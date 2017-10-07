@@ -2,7 +2,7 @@ var assert = require('assert');
 var request = require('supertest');  
 var guid = require('guid');
 
-var config = require('./config_azure.json');
+var config = require('./config_default.json');
 var serviceCatalogSchema = require('./service_catalog.json');
 var Validator = require('jsonschema').Validator;
 

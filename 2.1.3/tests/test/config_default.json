@@ -1,0 +1,25 @@
+{
+    "url": "<your OSB endpoint>",
+    "apiVersion" : "2.1.3",
+    "user": "<your user name>",
+    "password": "<your password>",
+    "provisions":[
+        {
+            "instance_id":"",
+            "body": {
+                "plan_id": "plan-id-here",
+                "service_id" :"service-id-here",
+                "context": {
+                  "platform": "azure",
+                  "some_field": "some-contextual-data"
+                },
+                "organization_guid": "org-guid-here",
+                "space_guid": "space-guid-here",
+                "parameters": {
+                  "parameter1": 1,
+                  "parameter2": "foo"
+                } 
+            }
+        }
+    ]       
+}
