@@ -1,0 +1,101 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "OSB Service Catalog",
+    "description": "OSB Service Catalog",
+    "type": "object",
+    "required": ["services"],
+    "properties": {
+        "services": {
+            "description": "Schema of service objects defined below. MAY be empty.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name" :{
+                        "type":"string",
+                        "pattern": "^[a-z0-9-]+$"  
+                    },
+                    "id": {
+                        "type":"string",
+                        "pattern": "\\S+"
+                    },
+                    "description": {
+                        "type":"string",
+                        "pattern":"\\S+"
+                    },
+                    "tags":{
+                        "type":"array",
+                        "items":{
+                            "type":"string"
+                        }
+                    },
+                    "requires":{
+                        "type":"array",
+                        "items":{
+                            "type":"string",
+                            "enum":["syslog_drain", "route_forwarding", "volume_mount"]
+                        }
+                    },
+                    "bindable":{"type":"boolean"},
+                    "metadata": {"type":"object"},
+                    "dashboard_client":{
+                        "type":"object",
+                        "properties": {
+                            "id":{
+                                "type":"string",
+                                "pattern": "\\S+"
+                            },
+                            "secret":{
+                                "type":"string",
+                                "pattern": "\\S+"
+                            },
+                            "redirect_uri":{
+                                "type":"string"
+                            }
+                        }
+                    },
+                    "plan_updateable":{"type":"boolean"},
+                    "plans":{
+                        "type":"array",
+                        "items":{"type":"object",
+                            "properties": {
+                                "id": {
+                                    "type":"string",
+                                    "pattern": "\\S+"
+                                },
+                                "name": {
+                                    "type":"string",
+                                    "pattern":"\\S+"
+                                },
+                                "description": {
+                                    "type":"string",
+                                    "pattern": "\\S+"
+                                },
+                                "metadata": {"type":"object"},
+                                "free": {"type":"boolean"},
+                                "bindable": {"type":"boolean"},
+                                "schemas": {
+                                    "type":"object",
+                                    "properties": {
+                                        "service_instance":{
+                                            "type":"object",
+                                            "properties": {
+                                                "create":{"type":"object"},
+                                                "update":{"type":"object"}
+                                            }
+                                        },
+                                        "service_binding": {"type":"object"}
+                                    }
+                                }
+                            },
+                            "required": ["id","name","description"]
+                        },
+                        "minItems": 1
+                    },
+                    "required":["name","id","description","bindable","plans"]
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

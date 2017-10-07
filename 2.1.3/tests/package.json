@@ -1,0 +1,20 @@
+{
+  "name": "osb-checker",
+  "version": "2.3.1",
+  "description": "An automated checker to validate if an OSB API implementation is spec-compliant",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "OSB"
+  ],
+  "author": "Haishi",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.1",
+    "mocha":"^4.0.0",
+    "supertest":"^3.0.0",
+    "jsonschema":"^1.2.0",
+    "guid":"^0.0.12"
+  }
+}
