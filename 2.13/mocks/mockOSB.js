@@ -1,13 +1,29 @@
-const express = require('express')
+const express = require('express');
+const bodyParser = require('body-parser');
 const app = express()
+            .use(bodyParser.urlencoded({extended: false}))
+            .use(bodyParser.json());
 
 //Catalog Management
 //- GET /v2/catalog
 app.get('/v2/catalog', function (req,res) {
-    if (!req.header('X-Broker-API-Version') || req.header('X-Broker-API-Version') != '2.13')
+    var username = '', password = '';
+    if (req.header('Authorization')) {
+      var token = req.header('Authorization').split(/\s+/).pop()||'';
+      var auth = new Buffer(token, 'base64').toString();
+      var parts = auth.split(/:/);
+      username = parts[0];
+      password = parts[1];
+    }    
+    if (!req.header('X-Broker-API-Version') || req.header('X-Broker-API-Version') != '2.13') {
       res.sendStatus(412);
-    else 
-      res.send(
+      return;
+    }
+    if (!username || !password || username != 'username' || password != 'password') {
+      res.sendStatus(401);
+      return;
+    }
+    res.send(
         {
             "services": [{
               "name": "fake-service",
@@ -131,6 +147,18 @@ app.get('/v2/catalog', function (req,res) {
             }]
           }
     )
+})
+app.put('/v2/service_instances/:instance_id', function (req,res) {  
+  if (!req.query.accepts_incomplete)
+    res.sendStatus(422);
+  if (!req.body.service_id || !req.body.plan_id)
+    res.sendStatus(400);  
+})
+app.get('/v2/service_instances/:instance_id/last_operation', function (req, res) {
+  res.send({
+    "state": "in progress",
+    "description": "Creating service (10% complete)."
+  });
 })
 app.listen(3000, function(){
     console.log('Example app listening on port 3000!')
