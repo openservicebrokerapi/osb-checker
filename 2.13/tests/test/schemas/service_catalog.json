@@ -50,9 +50,11 @@
                                 "pattern": "\\S+"
                             },
                             "redirect_uri":{
-                                "type":"string"
+                                "type":"string",
+                                "pattern": "(http|ftp|https):\\/\\/[\\w\\-_]+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?"
                             }
-                        }
+                        },
+                        "additionalProperties": false
                     },
                     "plan_updateable":{"type":"boolean"},
                     "plans":{
@@ -65,7 +67,7 @@
                                 },
                                 "name": {
                                     "type":"string",
-                                    "pattern":"\\S+"
+                                    "pattern":"^[a-z0-9-]+$"
                                 },
                                 "description": {
                                     "type":"string",
@@ -80,15 +82,38 @@
                                         "service_instance":{
                                             "type":"object",
                                             "properties": {
-                                                "create":{"type":"object"},
-                                                "update":{"type":"object"}
-                                            }
+                                                "create":{
+                                                    "type":"object",
+                                                    "properties":{
+                                                        "parameters": {"type":"object"}
+                                                    }
+                                                },
+                                                "update":{
+                                                    "type":"object",
+                                                    "properties":{
+                                                        "parameters": {"type":"object"}
+                                                    }
+                                                }
+                                            },
+                                            "additionalProperties": false
                                         },
-                                        "service_binding": {"type":"object"}
+                                        "service_binding": {
+                                            "type":"object",
+                                            "properties": {
+                                                "create": {
+                                                    "type":"object",
+                                                    "properties":{
+                                                        "parameters": {"type": "object"}
+                                                    }
+                                                }
+                                            },
+                                            "additionalProperties": false
+                                        }
                                     }
                                 }
                             },
-                            "required": ["id","name","description"]
+                            "required": ["id","name","description"],
+                            "additionalProperties": false
                         },
                         "minItems": 1
                     },

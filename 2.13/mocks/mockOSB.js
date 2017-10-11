@@ -7,22 +7,8 @@ const app = express()
 //Catalog Management
 //- GET /v2/catalog
 app.get('/v2/catalog', function (req,res) {
-    var username = '', password = '';
-    if (req.header('Authorization')) {
-      var token = req.header('Authorization').split(/\s+/).pop()||'';
-      var auth = new Buffer(token, 'base64').toString();
-      var parts = auth.split(/:/);
-      username = parts[0];
-      password = parts[1];
-    }    
-    if (!req.header('X-Broker-API-Version') || req.header('X-Broker-API-Version') != '2.13') {
-      res.sendStatus(412);
-      return;
-    }
-    if (!username || !password || username != 'username' || password != 'password') {
-      res.sendStatus(401);
-      return;
-    }
+  if (!checkRequest(req,res))
+    return;
     res.send(
         {
             "services": [{
@@ -149,12 +135,20 @@ app.get('/v2/catalog', function (req,res) {
     )
 })
 app.put('/v2/service_instances/:instance_id', function (req,res) {  
-  if (!req.query.accepts_incomplete)
+  if (!checkRequest(req,res))
+    return;
+  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
     res.sendStatus(422);
-  if (!req.body.service_id || !req.body.plan_id)
-    res.sendStatus(400);  
+  } else if (!req.body.service_id || !req.body.plan_id) {
+    res.sendStatus(400); 
+  }
+  else {
+    res.sendStatus(202); 
+  }
 })
 app.get('/v2/service_instances/:instance_id/last_operation', function (req, res) {
+  if (!checkRequest(req,res))
+    return;
   res.send({
     "state": "in progress",
     "description": "Creating service (10% complete)."
@@ -163,3 +157,23 @@ app.get('/v2/service_instances/:instance_id/last_operation', function (req, res)
 app.listen(3000, function(){
     console.log('Example app listening on port 3000!')
 })
+
+function checkRequest(req,res) {
+  var username = '', password = '';
+  if (req.header('Authorization')) {
+    var token = req.header('Authorization').split(/\s+/).pop()||'';
+    var auth = new Buffer(token, 'base64').toString();
+    var parts = auth.split(/:/);
+    username = parts[0];
+    password = parts[1];
+  }    
+  if (!req.header('X-Broker-API-Version') || req.header('X-Broker-API-Version') != '2.13') {
+    res.sendStatus(412);
+    return false;
+  }
+  if (!username || !password || username != 'username' || password != 'password') {
+    res.sendStatus(401);
+    return false;
+  }
+  return true;
+}

@@ -3,6 +3,7 @@
     "apiVersion" : "2.13",
     "user": "username",
     "password": "password",
+    "authentication": "basic",    
     "provisions":[
         {
             "instance_id":"",
@@ -17,7 +18,8 @@
                 } 
             },            
             "scenario": "new",
-            "notes": "Azure Storage - General Purpose Storage Account"
+            "notes": "Azure Storage - General Purpose Storage Account",
+            "async": true
         }
     ]       
 }

@@ -3,6 +3,7 @@
     "apiVersion" : "2.13",
     "user": "username",
     "password": "password",
+    "authentication": "basic",    
     "provisions":[
         {
             "instance_id":"",

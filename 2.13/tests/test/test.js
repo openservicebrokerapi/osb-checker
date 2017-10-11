@@ -18,25 +18,10 @@ describe('/v2/catalog', function() {
     });
 
     describe('GET', function() {
-        it('should reject requests without X-Broker-API-Version header with 412', function(done){
-            request(url)
-                .get('/v2/catalog')
-                .auth(config.user, config.password)
-                .expect(412, done);
-        })
-        it ('should reject unauthorized requests with 401', function(done) {
-            request(url)
-                .get('/v2/catalog')
-                .set('X-Broker-API-Version', apiVersion)
-                .expect(401, done);
-        })
-        it ('should reject bad credentials with 401', function(done) {
-            request(url)
-                .get('/v2/catalog')
-                .set('X-Broker-API-Version', apiVersion)
-                .auth("spock", "spockpass")
-                .expect(401, done);
-        })
+        
+        testAPIVersionHeader('/v2/catalog', 'GET');
+        testAuthentication('/v2/catalog', 'GET');
+        
         it('should return list of registered service classes as JSON payload', function(done){
             request(url)
                 .get('/v2/catalog')
@@ -50,7 +35,7 @@ describe('/v2/catalog', function() {
                     if (!results.valid) {
                         var message = "Schema validation errors: " + results.errors.length;
                         results.errors.forEach(function(e){
-                            message += "\n" + e.message;
+                            message += "\n" + e.instance + " " + e.message;
                         });
                         done(new Error(message));
                     }
@@ -66,15 +51,14 @@ describe('/v2/service_instances/:instance_id', function(){
         var instance_id = provision.instance_id;
         if (!instance_id)
             instance_id = guid.create().value;        
-        describe('PROVISION - request syntax', function() {
-            it ('should return 422 if request doesn\'t have the accept_incomplete parameter', function(done){
-                request(url)
-                .put('/v2/service_instances/' + instance_id)
-                .set('X-Broker-API-Version', apiVersion)
-                .auth(config.user, config.password)
-                .send(provision.body)
-                .expect(422, done)
-            })
+        describe('PROVISION - request syntax', function() {     
+            
+            testAPIVersionHeader('/v2/service_instances/' + instance_id, 'PUT');
+            testAuthentication('/v2/service_instances/' + instance_id, 'PUT');
+
+            if (provision.async) 
+                testAsyncParameter('/v2/service_instances/' + instance_id);
+
             it ('should reject if missing service_id', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
                 delete tempBody.service_id;
@@ -106,29 +90,104 @@ describe('/v2/service_instances/:instance_id', function(){
                     .auth(config.user, config.password)
                     .send(tempBody)
                     .expect(202, done)
-                })
-                it ('should return last operation status', function(done){
-                    request(url)
-                    .get('/v2/service_instances/' + instance_id + '/last_operation')
-                    .set('X-Broker-API-Version', apiVersion)
-                    .auth(config.user, config.password)
-                    .expect(200, done)
-                    .expect('Content-Type', /json/)
-                    .end(function(err, res){
-                        if (err) return done(err);
-                        var results = validator.validate(res.body, lastOperationSchema);
-                        if (!results.valid) {
-                            var message = "Schema validation errors: " + results.errors.length;
-                            results.errors.forEach(function(e){
-                                message += "\n" + e.message;
-                            });
-                            done(new Error(message));
-                        }
-                        else
-                            done();
-                    })
-                })
+                });
+                
+                testAPIVersionHeader('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
+                testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
+                describe("PROVISION - query after new", function() {
+                    it ('should return last operation status', function(done){
+                        request(url)
+                            .get('/v2/service_instances/' + instance_id + '/last_operation')
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(200)
+                            .expect('Content-Type', /json/)
+                            .end(function(err, res){
+                                if (err) return done(err);
+                                var results = validator.validate(res.body, lastOperationSchema);
+                                if (!results.valid) {
+                                    var message = "Schema validation errors: " + results.errors.length;
+                                    results.errors.forEach(function(e){
+                                        message += "\n" + e.instance + " " + e.message;
+                                    });
+                                    done(new Error(message));
+                                }
+                                else
+                                    done();
+                            })
+                        })
+                    });
             });
         }
     })
 })
+
+function testAuthentication(handler, verb) {
+    if (config.authentication == "basic") {
+        it ('should reject unauthorized requests with 401', function(done) {
+            if (verb == 'GET') {
+                request(url)
+                    .get(handler)
+                    .set('X-Broker-API-Version', apiVersion)
+                    .expect(401, done);
+            } else if (verb == 'PUT') {
+                request(url)
+                    .put(handler)
+                    .set('X-Broker-API-Version', apiVersion)
+                    .send({})
+                    .expect(401, done);
+            }
+        });
+        it ('should reject bad credentials with 401', function(done) {
+            if (verb == 'GET') {
+                request(url)
+                    .get(handler)
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth("spock", "spockpass")
+                    .expect(401, done);
+            } else if (verb == 'PUT') {
+                request(url)
+                    .put(handler)
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth("spock", "spockpass")
+                    .send({})
+                    .expect(401, done);
+            }
+        })
+    }    
+}
+
+function testAPIVersionHeader(handler, verb) {
+    it('should reject requests without X-Broker-API-Version header with 412', function(done) {
+        if (verb == 'GET') {
+            request(url)
+                .get(handler)                    
+                .auth(config.user, config.password)
+                .expect(412, done)
+        } else if (verb == 'PUT') {
+            request(url)
+                .put(handler)                    
+                .auth(config.user, config.password)
+                .send({})
+                .expect(412, done)
+        }
+    })     
+}
+function testAsyncParameter(handler) {
+    it ('should return 422 if request doesn\'t have the accept_incomplete parameter', function(done){
+        request(url)
+        .put(handler)
+        .set('X-Broker-API-Version', apiVersion)
+        .auth(config.user, config.password)
+        .send({})
+        .expect(422, done)
+    });
+    it ('should return 422 if request if the accept_incomplete parameter is false', function(done){
+        request(url)
+        .put(handler + '?accepts_incomplete=false')
+        .set('X-Broker-API-Version', apiVersion)
+        .auth(config.user, config.password)
+        .send({})
+        .expect(422, done)
+    });
+}
