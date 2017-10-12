@@ -1,0 +1,9 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "OSB Binding Delete Response",
+    "description": "OSB Binding Delete Response",
+    "type": "object",    
+    "properties": {
+    },
+    "additionalProperties": false
+}

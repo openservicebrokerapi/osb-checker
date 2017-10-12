@@ -7,7 +7,9 @@ var serviceCatalogSchema = require('./schemas/service_catalog.json');
 var lastOperationSchema = require('./schemas/last_operation.json');
 var provisionResponseSchema = require('./schemas/provision_response.json');
 var updateResponseSchema = require('./schemas/provision_response.json');
-
+var bindingResponseSchema = require('./schemas/binding_response.json');
+var bindingDeleteResponseSchema = require('./schemas/binding_delete_response.json');
+var provisioningDeleteResponseSchema = require('./schemas/provisioning_delete_response.json');
 var Validator = require('jsonschema').Validator;
 var validator = new Validator();
 
@@ -40,107 +42,6 @@ describe('GET /v2/catalog', function() {
                         done();
                 })
         });
-    });
-});
-
-describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', function() {
-    config.bindings.forEach(function(binding) {
-        var instance_id = binding.instance_id;
-        if (!instance_id)
-            instance_id = guid.create().value;   
-        var binding_id = binding.binding_id;
-        if (!binding_id)
-            binding_id = guid.create().value;   
-        
-        describe('BINDING - request syntax', function() {     
-                                
-            testAPIVersionHeader('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
-            testAuthentication('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
-
-            if (binding.async) 
-                testAsyncParameter('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
-
-            it ('should reject if missing service_id', function(done){
-                tempBody = JSON.parse(JSON.stringify(binding.body)); 
-                delete tempBody.service_id;
-                request(url)
-                    .patch('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
-                    .set('X-Broker-API-Version', apiVersion)
-                    .auth(config.user, config.password)
-                    .send(tempBody)
-                    .expect(400, done)
-            })
-        });
-    });
-});
-
-describe('PATCH /v2/service_instance/:instance_id', function() {
-    config.updates.forEach(function(update) {
-        var instance_id = update.instance_id;
-        if (!instance_id)
-            instance_id = guid.create().value;   
-        describe('UPDATE - request syntax', function() {     
-            
-            testAPIVersionHeader('/v2/service_instances/' + instance_id, 'PATCH');
-            testAuthentication('/v2/service_instances/' + instance_id, 'PATCH');
-
-            if (update.async) 
-                testAsyncParameter('/v2/service_instances/' + instance_id, 'PATCH');
-
-            it ('should reject if missing service_id', function(done){
-                tempBody = JSON.parse(JSON.stringify(update.body)); 
-                delete tempBody.service_id;
-                request(url)
-                    .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
-                    .set('X-Broker-API-Version', apiVersion)
-                    .auth(config.user, config.password)
-                    .send(tempBody)
-                    .expect(400, done)
-            })
-        });
-        if (update.scenario == "update") {
-            describe("UPDATE", function () {
-                it ('should accept a valid update request', function(done){
-                    tempBody = JSON.parse(JSON.stringify(update.body)); 
-                    request(url)
-                    .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
-                    .set('X-Broker-API-Version', apiVersion)
-                    .auth(config.user, config.password)
-                    .send(tempBody)
-                    .expect(202)
-                    .end(function(err, res){
-                        if (err) return done(err);
-                        var message = validateJsonSchema(res.body, updateResponseSchema);
-                        if (message!="")
-                            done(new Error(message));
-                        else
-                            done();
-                    })
-                });
-                
-                testAPIVersionHeader('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
-                testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
-
-                describe("PROVISION - query after new", function() {
-                    it ('should return last operation status', function(done){
-                        request(url)
-                            .get('/v2/service_instances/' + instance_id + '/last_operation')
-                            .set('X-Broker-API-Version', apiVersion)
-                            .auth(config.user, config.password)
-                            .expect(200)
-                            .expect('Content-Type', /json/)
-                            .end(function(err, res){
-                                if (err) return done(err);
-                                var message = validateJsonSchema(res.body, lastOperationSchema);
-                                if (message!="")
-                                    done(new Error(message));
-                                else
-                                    done();
-                            })
-                        })
-                    });
-            });
-        }
     });
 });
 
@@ -244,6 +145,249 @@ describe('PUT /v2/service_instances/:instance_id', function(){
     })
 })
 
+describe('PATCH /v2/service_instance/:instance_id', function() {
+    config.updates.forEach(function(update) {
+        var instance_id = update.instance_id;
+        if (!instance_id)
+            instance_id = guid.create().value;   
+        describe('UPDATE - request syntax', function() {     
+            
+            testAPIVersionHeader('/v2/service_instances/' + instance_id, 'PATCH');
+            testAuthentication('/v2/service_instances/' + instance_id, 'PATCH');
+
+            if (update.async) 
+                testAsyncParameter('/v2/service_instances/' + instance_id, 'PATCH');
+
+            it ('should reject if missing service_id', function(done){
+                tempBody = JSON.parse(JSON.stringify(update.body)); 
+                delete tempBody.service_id;
+                request(url)
+                    .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth(config.user, config.password)
+                    .send(tempBody)
+                    .expect(400, done)
+            })
+        });
+        if (update.scenario == "update") {
+            describe("UPDATE", function () {
+                it ('should accept a valid update request', function(done){
+                    tempBody = JSON.parse(JSON.stringify(update.body)); 
+                    request(url)
+                    .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth(config.user, config.password)
+                    .send(tempBody)
+                    .expect(202)
+                    .end(function(err, res){
+                        if (err) return done(err);
+                        var message = validateJsonSchema(res.body, updateResponseSchema);
+                        if (message!="")
+                            done(new Error(message));
+                        else
+                            done();
+                    })
+                });
+                
+                testAPIVersionHeader('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
+                testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
+
+                describe("PROVISION - query after new", function() {
+                    it ('should return last operation status', function(done){
+                        request(url)
+                            .get('/v2/service_instances/' + instance_id + '/last_operation')
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(200)
+                            .expect('Content-Type', /json/)
+                            .end(function(err, res){
+                                if (err) return done(err);
+                                var message = validateJsonSchema(res.body, lastOperationSchema);
+                                if (message!="")
+                                    done(new Error(message));
+                                else
+                                    done();
+                            })
+                        })
+                    });
+            });
+        }
+    });
+});
+
+describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', function() {
+    config.bindings.forEach(function(binding) {
+        var instance_id = binding.instance_id;
+        if (!instance_id)
+            instance_id = guid.create().value;   
+        var binding_id = binding.binding_id;
+        if (!binding_id)
+            binding_id = guid.create().value;   
+        
+        describe('BINDING - request syntax', function() {     
+                                
+            testAPIVersionHeader('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
+            testAuthentication('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
+
+            if (binding.async) 
+                testAsyncParameter('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
+
+            it ('should reject if missing service_id', function(done){
+                tempBody = JSON.parse(JSON.stringify(binding.body)); 
+                delete tempBody.service_id;
+                request(url)
+                    .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth(config.user, config.password)
+                    .send(tempBody)
+                    .expect(400, done)
+            })
+            it ('should reject if missing plan_id', function(done){
+                tempBody = JSON.parse(JSON.stringify(binding.body)); 
+                delete tempBody.plan_id;
+                request(url)
+                    .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth(config.user, config.password)
+                    .send(tempBody)
+                    .expect(400, done)
+            });
+
+            if (binding.scenario == "new") {
+                describe("NEW", function () {
+                    it ('should accept a valid binding request', function(done){
+                        tempBody = JSON.parse(JSON.stringify(binding.body)); 
+                        request(url)
+                        .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
+                        .set('X-Broker-API-Version', apiVersion)
+                        .auth(config.user, config.password)
+                        .send(tempBody)
+                        .expect(201)
+                        .end(function(err, res){
+                            if (err) return done(err);
+                            var message = validateJsonSchema(res.body, bindingResponseSchema);
+                            if (message!="")
+                                done(new Error(message));
+                            else
+                                done();
+                        })
+                    });
+                });
+            }
+        });
+    });
+});
+
+describe('DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id', function() {
+    config.bindings.forEach(function(binding) {
+        if (binding.scenario == "delete") {
+            var instance_id = binding.instance_id;
+            if (!instance_id)
+                instance_id = guid.create().value;   
+            var binding_id = binding.binding_id;
+            if (!binding_id)
+                binding_id = guid.create().value;   
+            describe('BINDING - delete syntax', function() {     
+                
+                testAPIVersionHeader('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'DELETE');
+                testAuthentication('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'DELETE');
+
+                if (binding.async) 
+                    testAsyncParameter('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'DELETE');
+
+                describe('DELETE', function () {
+                    it ('should reject if missing service_id', function(done) {                
+                        request(url)
+                            .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id)
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(400, done)
+                    })
+                    it ('should reject if missing plan_id', function(done){                
+                        request(url)
+                            .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true&service_id=" + binding.body.service_id)                    
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(400, done)
+                        })
+                    it ('should accept a valid binding deletion request', function(done){
+                        tempBody = JSON.parse(JSON.stringify(binding.body)); 
+                        request(url)
+                            .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id 
+                                + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id
+                                + "&service_id=" + binding.body.service_id)
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(200)
+                            .end(function(err, res){
+                                if (err) return done(err);
+                                var message = validateJsonSchema(res.body, bindingDeleteResponseSchema);
+                                if (message!="")
+                                    done(new Error(message));
+                                else
+                                    done();
+                        })
+                    });
+                });
+            });
+        }
+    });
+});
+
+describe('DELETE /v2/service_instance/:instance_id', function() {
+    config.bindings.forEach(function(binding) {
+        if (binding.scenario == "delete") {
+            var instance_id = binding.instance_id;
+            if (!instance_id)
+                instance_id = guid.create().value;   
+            
+            describe('DEPROVISIONING - delete syntax', function() {     
+                
+                testAPIVersionHeader('/v2/service_instances/' + instance_id, 'DELETE');
+                testAuthentication('/v2/service_instances/' + instance_id, 'DELETE');
+
+                if (binding.async) 
+                    testAsyncParameter('/v2/service_instances/' + instance_id, 'DELETE');
+
+                describe("DELETE", function () { 
+                    it ('should reject if missing service_id', function(done) {                
+                        request(url)
+                            .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id)
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(400, done)
+                    })
+                    it ('should reject if missing plan_id', function(done){                
+                        request(url)
+                            .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&service_id=" + binding.body.service_id)                    
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(400, done)
+                        })
+                    it ('should accept a valid service deletion request', function(done){
+                        tempBody = JSON.parse(JSON.stringify(binding.body)); 
+                        request(url)
+                            .delete('/v2/service_instances/' + instance_id 
+                                + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id
+                                + "&service_id=" + binding.body.service_id)
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .expect(202)
+                            .end(function(err, res){
+                                if (err) return done(err);
+                                var message = validateJsonSchema(res.body, provisioningDeleteResponseSchema);
+                                if (message!="")
+                                    done(new Error(message));
+                                else
+                                    done();
+                        })
+                    });
+                });
+            });
+        }
+    });
+});
+
 function testAuthentication(handler, verb) {
     if (config.authentication == "basic") {
         it ('should reject unauthorized requests with 401', function(done) {
@@ -261,6 +405,12 @@ function testAuthentication(handler, verb) {
             } else if (verb == 'PATCH') {
                 request(url)
                     .patch(handler)
+                    .set('X-Broker-API-Version', apiVersion)
+                    .send({})
+                    .expect(401, done);
+            } else if (verb == 'DELETE') {
+                request(url)
+                    .delete(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .send({})
                     .expect(401, done);
@@ -287,6 +437,12 @@ function testAuthentication(handler, verb) {
                     .auth("spock", "spockpass")
                     .send({})
                     .expect(401, done);
+            } else if (verb == 'DELETE') {
+                request(url)
+                    .delete(handler)
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth("spock", "spockpass")
+                    .expect(401, done);
             }
         })
     }    
@@ -311,6 +467,11 @@ function testAPIVersionHeader(handler, verb) {
                 .auth(config.user, config.password)
                 .send({})
                 .expect(412, done)
+        } else if (verb == 'DELETE') {
+            request(url)
+                .delete(handler)                    
+                .auth(config.user, config.password)
+                .expect(412, done)
         }
     })     
 }
@@ -330,6 +491,12 @@ function testAsyncParameter(handler, verb) {
                 .auth(config.user, config.password)
                 .send({})
                 .expect(422, done)
+        } else if (verb == 'DELETE') {
+            request(url)
+                .delete(handler)
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .expect(422, done)
         }
     });
     it ('should return 422 if request if the accept_incomplete parameter is false', function(done) {
@@ -346,6 +513,12 @@ function testAsyncParameter(handler, verb) {
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({})
+                .expect(422, done)
+        } else if (verb == 'DELETE') {
+            request(url)
+                .delete(handler + '?accepts_incomplete=false')
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
                 .expect(422, done)
         }
     });

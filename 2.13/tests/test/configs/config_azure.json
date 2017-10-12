@@ -68,6 +68,14 @@
             },            
             "async": true,
             "scenario": "new"
+        },
+        {
+            "body": {
+                "service_id":"2e2fc314-37b6-4587-8127-8f9ee8b33fea",
+                "plan_id":"6ddf6b41-fb60-4b70-af99-8ecc4896b3cf"                
+            },            
+            "async": true,
+            "scenario": "delete"
         }
     ]                     
 }

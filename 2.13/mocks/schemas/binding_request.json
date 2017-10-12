@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "OSB Binding Request",
+    "description": "OSB Binding Request",
+    "type": "object",
+    "required": ["service_id", "plan_id"],
+    "properties": {
+        "context": { "type": "object"},
+        "service_id": {            
+            "type": "string",
+            "pattern": "\\S+"
+        },
+        "plan_id":{
+            "type": "string",
+            "pattern": "\\S+"
+        },
+        "app_guid":{
+            "type":"string",
+            "pattern": "\\S+"
+        },
+        "bind_resource":{
+            "type":"object",
+            "properties":{
+                "app_guid":{"type":"string"},
+                "route":{"type":"string"}
+            },
+            "additionalProperties": true
+        },
+        "parameters":{"type":"object"}
+    },
+    "additionalProperties": false
+}

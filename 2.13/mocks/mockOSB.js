@@ -8,6 +8,7 @@ var Validator = require('jsonschema').Validator;
 var validator = new Validator();
 var provisionRequestSchema = require('./schemas/provision_request.json');
 var updateRequestSchema = require('./schemas/update_request.json');
+var bindingRequestSchema = require('./schemas/binding_request.json');
 
 //Catalog Management
 //- GET /v2/catalog
@@ -190,18 +191,60 @@ app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', funct
     return;
   }
   
-  var messages = validateJsonSchema(req.body, updateRequestSchema);
+  var messages = validateJsonSchema(req.body, bindingRequestSchema);
   if (messages !="") {
     console.log(messages);
     res.sendStatus(400);
     return;
   }
 
-  res.status(202).send(
+  res.status(201).send(
     {
-      "operation": "task_10"
+      "credentials":{
+        "uri":"mysql://mysqluser:pass@mysqlhost:3306/dbname",
+        "username":"mysqluser",
+        "password":"pass",
+        "host":"mysqlhost",
+        "port":3306,
+        "database":"dbname"
+      }
     }
   );
+})
+
+app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', function (req,res) {  
+  if (!checkRequest(req,res))
+    return;
+  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
+    res.sendStatus(422);
+    return;
+  }
+  
+  if (!req.query.service_id || !req.query.plan_id) {
+    res.sendStatus(400);
+  } else {
+    res.status(200).send({});
+  }
+})
+
+app.delete('/v2/service_instances/:instance_id', function (req,res) {  
+  if (!checkRequest(req,res))
+    return;
+  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
+    res.sendStatus(422);
+    return;
+  }
+  
+  if (!req.query.service_id || !req.query.plan_id) {
+    res.sendStatus(400);
+  } else {
+    res.status(202)
+    .send(
+      {
+        "operation":"task_10"
+      }
+    );
+  }
 })
 
 app.get('/v2/service_instances/:instance_id/last_operation', function (req, res) {
