@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "OSB Provisioning Request",
+    "description": "OSB Provisioning Request",
+    "type": "object",
+    "required": ["service_id","plan_id", "organization_guid", "space_guid"],
+    "properties": {
+        "service_id": {            
+            "type": "string",
+            "pattern": "\\S+"
+        },
+        "plan_id":{
+            "type": "string",
+            "pattern": "\\S+"
+        },
+        "context":{"type":"object"},
+        "organization_guid":{
+            "type":"string",
+            "pattern": "\\S+"
+        },
+        "space_guid":{
+            "type":"string",
+            "pattern": "\\S+"
+        },
+        "parameters":{
+            "type":"object"
+        }
+
+    },
+    "additionalProperties": false
+}

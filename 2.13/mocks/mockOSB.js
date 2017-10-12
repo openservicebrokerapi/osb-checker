@@ -4,6 +4,11 @@ const app = express()
             .use(bodyParser.urlencoded({extended: false}))
             .use(bodyParser.json());
 
+var Validator = require('jsonschema').Validator;
+var validator = new Validator();
+var provisionRequestSchema = require('./schemas/provision_request.json');
+var updateRequestSchema = require('./schemas/update_request.json');
+
 //Catalog Management
 //- GET /v2/catalog
 app.get('/v2/catalog', function (req,res) {
@@ -139,13 +144,66 @@ app.put('/v2/service_instances/:instance_id', function (req,res) {
     return;
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
     res.sendStatus(422);
-  } else if (!req.body.service_id || !req.body.plan_id) {
-    res.sendStatus(400); 
+    return;
   }
-  else {
-    res.sendStatus(202); 
+  
+  var messages = validateJsonSchema(req.body, provisionRequestSchema);
+  if (messages !="") {
+    res.sendStatus(400);
+    return;
   }
+  res.status(202).send(
+    {
+      "dashboard_url" :"http://example-dashboard.example.com/9189kdfsk0vfnku",
+      "operation": "task_10"
+    }
+  );
 })
+
+app.patch('/v2/service_instances/:instance_id', function (req,res) {  
+  if (!checkRequest(req,res))
+    return;
+  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
+    res.sendStatus(422);
+    return;
+  }
+  
+  var messages = validateJsonSchema(req.body, updateRequestSchema);
+  if (messages !="") {
+    console.log(messages);
+    res.sendStatus(400);
+    return;
+  }
+
+  res.status(202).send(
+    {
+      "operation": "task_10"
+    }
+  );
+})
+
+app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', function (req,res) {  
+  if (!checkRequest(req,res))
+    return;
+  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
+    res.sendStatus(422);
+    return;
+  }
+  
+  var messages = validateJsonSchema(req.body, updateRequestSchema);
+  if (messages !="") {
+    console.log(messages);
+    res.sendStatus(400);
+    return;
+  }
+
+  res.status(202).send(
+    {
+      "operation": "task_10"
+    }
+  );
+})
+
 app.get('/v2/service_instances/:instance_id/last_operation', function (req, res) {
   if (!checkRequest(req,res))
     return;
@@ -176,4 +234,17 @@ function checkRequest(req,res) {
     return false;
   }
   return true;
+}
+
+function validateJsonSchema(body, schema) {
+  var results = validator.validate(body, schema);
+  if (!results.valid) {
+      var message = "Schema validation errors: " + results.errors.length;
+      results.errors.forEach(function(e){
+          message += "\n" + e.instance + " " + e.message;
+      });
+      return message;
+  }
+  else
+      return "";
 }

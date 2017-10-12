@@ -20,7 +20,56 @@
                   "parameter1": 1,
                   "parameter2": "foo"
                 } 
-            }
+            },
+            "async": true
         }
-    ]       
+    ],
+    "updates":[
+        {
+            "instance_id":"",
+            "body":{
+                "context" :{
+                    "platform": "azure",
+                    "some_field": "some-contextual-data"
+                },
+                "service_id": "service-id-here",
+                "plan_id":"plan-id-here",
+                "parameters":{
+                    "parameter1":1,
+                    "parameter2":"foo"
+                },
+                "previous_values":{
+                    "plan_id":"plan-id-here",
+                    "service_id":"service-id-here",
+                    "organization_id":"org-guid-here",
+                    "space_id":"spcae-guid-here"
+                }
+            },
+            "scenario": "gone",
+            "async": true
+        }
+    ],
+    "bindings": [
+        {
+            "body": {
+                "context": {
+                    "platform": "azure",
+                    "some_field":"some-contextual-data"
+                },
+                "service_id":"servide-id-here",
+                "plan_id":"plan-id-here",
+                "bind_resource": {
+                    "app_guid": "app-guid-here"
+                },
+                "parameters": {
+                    "parameter1-name-here": 1,
+                    "parameter2-name-here": "parameter2-value-here"
+                },
+                "async": true,
+                "scenario": "new"
+            },
+            "async": true,
+            "scenario": "new"
+        }
+    ]                     
 }

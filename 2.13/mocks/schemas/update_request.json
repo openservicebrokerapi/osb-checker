@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "OSB Update Request",
+    "description": "OSB Update Request",
+    "type": "object",
+    "required": ["service_id"],
+    "properties": {
+        "context": { "type": "object"},
+        "service_id": {            
+            "type": "string",
+            "pattern": "\\S+"
+        },
+        "plan_id":{
+            "type": "string",
+            "pattern": "\\S+"
+        },
+        "parameters":{"type":"object"},
+        "previous_values":{ "type":"object"},
+        "previous_values.service_id":{
+            "type":"string",
+            "pattern": "\\S+"
+        },
+        "previous_values.plan_id":{
+            "type":"string",
+            "pattern": "\\S+"
+        },
+        "previous_values.organization_id":{
+            "type":"string",
+            "pattern": "\\S+"
+        },
+        "previous_values.space_id": { 
+            "type":"string",
+            "pattern": "\\S+"
+        }
+    },
+    "additionalProperties": false
+}
