@@ -18,6 +18,11 @@ An automatic checker to verify an Open Service Broker API implementation against
     mocha
 ```
 
+## What's covered
+* All OSB API 2.31 verbs (~60 test cases)
+* JSON schema check against all requests/responses (7 schemas)
+* Extensible test cases by configuration files
+
 ## Customize
 
 ### Provisioning requests
