@@ -4,7 +4,7 @@ An automatic checker to verify an Open Service Broker API implementation against
 ## Usage
 
 1. Clone the repository to a folder, for example c:\osb-checker
-2. Modify test configurations. By default, test parameters are loaded from the **test\config_default.json** file. You need to update the **url**, **user**, and **password** fields to match with your OSB endpoint. 
+2. Modify test configurations. By default, test parameters are loaded from the **test\config_mock.json** file. You need to update the **url**, **user**, and **password** fields to match with your OSB endpoint. 
 ```json
     "url": "<your OSB endpoint>",
     "apiVersion" : "2.13",
