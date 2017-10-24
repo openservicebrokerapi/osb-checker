@@ -98,6 +98,26 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                 .send(tempBody)
                 .expect(400, done)
             })
+            it ('should reject if service_id is invalid', function(done){
+                tempBody = JSON.parse(JSON.stringify(provision.body)); 
+                tempBody.service_id = "xxxxx-xxxxx";
+                request(url)
+                .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .send(tempBody)
+                .expect(400, done)
+            })
+            it ('should reject if plan_id is invalid', function(done){
+                tempBody = JSON.parse(JSON.stringify(provision.body)); 
+                tempBody.plan_id = "xxxxx-xxxxx";
+                request(url)
+                .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .send(tempBody)
+                .expect(400, done)
+            })
         });
         if (provision.scenario == "new") {
             describe("PROVISION - new", function () {

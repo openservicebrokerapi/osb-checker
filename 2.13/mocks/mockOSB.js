@@ -31,6 +31,13 @@ app.put('/v2/service_instances/:instance_id', function (req,res) {
     res.sendStatus(400);
     return;
   }
+  
+  if (!serviceIdExists(serviceCatalog, req.body.service_id)
+    || !planIdExists(serviceCatalog, req.body.service_id, req.body.plan_id)){
+    res.sendStatus(400);
+    return;
+  }
+
   res.status(202).send(
     {
       "dashboard_url" :"http://example-dashboard.example.com/9189kdfsk0vfnku",
@@ -169,4 +176,33 @@ function validateJsonSchema(body, schema) {
   }
   else
       return "";
+}
+
+function serviceIdExists(catalog, service_id) {
+  return containsKeyValue(catalog.services, 'id', service_id) != null;
+}
+function planIdExists(catalog, service_id, plan_id) {
+  var service = containsKeyValue(catalog.services, 'id', service_id);
+  return containsKeyValue(service.plans, 'id', plan_id) != undefined;
+}
+
+function containsKeyValue(obj, key, value ) {          
+  if (!obj) return null;
+  if( obj[key] === value ) 
+   return obj;
+  if (Array.isArray(obj)) {
+      for (var i in obj) {
+          var found = containsKeyValue(obj[i], key, value);
+          if (found) return found;
+      }
+  } else if (typeof obj == "object") {
+      for (var p in obj) {
+          if (p === key && obj[p] === value) {
+              return obj;
+          }
+          var found = containsKeyValue(p, key, value );
+          if(found) return found;
+      }
+  }
+  return null;
 }
