@@ -40,15 +40,13 @@ Sample test outputs against the mock server
 MOCK server
 
   GET /v2/catalog
-
     Query service catalog
-      √ should reject requests without X-Broker-API-Version header with 412
+      √ should reject requests without X-Broker-API-Version header with 412 (38ms)
       √ should reject unauthorized requests with 401
       √ should reject bad credentials with 401
       √ should return list of registered service classes as JSON payload
- 
-  PUT /v2/service_instances/:instance_id
 
+  PUT /v2/service_instances/:instance_id
     PROVISION - request syntax
       √ should reject requests without X-Broker-API-Version header with 412
       √ should reject unauthorized requests with 401
@@ -59,6 +57,9 @@ MOCK server
       √ should reject if missing plan_id
       √ should reject if request payload is missing organization_guid
       √ should reject if request payload is missing space_guid
+      √ should reject if service_id is invalid
+      √ should reject if plan_id is invalid
+      √ should reject if parameters are not following schema
     PROVISION - new
       √ should accept a valid provision request
       √ should reject requests without X-Broker-API-Version header with 412
@@ -66,11 +67,10 @@ MOCK server
       √ should reject bad credentials with 401
       PROVISION - query after new
         √ should return last operation status
- 
-  PATCH /v2/service_instance/:instance_id
 
+  PATCH /v2/service_instance/:instance_id
     UPDATE - request syntax
-      √should reject requests without X-Broker-API-Version header with 412
+      √ should reject requests without X-Broker-API-Version header with 412
       √ should reject unauthorized requests with 401
       √ should reject bad credentials with 401
       √ should return 422 if request doesn't have the accept_incomplete parameter
@@ -83,11 +83,10 @@ MOCK server
       √ should reject bad credentials with 401
       PROVISION - query after new
         √ should return last operation status
- 
-  PUT /v2/service_instance/:instance_id/service_bindings/:binding_id
 
+  PUT /v2/service_instance/:instance_id/service_bindings/:binding_id
     BINDING - request syntax
-      √should reject requests without X-Broker-API-Version header with 412
+      √ should reject requests without X-Broker-API-Version header with 412
       √ should reject unauthorized requests with 401
       √ should reject bad credentials with 401
       √ should return 422 if request doesn't have the accept_incomplete parameter
@@ -97,16 +96,15 @@ MOCK server
       NEW
         √ should accept a valid binding request
     BINDING - request syntax
-     √ should reject requests without X-Broker-API-Version header with 412
+      √ should reject requests without X-Broker-API-Version header with 412
       √ should reject unauthorized requests with 401
       √ should reject bad credentials with 401
       √ should return 422 if request doesn't have the accept_incomplete parameter
       √ should return 422 if request if the accept_incomplete parameter is false
       √ should reject if missing service_id
       √ should reject if missing plan_id
- 
-  DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id
 
+  DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id
     BINDING - delete syntax
       √ should reject requests without X-Broker-API-Version header with 412
       √ should reject unauthorized requests with 401
@@ -117,9 +115,8 @@ MOCK server
         √ should reject if missing service_id
         √ should reject if missing plan_id
         √ should accept a valid binding deletion request
- 
+
   DELETE /v2/service_instance/:instance_id
-  
     DEPROVISIONING - delete syntax
       √ should reject requests without X-Broker-API-Version header with 412
       √ should reject unauthorized requests with 401
@@ -130,5 +127,6 @@ MOCK server
         √ should reject if missing service_id
         √ should reject if missing plan_id
         √ should accept a valid service deletion request
- 
-  60 passing (344ms)
+
+
+  63 passing (440ms)

@@ -61,7 +61,8 @@
                     "description": "Billing account number used to charge use of shared fake server.",
                     "type": "string"
                   }
-                }
+                },
+                "required":["billing-account"]
               }
             },
             "update": {

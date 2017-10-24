@@ -32,8 +32,15 @@ app.put('/v2/service_instances/:instance_id', function (req,res) {
     return;
   }
   
+
   if (!serviceIdExists(serviceCatalog, req.body.service_id)
-    || !planIdExists(serviceCatalog, req.body.service_id, req.body.plan_id)){
+    || !planIdExists(serviceCatalog, req.body.service_id, req.body.plan_id)) {
+    res.sendStatus(400);
+    return;
+  }
+
+  var schemaCheckResults = parametersSchemaCheck(serviceCatalog, req.body.service_id, req.body.plan_id, 'create', req.body.parameters);
+  if (schemaCheckResults !="") {
     res.sendStatus(400);
     return;
   }
@@ -205,4 +212,15 @@ function containsKeyValue(obj, key, value ) {
       }
   }
   return null;
+}
+function parametersSchemaCheck(catalog, service_id, plan_id, action, parameters){
+  var service = containsKeyValue(catalog.services, 'id', service_id);
+  var plan = containsKeyValue(service.plans, 'id', plan_id);
+  var schemas = plan.schemas;  
+  if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) return "";
+  var schema = schemas.service_instance[action].parameters;  
+  if (!schema) return "";
+  console.log(JSON.stringify(parameters));
+  console.log(JSON.stringify(schema));
+  return validateJsonSchema(parameters, schema);
 }
