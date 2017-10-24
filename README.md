@@ -39,6 +39,7 @@ Sample test outputs against the mock server
 
 MOCK server
 
+```
   GET /v2/catalog
     Query service catalog
       √ should reject requests without X-Broker-API-Version header with 412 (38ms)
@@ -130,3 +131,5 @@ MOCK server
 
 
   63 passing (440ms)
+
+  ```
