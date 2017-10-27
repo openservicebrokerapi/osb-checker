@@ -173,6 +173,18 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                         })
                     });
             });
+        } else if (provision.scenario == "conflict") {
+            describe("PROVISION - conflict", function () {
+                it ('should return conflict when instance Id exists with different properties', function(done){
+                    tempBody = JSON.parse(JSON.stringify(provision.body)); 
+                    request(url)
+                    .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth(config.user, config.password)
+                    .send(tempBody)
+                    .expect(409, done)                    
+                });
+            });
         }
     })
 })

@@ -10,7 +10,7 @@ var provisionRequestSchema = require('./schemas/provision_request.json');
 var updateRequestSchema = require('./schemas/update_request.json');
 var bindingRequestSchema = require('./schemas/binding_request.json');
 var serviceCatalog = require('./data/service_catalog.json');
-
+var serviceInstances = [];
 //Catalog Management
 //- GET /v2/catalog
 app.get('/v2/catalog', function (req,res) {
@@ -45,6 +45,19 @@ app.put('/v2/service_instances/:instance_id', function (req,res) {
     return;
   }
 
+  if (serviceInstanceExistsWithDifferentProperties(req.body.service_id, req.body.plan_id, req.params.instance_id)) {    
+    res.status(409).send({});  
+    return;
+  }
+  
+  if (!serviceInstanceExists(req.body.service_id, req.body.plan_id, req.params.instance_id)) {
+    serviceInstances.push({
+      "service_id": req.body.service_id,
+      "plan_id": req.body.plan_id,
+      "instance_id": req.params.instance_id
+    });
+  }
+  
   res.status(202).send(
     {
       "dashboard_url" :"http://example-dashboard.example.com/9189kdfsk0vfnku",
@@ -193,6 +206,22 @@ function planIdExists(catalog, service_id, plan_id) {
   return containsKeyValue(service.plans, 'id', plan_id) != undefined;
 }
 
+function serviceInstanceExistsWithDifferentProperties(service_id, plan_id, instance_id) {  
+  for (var i = 0; i < serviceInstances.length; i++ ) {
+    if ((serviceInstances[i].instance_id == instance_id) && (serviceInstances[i].service_id != service_id || serviceInstances[i].plan_id != plan_id)){
+      return true;
+    }
+  }
+  return false;
+}
+function serviceInstanceExists(service_id, plan_id, instance_id) {  
+  for (var i = 0; i < serviceInstances.length; i++ ) {
+    if (serviceInstances[i].instance_id == instance_id && serviceInstances[i].service_id == service_id && serviceInstances[i].plan_id == plan_id) {
+      return true;
+    }
+  }
+  return false;
+}
 function containsKeyValue(obj, key, value ) {          
   if (!obj) return null;
   if( obj[key] === value ) 
