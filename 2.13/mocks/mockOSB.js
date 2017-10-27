@@ -143,8 +143,8 @@ app.get('/v2/service_instances/:instance_id/last_operation', function (req, res)
   if (!checkRequest(req,res))
     return;
   res.send({
-    "state": "in progress",
-    "description": "Creating service (10% complete)."
+    "state": "succeeded",
+    "description": "Created service."
   });
 })
 app.listen(3000, function(){
