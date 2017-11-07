@@ -4,6 +4,8 @@ const app = express()
             .use(bodyParser.urlencoded({extended: false}))
             .use(bodyParser.json());
 
+const maxLastOperationQueries = 0; //After this number of LastOperation queries, the operation result is set to "succeeded"
+            
 var Validator = require('jsonschema').Validator;
 var validator = new Validator();
 var provisionRequestSchema = require('./schemas/provision_request.json');
@@ -11,6 +13,7 @@ var updateRequestSchema = require('./schemas/update_request.json');
 var bindingRequestSchema = require('./schemas/binding_request.json');
 var serviceCatalog = require('./data/service_catalog.json');
 var serviceInstances = [];
+var lastOperationQueries = 0;
 //Catalog Management
 //- GET /v2/catalog
 app.get('/v2/catalog', function (req,res) {
@@ -56,6 +59,7 @@ app.put('/v2/service_instances/:instance_id', function (req,res) {
       "plan_id": req.body.plan_id,
       "instance_id": req.params.instance_id
     });
+    lastOperationQueries = 0;
   }
   
   res.status(202).send(
@@ -155,10 +159,17 @@ app.delete('/v2/service_instances/:instance_id', function (req,res) {
 app.get('/v2/service_instances/:instance_id/last_operation', function (req, res) {
   if (!checkRequest(req,res))
     return;
-  res.send({
-    "state": "succeeded",
-    "description": "Created service."
-  });
+  if (++lastOperationQueries >= maxLastOperationQueries) {
+    res.send({
+      "state": "succeeded",
+      "description": "Created service."
+    });
+  } else {
+    res.send({
+      "state": "in progress",
+      "description": "Creating service."
+    });
+  }
 })
 app.listen(3000, function(){
     console.log('Example app listening on port 3000!')
