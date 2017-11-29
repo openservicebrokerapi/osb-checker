@@ -27,8 +27,12 @@ server. For your own environment, you should create a new config file based on *
     "apiVersion" : "2.13",
     "user": "<your user name>",
     "password": "<your password>",
+    "caCertFile": "<path to ca-cert (optional)>",
 ```
-2. You should also modify your test configuration file to use match with your enviornment, such as using the correct service ids and plan ids. OSB-Checker is data-driven. You can define more test cases by modifying the test configuration file. For instance, to add a new service instance provision case, simply add a new item into the **provisions** array.
+
+If your server uses TLS with an untrusted certificate authority, specify the path to the CA certificate using the `caCertFile` property.
+
+2. You should also modify your test configuration file to use match with your environment, such as using the correct service ids and plan ids. OSB-Checker is data-driven. You can define more test cases by modifying the test configuration file. For instance, to add a new service instance provision case, simply add a new item into the **provisions** array.
 
 
 > **CALL FOR ACTION** Please contribute your test configurations back to the community.
