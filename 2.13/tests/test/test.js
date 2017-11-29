@@ -1,5 +1,6 @@
 var assert = require('assert');
 var request = require('supertest');  
+var fs = require('fs');
 var guid = require('guid');
 
 var config = require('./configs/config_mock.json');
@@ -16,6 +17,15 @@ var validator = new Validator();
 var url = config.url;
 var apiVersion = config.apiVersion;
 
+var caCert;
+if (config.caCertFile) {
+    caCert = fs.readFileSync(config.caCertFile);
+}
+
+function preparedRequest() {
+    return caCert ? request.agent(url, {ca: caCert}) : request(url);
+}
+
 describe('GET /v2/catalog', function() {
     before(function() {
         //Plug in your environment initializer here
@@ -27,7 +37,7 @@ describe('GET /v2/catalog', function() {
         testAuthentication('/v2/catalog', 'GET');
         
         it('should return list of registered service classes as JSON payload', function(done){
-            request(url)
+            preparedRequest()
                 .get('/v2/catalog')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -61,7 +71,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             it ('should reject if missing service_id', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
                 delete tempBody.service_id;
-                request(url)
+                preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -71,7 +81,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             it ('should reject if missing plan_id', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
                 delete tempBody.plan_id;
-                request(url)
+                preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -81,7 +91,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             it ('should reject if request payload is missing organization_guid', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
                 delete tempBody.organization_guid;
-                request(url)
+                preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -91,7 +101,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             it ('should reject if request payload is missing space_guid', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
                 delete tempBody.space_guid;
-                request(url)
+                preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -101,7 +111,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             it ('should reject if service_id is invalid', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
                 tempBody.service_id = "xxxxx-xxxxx";
-                request(url)
+                preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -111,7 +121,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             it ('should reject if plan_id is invalid', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
                 tempBody.plan_id = "xxxxx-xxxxx";
-                request(url)
+                preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -123,7 +133,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                 tempBody.parameters = {
                     "can-not": "be-good"
                 }                
-                request(url)
+                preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -135,7 +145,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             describe("PROVISION - new", function () {
                 it ('should accept a valid provision request', function(done){
                     tempBody = JSON.parse(JSON.stringify(provision.body)); 
-                    request(url)
+                    preparedRequest()
                     .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
@@ -156,7 +166,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
 
                 describe("PROVISION - query after new", function() {
                     it ('should return last operation status', function(done){
-                        request(url)
+                        preparedRequest()
                             .get('/v2/service_instances/' + instance_id + '/last_operation')
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
@@ -177,7 +187,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             describe("PROVISION - conflict", function () {
                 it ('should return conflict when instance Id exists with different properties', function(done){
                     tempBody = JSON.parse(JSON.stringify(provision.body)); 
-                    request(url)
+                    preparedRequest()
                     .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
@@ -205,7 +215,7 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
             it ('should reject if missing service_id', function(done){
                 tempBody = JSON.parse(JSON.stringify(update.body)); 
                 delete tempBody.service_id;
-                request(url)
+                preparedRequest()
                     .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
@@ -217,7 +227,7 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
             describe("UPDATE", function () {
                 it ('should accept a valid update request', function(done){
                     tempBody = JSON.parse(JSON.stringify(update.body)); 
-                    request(url)
+                    preparedRequest()
                     .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
@@ -238,7 +248,7 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
 
                 describe("PROVISION - query after new", function() {
                     it ('should return last operation status', function(done){
-                        request(url)
+                        preparedRequest()
                             .get('/v2/service_instances/' + instance_id + '/last_operation')
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
@@ -279,7 +289,7 @@ describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', f
             it ('should reject if missing service_id', function(done){
                 tempBody = JSON.parse(JSON.stringify(binding.body)); 
                 delete tempBody.service_id;
-                request(url)
+                preparedRequest()
                     .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
@@ -289,7 +299,7 @@ describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', f
             it ('should reject if missing plan_id', function(done){
                 tempBody = JSON.parse(JSON.stringify(binding.body)); 
                 delete tempBody.plan_id;
-                request(url)
+                preparedRequest()
                     .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
@@ -301,7 +311,7 @@ describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', f
                 describe("NEW", function () {
                     it ('should accept a valid binding request', function(done){
                         tempBody = JSON.parse(JSON.stringify(binding.body)); 
-                        request(url)
+                        preparedRequest()
                         .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
                         .set('X-Broker-API-Version', apiVersion)
                         .auth(config.user, config.password)
@@ -341,14 +351,14 @@ describe('DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id'
 
                 describe('DELETE', function () {
                     it ('should reject if missing service_id', function(done) {                
-                        request(url)
+                        preparedRequest()
                             .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
                             .expect(400, done)
                     })
                     it ('should reject if missing plan_id', function(done){                
-                        request(url)
+                        preparedRequest()
                             .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true&service_id=" + binding.body.service_id)                    
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
@@ -356,7 +366,7 @@ describe('DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id'
                         })
                     it ('should accept a valid binding deletion request', function(done){
                         tempBody = JSON.parse(JSON.stringify(binding.body)); 
-                        request(url)
+                        preparedRequest()
                             .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id 
                                 + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id
                                 + "&service_id=" + binding.body.service_id)
@@ -395,14 +405,14 @@ describe('DELETE /v2/service_instance/:instance_id', function() {
 
                 describe("DELETE", function () { 
                     it ('should reject if missing service_id', function(done) {                
-                        request(url)
+                        preparedRequest()
                             .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
                             .expect(400, done)
                     })
                     it ('should reject if missing plan_id', function(done){                
-                        request(url)
+                        preparedRequest()
                             .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&service_id=" + binding.body.service_id)                    
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
@@ -410,7 +420,7 @@ describe('DELETE /v2/service_instance/:instance_id', function() {
                         })
                     it ('should accept a valid service deletion request', function(done){
                         tempBody = JSON.parse(JSON.stringify(binding.body)); 
-                        request(url)
+                        preparedRequest()
                             .delete('/v2/service_instances/' + instance_id 
                                 + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id
                                 + "&service_id=" + binding.body.service_id)
@@ -436,24 +446,24 @@ function testAuthentication(handler, verb) {
     if (config.authentication == "basic") {
         it ('should reject unauthorized requests with 401', function(done) {
             if (verb == 'GET') {
-                request(url)
+                preparedRequest()
                     .get(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .expect(401, done);
             } else if (verb == 'PUT') {
-                request(url)
+                preparedRequest()
                     .put(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .send({})
                     .expect(401, done);
             } else if (verb == 'PATCH') {
-                request(url)
+                preparedRequest()
                     .patch(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .send({})
                     .expect(401, done);
             } else if (verb == 'DELETE') {
-                request(url)
+                preparedRequest()
                     .delete(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .send({})
@@ -462,27 +472,27 @@ function testAuthentication(handler, verb) {
         });
         it ('should reject bad credentials with 401', function(done) {
             if (verb == 'GET') {
-                request(url)
+                preparedRequest()
                     .get(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .auth("spock", "spockpass")
                     .expect(401, done);
             } else if (verb == 'PUT') {
-                request(url)
+                preparedRequest()
                     .put(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .auth("spock", "spockpass")
                     .send({})
                     .expect(401, done);
             } else if (verb == 'PATCH') {
-                request(url)
+                preparedRequest()
                     .patch(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .auth("spock", "spockpass")
                     .send({})
                     .expect(401, done);
             } else if (verb == 'DELETE') {
-                request(url)
+                preparedRequest()
                     .delete(handler)
                     .set('X-Broker-API-Version', apiVersion)
                     .auth("spock", "spockpass")
@@ -495,24 +505,24 @@ function testAuthentication(handler, verb) {
 function testAPIVersionHeader(handler, verb) {
     it('should reject requests without X-Broker-API-Version header with 412', function(done) {
         if (verb == 'GET') {
-            request(url)
+            preparedRequest()
                 .get(handler)                    
                 .auth(config.user, config.password)
                 .expect(412, done)
         } else if (verb == 'PUT') {
-            request(url)
+            preparedRequest()
                 .put(handler)                    
                 .auth(config.user, config.password)
                 .send({})
                 .expect(412, done)
         } else if (verb == 'PATCH') {
-            request(url)
+            preparedRequest()
                 .patch(handler)                    
                 .auth(config.user, config.password)
                 .send({})
                 .expect(412, done)
         } else if (verb == 'DELETE') {
-            request(url)
+            preparedRequest()
                 .delete(handler)                    
                 .auth(config.user, config.password)
                 .expect(412, done)
@@ -522,21 +532,21 @@ function testAPIVersionHeader(handler, verb) {
 function testAsyncParameter(handler, verb) {
     it ('should return 422 if request doesn\'t have the accept_incomplete parameter', function(done) {
         if (verb == 'PUT') {
-            request(url)
+            preparedRequest()
                 .put(handler)
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({})
                 .expect(422, done)
         } else if (verb == 'PATCH') {
-            request(url)
+            preparedRequest()
                 .patch(handler)
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({})
                 .expect(422, done)
         } else if (verb == 'DELETE') {
-            request(url)
+            preparedRequest()
                 .delete(handler)
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
@@ -545,21 +555,21 @@ function testAsyncParameter(handler, verb) {
     });
     it ('should return 422 if request if the accept_incomplete parameter is false', function(done) {
         if (verb == 'PUT') {
-            request(url)
+            preparedRequest()
                 .put(handler + '?accepts_incomplete=false')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({})
                 .expect(422, done)
         } else if (verb == 'PATCH') {
-            request(url)
+            preparedRequest()
                 .patch(handler + '?accepts_incomplete=false')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({})
                 .expect(422, done)
         } else if (verb == 'DELETE') {
-            request(url)
+            preparedRequest()
                 .delete(handler + '?accepts_incomplete=false')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
