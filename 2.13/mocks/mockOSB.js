@@ -14,45 +14,59 @@ var bindingRequestSchema = require('./schemas/binding_request.json');
 var serviceCatalog = require('./data/service_catalog.json');
 var serviceInstances = [];
 var lastOperationQueries = 0;
+
+// Enable CORS
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, X-Broker-API-Version, X-Broker-API-Originating-Identity, Content-Type, Authorization, Accept");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE');
+  next();
+});
+
 //Catalog Management
 //- GET /v2/catalog
-app.get('/v2/catalog', function (req,res) {
-  if (!checkRequest(req,res))
+
+app.get('/v2/catalog', function (req, res) {
+  if (!checkRequest(req,res)) {
     return;
+  }
   res.send(serviceCatalog);
-})
-app.put('/v2/service_instances/:instance_id', function (req,res) {  
-  if (!checkRequest(req,res))
+});
+
+// TODO: This mock only supports async. Need to allow two modes and support accepts_incomplete=false.
+
+app.put('/v2/service_instances/:instance_id', function (req, res) {
+  if (!checkRequest(req,res)) {
     return;
+  }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422);
+    res.sendStatus(422).send({});
     return;
   }
-  
+
   var messages = validateJsonSchema(req.body, provisionRequestSchema);
-  if (messages !="") {
-    res.sendStatus(400);
+  if (messages != "") {
+    res.sendStatus(400).send({});
     return;
   }
-  
 
   if (!serviceIdExists(serviceCatalog, req.body.service_id)
     || !planIdExists(serviceCatalog, req.body.service_id, req.body.plan_id)) {
-    res.sendStatus(400);
+    res.sendStatus(400).send({});
     return;
   }
 
   var schemaCheckResults = parametersSchemaCheck(serviceCatalog, req.body.service_id, req.body.plan_id, 'create', req.body.parameters);
-  if (schemaCheckResults !="") {
-    res.sendStatus(400);
+  if (schemaCheckResults != "") {
+    res.sendStatus(400).send({});
     return;
   }
 
-  if (serviceInstanceExistsWithDifferentProperties(req.body.service_id, req.body.plan_id, req.params.instance_id)) {    
-    res.status(409).send({});  
+  if (serviceInstanceExistsWithDifferentProperties(req.body.service_id, req.body.plan_id, req.params.instance_id)) {
+    res.status(409).send({});
     return;
   }
-  
+
   if (!serviceInstanceExists(req.body.service_id, req.body.plan_id, req.params.instance_id)) {
     serviceInstances.push({
       "service_id": req.body.service_id,
@@ -68,97 +82,95 @@ app.put('/v2/service_instances/:instance_id', function (req,res) {
       "operation": "task_10"
     }
   );
-})
+});
 
-app.patch('/v2/service_instances/:instance_id', function (req,res) {  
-  if (!checkRequest(req,res))
-    return;
-  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422);
+app.patch('/v2/service_instances/:instance_id', function (req, res) {
+  if (!checkRequest(req,res)) {
     return;
   }
-  
+  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
+    res.sendStatus(422).send({});
+    return;
+  }
+
   var messages = validateJsonSchema(req.body, updateRequestSchema);
-  if (messages !="") {
+  if (messages != "") {
     console.log(messages);
-    res.sendStatus(400);
+    res.sendStatus(400).send({});
     return;
   }
 
-  res.status(202).send(
-    {
-      "operation": "task_10"
-    }
-  );
-})
+  res.status(202).send({
+    "operation": "task_10"
+  });
+});
 
-app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', function (req,res) {  
-  if (!checkRequest(req,res))
+app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', function (req, res) {
+  if (!checkRequest(req,res)) {
     return;
+  }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422);
+    res.sendStatus(422).send({});
     return;
   }
   
   var messages = validateJsonSchema(req.body, bindingRequestSchema);
-  if (messages !="") {
+  if (messages != "") {
     console.log(messages);
-    res.sendStatus(400);
+    res.sendStatus(400).send({});
     return;
   }
 
-  res.status(201).send(
-    {
-      "credentials":{
-        "uri":"mysql://mysqluser:pass@mysqlhost:3306/dbname",
-        "username":"mysqluser",
-        "password":"pass",
-        "host":"mysqlhost",
-        "port":3306,
-        "database":"dbname"
-      }
+  res.status(201).send({
+    "credentials":{
+      "uri":"mysql://mysqluser:pass@mysqlhost:3306/dbname",
+      "username":"mysqluser",
+      "password":"pass",
+      "host":"mysqlhost",
+      "port":3306,
+      "database":"dbname"
     }
-  );
-})
+  });
+});
 
-app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', function (req,res) {  
-  if (!checkRequest(req,res))
+app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', function (req, res) {
+  if (!checkRequest(req,res)) {
     return;
+  }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422);
+    res.sendStatus(422).send({});
     return;
   }
   
   if (!req.query.service_id || !req.query.plan_id) {
-    res.sendStatus(400);
+    res.sendStatus(400).send({});
   } else {
     res.status(200).send({});
   }
-})
+});
 
-app.delete('/v2/service_instances/:instance_id', function (req,res) {  
-  if (!checkRequest(req,res))
+app.delete('/v2/service_instances/:instance_id', function (req, res) {
+  if (!checkRequest(req,res)) {
     return;
+  }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422);
+    res.sendStatus(422).send({});
     return;
   }
   
   if (!req.query.service_id || !req.query.plan_id) {
-    res.sendStatus(400);
+    res.sendStatus(400).send({});
   } else {
-    res.status(202)
-    .send(
-      {
-        "operation":"task_10"
-      }
-    );
+    res.status(202).send({
+      "operation" : "task_10"
+    });
   }
 })
 
 app.get('/v2/service_instances/:instance_id/last_operation', function (req, res) {
-  if (!checkRequest(req,res))
+  if (!checkRequest(req,res)) {
     return;
+  }
   if (++lastOperationQueries >= maxLastOperationQueries) {
     res.send({
       "state": "succeeded",
@@ -170,12 +182,13 @@ app.get('/v2/service_instances/:instance_id/last_operation', function (req, res)
       "description": "Creating service."
     });
   }
-})
-app.listen(3000, function(){
-    console.log('Example app listening on port 3000!')
-})
+});
 
-function checkRequest(req,res) {
+app.listen(3000, function(){
+  console.log('Mock OSB listening on port 3000!');
+});
+
+function checkRequest(req, res) {
   var username = '', password = '';
   if (req.header('Authorization')) {
     var token = req.header('Authorization').split(/\s+/).pop()||'';
@@ -183,14 +196,13 @@ function checkRequest(req,res) {
     var parts = auth.split(/:/);
     username = parts[0];
     password = parts[1];
-  }      
-  if (!req.header('X-Broker-API-Version') || req.header('X-Broker-API-Version') != '2.13') {    
-    res.sendStatus(412);
+  }
+  if (!req.header('X-Broker-API-Version') || req.header('X-Broker-API-Version') != '2.13') {
+    res.sendStatus(412).send({});
     return false;
   }
-  
   if (!username || !password || username != 'username' || password != 'password') {
-    res.sendStatus(401);
+    res.sendStatus(401).send({});
     return false;
   }
   return true;
@@ -205,38 +217,48 @@ function validateJsonSchema(body, schema) {
       });
       return message;
   }
-  else
-      return "";
+  else {
+    return "";
+  }
 }
 
 function serviceIdExists(catalog, service_id) {
   return containsKeyValue(catalog.services, 'id', service_id) != null;
 }
+
 function planIdExists(catalog, service_id, plan_id) {
   var service = containsKeyValue(catalog.services, 'id', service_id);
   return containsKeyValue(service.plans, 'id', plan_id) != undefined;
 }
 
-function serviceInstanceExistsWithDifferentProperties(service_id, plan_id, instance_id) {  
+function serviceInstanceExistsWithDifferentProperties(service_id, plan_id, instance_id) {
   for (var i = 0; i < serviceInstances.length; i++ ) {
-    if ((serviceInstances[i].instance_id == instance_id) && (serviceInstances[i].service_id != service_id || serviceInstances[i].plan_id != plan_id)){
+    if (serviceInstances[i].instance_id == instance_id &&
+        (serviceInstances[i].service_id != service_id || serviceInstances[i].plan_id != plan_id)){
       return true;
     }
   }
   return false;
 }
-function serviceInstanceExists(service_id, plan_id, instance_id) {  
+
+function serviceInstanceExists(service_id, plan_id, instance_id) {
   for (var i = 0; i < serviceInstances.length; i++ ) {
-    if (serviceInstances[i].instance_id == instance_id && serviceInstances[i].service_id == service_id && serviceInstances[i].plan_id == plan_id) {
+    if (serviceInstances[i].instance_id == instance_id &&
+        serviceInstances[i].service_id == service_id &&
+        serviceInstances[i].plan_id == plan_id) {
       return true;
     }
   }
   return false;
 }
-function containsKeyValue(obj, key, value ) {          
-  if (!obj) return null;
-  if( obj[key] === value ) 
+
+function containsKeyValue(obj, key, value ) {
+  if (!obj) {
+    return null;
+  }
+  if (obj[key] === value) {
    return obj;
+ }
   if (Array.isArray(obj)) {
       for (var i in obj) {
           var found = containsKeyValue(obj[i], key, value);
@@ -253,13 +275,18 @@ function containsKeyValue(obj, key, value ) {
   }
   return null;
 }
+
 function parametersSchemaCheck(catalog, service_id, plan_id, action, parameters){
   var service = containsKeyValue(catalog.services, 'id', service_id);
   var plan = containsKeyValue(service.plans, 'id', plan_id);
   var schemas = plan.schemas;  
-  if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) return "";
-  var schema = schemas.service_instance[action].parameters;  
-  if (!schema) return "";
+  if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
+    return "";
+  }
+  var schema = schemas.service_instance[action].parameters;
+  if (!schema) {
+    return "";
+  }
   console.log(JSON.stringify(parameters));
   console.log(JSON.stringify(schema));
   return validateJsonSchema(parameters, schema);
