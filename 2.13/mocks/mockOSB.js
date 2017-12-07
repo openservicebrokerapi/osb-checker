@@ -109,7 +109,7 @@ app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', funct
   if (!checkRequest(req,res)) {
     return;
   }
-  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
+  if (req.query.accepts_incomplete) {
     res.sendStatus(422);
     return;
   }
@@ -137,7 +137,7 @@ app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', fu
   if (!checkRequest(req,res)) {
     return;
   }
-  if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
+  if (req.query.accepts_incomplete) {
     res.sendStatus(422);
     return;
   }
