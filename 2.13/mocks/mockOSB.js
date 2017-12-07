@@ -40,25 +40,25 @@ app.put('/v2/service_instances/:instance_id', function (req, res) {
     return;
   }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422).send({});
+    res.sendStatus(422);
     return;
   }
 
   var messages = validateJsonSchema(req.body, provisionRequestSchema);
   if (messages != "") {
-    res.sendStatus(400).send({});
+    res.sendStatus(400);
     return;
   }
 
   if (!serviceIdExists(serviceCatalog, req.body.service_id)
     || !planIdExists(serviceCatalog, req.body.service_id, req.body.plan_id)) {
-    res.sendStatus(400).send({});
+    res.sendStatus(400);
     return;
   }
 
   var schemaCheckResults = parametersSchemaCheck(serviceCatalog, req.body.service_id, req.body.plan_id, 'create', req.body.parameters);
   if (schemaCheckResults != "") {
-    res.sendStatus(400).send({});
+    res.sendStatus(400);
     return;
   }
 
@@ -89,14 +89,14 @@ app.patch('/v2/service_instances/:instance_id', function (req, res) {
     return;
   }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422).send({});
+    res.sendStatus(422);
     return;
   }
 
   var messages = validateJsonSchema(req.body, updateRequestSchema);
   if (messages != "") {
     console.log(messages);
-    res.sendStatus(400).send({});
+    res.sendStatus(400);
     return;
   }
 
@@ -110,14 +110,14 @@ app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', funct
     return;
   }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422).send({});
+    res.sendStatus(422);
     return;
   }
   
   var messages = validateJsonSchema(req.body, bindingRequestSchema);
   if (messages != "") {
     console.log(messages);
-    res.sendStatus(400).send({});
+    res.sendStatus(400);
     return;
   }
 
@@ -138,12 +138,12 @@ app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', fu
     return;
   }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422).send({});
+    res.sendStatus(422);
     return;
   }
   
   if (!req.query.service_id || !req.query.plan_id) {
-    res.sendStatus(400).send({});
+    res.sendStatus(400);
   } else {
     res.status(200).send({});
   }
@@ -154,12 +154,12 @@ app.delete('/v2/service_instances/:instance_id', function (req, res) {
     return;
   }
   if (!req.query.accepts_incomplete || req.query.accepts_incomplete == 'false') {
-    res.sendStatus(422).send({});
+    res.sendStatus(422);
     return;
   }
   
   if (!req.query.service_id || !req.query.plan_id) {
-    res.sendStatus(400).send({});
+    res.sendStatus(400);
   } else {
     res.status(202).send({
       "operation" : "task_10"
@@ -198,11 +198,11 @@ function checkRequest(req, res) {
     password = parts[1];
   }
   if (!req.header('X-Broker-API-Version') || req.header('X-Broker-API-Version') != '2.13') {
-    res.sendStatus(412).send({});
+    res.sendStatus(412);
     return false;
   }
   if (!username || !password || username != 'username' || password != 'password') {
-    res.sendStatus(401).send({});
+    res.sendStatus(401);
     return false;
   }
   return true;
