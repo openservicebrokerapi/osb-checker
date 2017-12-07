@@ -524,7 +524,7 @@ function testAPIVersionHeader(handler, verb) {
     })     
 }
 function testAsyncParameter(handler, verb) {
-    it ('should return 422 if request doesn\'t have the accept_incomplete parameter', function(done) {
+    it ('should return 422 if request doesn\'t have the accepts_incomplete parameter', function(done) {
         if (verb == 'PUT') {
             preparedRequest()
                 .put(handler)
@@ -547,7 +547,7 @@ function testAsyncParameter(handler, verb) {
                 .expect(422, done)
         }
     });
-    it ('should return 422 if request if the accept_incomplete parameter is false', function(done) {
+    it ('should return 422 if request if the accepts_incomplete parameter is false', function(done) {
         if (verb == 'PUT') {
             preparedRequest()
                 .put(handler + '?accepts_incomplete=false')
