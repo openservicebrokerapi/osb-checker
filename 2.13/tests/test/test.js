@@ -283,14 +283,11 @@ describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', f
             testAPIVersionHeader('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
             testAuthentication('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
 
-            if (binding.async) 
-                testAsyncParameter('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'PUT');
-
             it ('should reject if missing service_id', function(done){
                 tempBody = JSON.parse(JSON.stringify(binding.body)); 
                 delete tempBody.service_id;
                 preparedRequest()
-                    .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
+                    .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id)
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
                     .send(tempBody)
@@ -300,7 +297,7 @@ describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', f
                 tempBody = JSON.parse(JSON.stringify(binding.body)); 
                 delete tempBody.plan_id;
                 preparedRequest()
-                    .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
+                    .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id)
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
                     .send(tempBody)
@@ -312,7 +309,7 @@ describe('PUT /v2/service_instance/:instance_id/service_bindings/:binding_id', f
                     it ('should accept a valid binding request', function(done){
                         tempBody = JSON.parse(JSON.stringify(binding.body)); 
                         preparedRequest()
-                        .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true")
+                        .put('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id)
                         .set('X-Broker-API-Version', apiVersion)
                         .auth(config.user, config.password)
                         .send(tempBody)
@@ -346,20 +343,17 @@ describe('DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id'
                 testAPIVersionHeader('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'DELETE');
                 testAuthentication('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'DELETE');
 
-                if (binding.async) 
-                    testAsyncParameter('/v2/service_instances/' + instance_id + '/service_bindings/' + binding_id, 'DELETE');
-
                 describe('DELETE', function () {
                     it ('should reject if missing service_id', function(done) {                
                         preparedRequest()
-                            .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id)
+                            .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?plan_id=" + binding.body.plan_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
                             .expect(400, done)
                     })
                     it ('should reject if missing plan_id', function(done){                
                         preparedRequest()
-                            .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?accepts_incomplete=true&service_id=" + binding.body.service_id)                    
+                            .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id + "?service_id=" + binding.body.service_id)                    
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
                             .expect(400, done)
@@ -368,7 +362,7 @@ describe('DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id'
                         tempBody = JSON.parse(JSON.stringify(binding.body)); 
                         preparedRequest()
                             .delete('/v2/service_instances/' + instance_id +  '/service_bindings/' + binding_id 
-                                + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id
+                                + "?plan_id=" + binding.body.plan_id
                                 + "&service_id=" + binding.body.service_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
