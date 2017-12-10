@@ -150,7 +150,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
                     .send(tempBody)
-                    .expect(202)
+                    .expect(provision.async ? 202 : 201)
                     .end(function(err, res){
                         if (err) return done(err);
                         var message = validateJsonSchema(res.body, provisionResponseSchema);
@@ -232,7 +232,7 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
                     .set('X-Broker-API-Version', apiVersion)
                     .auth(config.user, config.password)
                     .send(tempBody)
-                    .expect(202)
+                    .expect(update.async ? 202 : 200)
                     .end(function(err, res){
                         if (err) return done(err);
                         var message = validateJsonSchema(res.body, updateResponseSchema);
@@ -420,7 +420,7 @@ describe('DELETE /v2/service_instance/:instance_id', function() {
                                 + "&service_id=" + binding.body.service_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
-                            .expect(202)
+                            .expect(binding.async ? 202 : 200)
                             .end(function(err, res){
                                 if (err) return done(err);
                                 var message = validateJsonSchema(res.body, provisioningDeleteResponseSchema);
