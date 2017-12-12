@@ -394,8 +394,12 @@ describe('DELETE /v2/service_instance/:instance_id', function() {
                 testAPIVersionHeader('/v2/service_instances/' + instance_id, 'DELETE');
                 testAuthentication('/v2/service_instances/' + instance_id, 'DELETE');
 
-                if (binding.async) 
-                    testAsyncParameter('/v2/service_instances/' + instance_id, 'DELETE');
+                if (binding.async)
+                    testAsyncParameter(
+                        '/v2/service_instances/' + instance_id
+                        + "?plan_id=" + binding.body.plan_id
+                        + "&service_id=" + binding.body.service_id,
+                        'DELETE');
 
                 describe("DELETE", function () { 
                     it ('should reject if missing service_id', function(done) {                
