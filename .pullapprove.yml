@@ -1,0 +1,19 @@
+approve_by_comment: true
+approve_regex: '(?i)LGTM'
+reject_regex: '(?i)NOT LGTM'
+reset_on_push: true
+signed_off_by:
+  required: false
+reviewers:
+  required: 2
+  members:
+    - duglin
+    - vaikas-google
+    - shalako
+    - angarg12
+    - pmorie
+    - fmui
+    - zrob
+    - avade
+    - mattmcneeney
+    - Haishi2016
