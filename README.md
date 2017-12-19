@@ -1,45 +1,60 @@
 # osb-checker
 An automatic checker to verify an Open Service Broker API implementation against the [specification](https://github.com/openservicebrokerapi/servicebroker).
 
-## Project Status
+# Project Status
 
 This project should be considered **experimental**. You should validate the results against the released [specification](https://github.com/openservicebrokerapi/servicebroker). In the case of any discrepancy, the specification should be considered correct.
 
-## Usage - test against the mock OSB API endpoint
+# Usage
 
-1. Clone the repository to a folder, for example c:\osb-checker
+## The Mock OSB API Server
+
+This repository comes with a mock OSB compatible server. Follow the below
+steps to start the mock server and run tests against it.
+
+1. Run `git clone` to clone this repository to `$DIRECTORY`
 2. Launch the mock server
 ```bash
-    cd c:\osb-checker\2.13\mocks
-    npm install
-    node mockOSB.js
+cd $DIRECTORY/2.13/mocks
+npm install
+node mockOSB.js
 ```
-3. Run tests
+3. In a new terminal window, run the tests
 ```bash
-    cd c:\osb-checker\2.13\tests
-    npm install
-    mocha
+cd $DIRECTORY/2.13/tests
+npm install
+mocha
 ```
 
-# Usage - test against your own OSB API endpoint
+## Your own OSB API Endpoint
 
-1. Modify test configurations. By default, test parameters are loaded from the **test\config_mock.json** file so that you can run tests directly against the mock 
-server. For your own environment, you should create a new config file based on **test\config_mock.json** and fill in your OSB endpoint info:
+Follow the below instructions to run tests against your own OSB API
+compatible server.
+
+1. Modify test configurations. By default, test parameters are loaded from the 
+`test\config_mock.json` file so that you can run tests directly against the mock 
+server. For your own environment, you should create a new config file based on 
+`test\config_mock.json` and fill in your OSB endpoint info:
 
 ```json
-    "url": "<your OSB endpoint>",
-    "apiVersion" : "2.13",
-    "user": "<your user name>",
-    "password": "<your password>",
-    "caCertFile": "<path to ca-cert (optional)>",
+"url": "<your OSB endpoint>",
+"apiVersion" : "2.13",
+"user": "<your user name>",
+"password": "<your password>",
+"caCertFile": "<path to ca-cert (optional)>",
 ```
 
-If your server uses TLS with an untrusted certificate authority, specify the path to the CA certificate using the `caCertFile` property.
+If your server uses TLS with an untrusted certificate authority, specify the 
+path to the CA certificate using the `caCertFile` property.
 
-2. You should also modify your test configuration file to use match with your environment, such as using the correct service ids and plan ids. OSB-Checker is data-driven. You can define more test cases by modifying the test configuration file. For instance, to add a new service instance provision case, simply add a new item into the **provisions** array.
+2. Modify your test configuration file to use match with your environment, 
+such as using the correct service ids and plan ids. OSB-Checker is data-driven.
+You can define more test cases by modifying the test configuration file. 
+For instance, to add a new service instance provision case, simply add a new
+item into the `provisions` array.
 
 
-> **CALL FOR ACTION** Please contribute your test configurations back to the community.
+> **CALL TO ACTION** Please contribute your test configurations back to the community.
 
 3. Update **test.js** to use your own configuration:
 ```javascript
@@ -52,13 +67,16 @@ var config = require('./configs/config_mock.json'); //replace config_mock.json w
     mocha
 ```
 
-## What's covered
+# What's covered
+
+The following functionality is covered by the tests:
+
 * All OSB API 2.13 verbs (~60 test cases)
 * JSON schema check against all requests/responses (7 schemas)
 * JSON schema check if OSB API returns schemas for parameters
 * Extensible test cases by configuration files
 
-## Customize
+# Customize
 
 ### Provisioning requests
 Provisioning requests are configured by the **provisions** array in your test configuration file. You can modify the array to use different *service_ids* and *plan_ids*. You can specify *instance_id*. If you leave the field as an empty string, a random instance id will be used during tests.
