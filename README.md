@@ -1,4 +1,5 @@
 # osb-checker
+
 An automatic checker to verify an Open Service Broker API implementation against the [specification](https://github.com/openservicebrokerapi/servicebroker).
 
 # Project Status
@@ -7,34 +8,37 @@ This project should be considered **experimental**. You should validate the resu
 
 # Usage
 
-## The Mock OSB API Server
+## The Mock OSBAPI Server
 
-This repository comes with a mock OSB compatible server. Follow the below
-steps to start the mock server and run tests against it.
+This repository comes with a mock OSBAPI compatible server. Follow the steps
+below to start the mock server and run tests against it.
 
 1. Run `git clone` to clone this repository to `$DIRECTORY`
 2. Launch the mock server
+
 ```bash
-cd $DIRECTORY/2.13/mocks
+cd $DIRECTORY/$VERSION_NUMBER/mocks
 npm install
 node mockOSB.js
 ```
+
 3. In a new terminal window, run the tests
+
 ```bash
 cd $DIRECTORY/2.13/tests
 npm install
 mocha
 ```
 
-## Your own OSB API Endpoint
+## Your own OSBAPI Endpoint
 
-Follow the below instructions to run tests against your own OSB API
+Follow the below instructions to run tests against your own OSBAPI
 compatible server.
 
-1. Modify test configurations. By default, test parameters are loaded from the 
-`test\config_mock.json` file so that you can run tests directly against the mock 
-server. For your own environment, you should create a new config file based on 
-`test\config_mock.json` and fill in your OSB endpoint info:
+1. Modify test configurations. By default, test parameters are loaded from the
+   `test\config_mock.json` file so that you can run tests directly against the mock
+   server. For your own environment, you should create a new config file based on
+   `test\config_mock.json` and fill in your OSB endpoint info:
 
 ```json
 "url": "<your OSB endpoint>",
@@ -44,53 +48,60 @@ server. For your own environment, you should create a new config file based on
 "caCertFile": "<path to ca-cert (optional)>",
 ```
 
-If your server uses TLS with an untrusted certificate authority, specify the 
+If your server uses TLS with an untrusted certificate authority, specify the
 path to the CA certificate using the `caCertFile` property.
 
-2. Modify your test configuration file to use match with your environment, 
-such as using the correct service ids and plan ids. OSB-Checker is data-driven.
-You can define more test cases by modifying the test configuration file. 
-For instance, to add a new service instance provision case, simply add a new
-item into the `provisions` array.
-
+2. Modify your test configuration file to use match with your environment,
+   such as using the correct service ids and plan ids. OSB-Checker is data-driven.
+   You can define more test cases by modifying the test configuration file.
+   For instance, to add a new service instance provision case, simply add a new
+   item into the `provisions` array.
 
 > **CALL TO ACTION** Please contribute your test configurations back to the community.
 
 3. Update **test.js** to use your own configuration:
+
 ```javascript
-var config = require('./configs/config_mock.json'); //replace config_mock.json with your own configuration file
+var config = require("./configs/config_mock.json"); //replace config_mock.json with your own configuration file
 ```
+
 3. Run tests
+
 ```bash
     cd c:\osb-checker\2.13\tests
     npm install
     mocha
 ```
 
-# What's covered
+# What's Covered
 
 The following functionality is covered by the tests:
 
-* All OSB API 2.13 verbs (~60 test cases)
+* All OSBAPI 2.13 verbs (~60 test cases)
 * JSON schema check against all requests/responses (7 schemas)
-* JSON schema check if OSB API returns schemas for parameters
+* JSON schema check if OSBAPI returns schemas for parameters
 * Extensible test cases by configuration files
 
 # Customize
 
 ### Provisioning requests
-Provisioning requests are configured by the **provisions** array in your test configuration file. You can modify the array to use different *service_ids* and *plan_ids*. You can specify *instance_id*. If you leave the field as an empty string, a random instance id will be used during tests.
-Provision requests support a couple of different scenarios, driven by the "scenario" property:
-* **new** check for provisioning a new service instance
-* **conflict** check for service instance conflicts. To set this up, you need two provision requests with the same *instance_id* but different *plan_id* or *service_id*, with the first request marked as **new** and the second request marked as **conflict**. Please see the **EXISTING_ID** requests in **configs/config_mock.json** as an example. 
 
-## Mock OSB API Endpoint
-OSB Checker also comes with a mock OSB API server that can be used to test marketplace implementations. To launch the Mock server:
+Provisioning requests are configured by the **provisions** array in your test configuration file. You can modify the array to use different _service_ids_ and _plan_ids_. You can specify _instance_id_. If you leave the field as an empty string, a random instance id will be used during tests.
+Provision requests support a couple of different scenarios, driven by the "scenario" property:
+
+* **new** check for provisioning a new service instance
+* **conflict** check for service instance conflicts. To set this up, you need two provision requests with the same _instance_id_ but different _plan_id_ or _service_id_, with the first request marked as **new** and the second request marked as **conflict**. Please see the **EXISTING_ID** requests in **configs/config_mock.json** as an example.
+
+## Mock OSBAPI Endpoint
+
+OSB Checker also comes with a mock OSBAPI server that can be used to test marketplace implementations. To launch the Mock server:
+
 ```bash
     cd c:\osb-checker\2.13\mocks
     npm install
     node mockOSB.js
 ```
+
 Sample test outputs against the mock server
 
 MOCK server
