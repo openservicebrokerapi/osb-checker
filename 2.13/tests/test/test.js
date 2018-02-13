@@ -223,47 +223,47 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
                     .expect(400, done)
             })
         });
+
         if (update.scenario == "update") {
             describe("UPDATE", function () {
-                it ('should accept a valid update request', function(done){
-                    tempBody = JSON.parse(JSON.stringify(update.body)); 
-                    preparedRequest()
-                    .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
-                    .set('X-Broker-API-Version', apiVersion)
-                    .auth(config.user, config.password)
-                    .send(tempBody)
-                    .expect(update.async ? 202 : 200)
-                    .end(function(err, res){
-                        if (err) return done(err);
-                        var message = validateJsonSchema(res.body, updateResponseSchema);
-                        if (message!="")
-                            done(new Error(message));
-                        else
-                            done();
-                    })
-                });
-                
                 testAPIVersionHeader('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
                 testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
 
-                describe("PROVISION - query after new", function() {
-                    it ('should return last operation status', function(done){
-                        preparedRequest()
-                            .get('/v2/service_instances/' + instance_id + '/last_operation')
-                            .set('X-Broker-API-Version', apiVersion)
-                            .auth(config.user, config.password)
-                            .expect(200)
-                            .expect('Content-Type', /json/)
-                            .end(function(err, res){
-                                if (err) return done(err);
-                                var message = validateJsonSchema(res.body, lastOperationSchema);
-                                if (message!="")
-                                    done(new Error(message));
-                                else
-                                    done();
-                            })
+                let testLastOperationStatus = function(body, done) {
+                    operation = JSON.parse(body.operation)
+                    endpoint = '/v2/service_instances/' + instance_id + '/last_operation'
+                    if (operation) {
+                        endpoint += "?operation=" + JSON.stringify(operation)
+                    }
+                    preparedRequest()
+                        .get(endpoint)
+                        .set('X-Broker-API-Version', apiVersion)
+                        .auth(config.user, config.password)
+                        .expect(200)
+                        .expect('Content-Type', /json/)
+                        .end(function(err, res){
+                            if (err) return done(err);
+                            var message = validateJsonSchema(res.body, lastOperationSchema);
+                            if (message!="") done(new Error(message));
+                            done();
                         })
-                    });
+                }
+
+                it('should accept a valid update request', function(done){
+                    tempBody = JSON.parse(JSON.stringify(update.body));
+                    preparedRequest()
+                        .patch('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                        .set('X-Broker-API-Version', apiVersion)
+                        .auth(config.user, config.password)
+                        .send(tempBody)
+                        .expect(update.async ? 202 : 200)
+                        .end(function(err, res){
+                            if (err) return done(err);
+                            var message = validateJsonSchema(res.body, updateResponseSchema);
+                            if (message!="") done(new Error(message));
+                            testLastOperationStatus(res.body, done)
+                        })
+                });
             });
         }
     });
