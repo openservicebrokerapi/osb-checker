@@ -529,8 +529,10 @@ function testAsyncParameter(handler, verb, body) {
                 .auth(config.user, config.password)
                 .send({
                     service_id: body.service_id || guid.create().value,
-                    plan_id: body.plan_id || guid.create().value
-                })
+                    plan_id: body.plan_id || guid.create().value,
+                    organization_guid: body.organization_guid || guid.create().value,
+                    space_guid: body.space_guid || guid.create().value
+                 })
                 .expect(422, done)
         } else if (verb == 'PATCH') {
             preparedRequest()
@@ -561,8 +563,10 @@ function testAsyncParameter(handler, verb, body) {
                 .auth(config.user, config.password)
                 .send({
                     service_id: body.service_id || guid.create().value,
-                    plan_id: body.plan_id || guid.create().value
-                })
+                    plan_id: body.plan_id || guid.create().value,
+                    organization_guid: body.organization_guid || guid.create().value,
+                    space_guid: body.space_guid || guid.create().value
+                 })
                 .expect(422, done)
         } else if (verb == 'PATCH') {
             preparedRequest()
