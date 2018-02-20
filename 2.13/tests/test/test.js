@@ -528,10 +528,10 @@ function testAsyncParameter(handler, verb, body) {
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({
-                    service_id: body.service_id || guid.create().value,
-                    plan_id: body.plan_id || guid.create().value,
-                    organization_guid: body.organization_guid || guid.create().value,
-                    space_guid: body.space_guid || guid.create().value
+                    service_id: body.service_id,
+                    plan_id: body.plan_id,
+                    organization_guid: body.organization_guid,
+                    space_guid: body.space_guid
                  })
                 .expect(422, done)
         } else if (verb == 'PATCH') {
@@ -540,7 +540,7 @@ function testAsyncParameter(handler, verb, body) {
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({
-                    service_id: body.service_id || guid.create().value
+                    service_id: body.service_id
                 })
                 .expect(422, done)
         } else if (verb == 'DELETE') {
@@ -549,8 +549,8 @@ function testAsyncParameter(handler, verb, body) {
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({
-                    service_id: body.service_id || guid.create().value,
-                    plan_id: body.plan_id || guid.create().value
+                    service_id: body.service_id,
+                    plan_id: body.plan_id
                 })
                 .expect(422, done)
         }
@@ -562,10 +562,10 @@ function testAsyncParameter(handler, verb, body) {
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({
-                    service_id: body.service_id || guid.create().value,
-                    plan_id: body.plan_id || guid.create().value,
-                    organization_guid: body.organization_guid || guid.create().value,
-                    space_guid: body.space_guid || guid.create().value
+                    service_id: body.service_id,
+                    plan_id: body.plan_id,
+                    organization_guid: body.organization_guid,
+                    space_guid: body.space_guid
                  })
                 .expect(422, done)
         } else if (verb == 'PATCH') {
@@ -574,7 +574,7 @@ function testAsyncParameter(handler, verb, body) {
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({
-                    service_id: body.service_id || guid.create().value
+                    service_id: body.service_id
                 })
                 .expect(422, done)
         } else if (verb == 'DELETE') {
@@ -583,8 +583,8 @@ function testAsyncParameter(handler, verb, body) {
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
                 .send({
-                    service_id: body.service_id || guid.create().value,
-                    plan_id: body.plan_id || guid.create().value
+                    service_id: body.service_id,
+                    plan_id: body.plan_id
                 })
                 .expect(422, done)
         }
