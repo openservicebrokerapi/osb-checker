@@ -1,0 +1,95 @@
+{
+    "url": "http://localhost:8080",
+    "apiVersion" : "2.13",
+    "user": "admin",
+    "password": "cloudfoundry",
+    "authentication": "basic",    
+    "provisions":[
+	 {
+            "instance_id":"",
+            "body": {
+                "plan_id": "5678-1234", 
+                "service_id": "sample-local",                                
+                "organization_guid": "org-guid-here",
+                "space_guid": "space-guid-here" 
+            },            
+            "scenario": "new",
+            "notes": "Fake service instance",
+            "async": true
+        }, 
+        {
+            "instance_id":"08a80928-48e4-8280-250d-401802728b71",
+            "body": {
+                "plan_id": "5678-1234", 
+                "service_id": "sample-local",                                
+                "organization_guid": "org-guid-here",
+                "space_guid": "space-guid-here" 
+            },            
+            "scenario": "new",
+            "notes": "Fake service instance",
+            "async": true
+        },
+        {
+            "instance_id":"08a80928-48e4-8280-250d-401802728b71",
+            "body": {
+                "plan_id": "1234-5678",  
+                "service_id": "sample-local",                                
+                "organization_guid": "org-guid-here",
+                "space_guid": "space-guid-here" 
+            },            
+            "scenario": "conflict",
+            "notes": "Fake service instance",
+            "async": true
+        }
+    ],
+    "updates":[
+        {
+            "instance_id":"08a80928-48e4-8280-250d-401802728b71",
+            "body":{
+                "context" :{
+                    "platform": "cloudfoundry",
+                    "some_field": "some-contextual-data"
+                },
+                "service_id": "sample-local",
+                "plan_id":"1234-5678",
+                "previous_values":{
+                    "plan_id":"5678-1234",
+                    "service_id":"sample-local",
+                    "organization_id":"org-guid-here",
+                    "space_id":"spcae-guid-here"
+                }
+            },
+            "scenario": "update",
+            "async": true
+        }
+    ],
+    "bindings": [
+        {
+            "instance_id": "08a80928-48e4-8280-250d-401802728b71", 
+            "binding_id": "1a2b3c4d5-6e7f8g9h",
+            "body": {
+                "context": {
+                    "platform": "cloudfoundry",
+                    "some_field": "some-contextual-data"
+                },
+                "service_id": "sample-local",
+                "plan_id": "1234-5678",
+                "bind_resource": {
+                    "app_guid": "app-guid-here"
+                }
+            },            
+            "async": true,
+            "scenario": "new"
+        },
+        {
+            "instance_id": "08a80928-48e4-8280-250d-401802728b71",
+            "binding_id": "1a2b3c4d5-6e7f8g9h",
+            "body": {
+                "service_id": "sample-local",
+                "plan_id": "1234-5678"               
+            },            
+            "async": true,
+            "scenario": "delete"
+        }
+    ]       
+}

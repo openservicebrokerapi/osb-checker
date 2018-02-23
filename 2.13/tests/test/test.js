@@ -1,9 +1,35 @@
+/* 
+Modified by: Marco Di Martino, evoila Gmbh, 16-01-2018
+   ----- Changes: ------
+	function testAsyncParameter()
+		If request is sent with accepts_incomplete=false, but no
+		request body is sent within it, then response should be 400 
+		and not 422. Request body has been added according to this 
+		specification 
+	
+	test on invalid service_id / invalid plan_id: 
+		An id like service_id="xxxx-xxxx" MIGHT be considered a valid id
+		as stated in the api spec.
+		From API: The ID of the service (from the catalog). MUST be globally unique. MUST be a non-empty string.
+		(https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md)
+		Modified value of ids to empty string
+
+    Note on DELETE/BINDING: in the config.json file I added the attribute "instance_id" giving an existing instance_id
+    because as default this attribute was not set, so once the test case run, it create a guid id an try to 
+    delete that instance_id, which of course does not exist
+
+"A test suite begins with a call to the global Jasmine function describe with two parameters: 
+a string and a function. The string is a name or title for a spec suite - usually what is being tested. 
+The function is a block of code that implements the suite."
+
+*/
+
 var assert = require('assert');
 var request = require('supertest');  
 var fs = require('fs');
 var guid = require('guid');
 
-var config = require('./configs/config_mock.json');
+var config = require('./configs/my_couchdb_config.json');
 var serviceCatalogSchema = require('./schemas/service_catalog.json');
 var lastOperationSchema = require('./schemas/last_operation.json');
 var provisionResponseSchema = require('./schemas/provision_response.json');
@@ -13,6 +39,8 @@ var bindingDeleteResponseSchema = require('./schemas/binding_delete_response.jso
 var provisioningDeleteResponseSchema = require('./schemas/provisioning_delete_response.json');
 var Validator = require('jsonschema').Validator;
 var validator = new Validator();
+
+var myBody = { "plan_id": "5678-1234", "service_id": "sample-local", "organization_guid": "org-guid-here", "space_guid": "space-guid-here" };
 
 var url = config.url;
 var apiVersion = config.apiVersion;
@@ -110,7 +138,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             })
             it ('should reject if service_id is invalid', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
-                tempBody.service_id = "xxxxx-xxxxx";
+                tempBody.service_id = "";
                 preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
@@ -120,7 +148,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
             })
             it ('should reject if plan_id is invalid', function(done){
                 tempBody = JSON.parse(JSON.stringify(provision.body)); 
-                tempBody.plan_id = "xxxxx-xxxxx";
+                tempBody.plan_id = "";
                 preparedRequest()
                 .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
                 .set('X-Broker-API-Version', apiVersion)
@@ -534,14 +562,14 @@ function testAsyncParameter(handler, verb) {
                 .put(handler)
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
-                .send({})
+                .send(myBody) 
                 .expect(422, done)
         } else if (verb == 'PATCH') {
             preparedRequest()
                 .patch(handler)
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
-                .send({})
+                .send(myBody) 
                 .expect(422, done)
         } else if (verb == 'DELETE') {
             preparedRequest()
@@ -551,20 +579,20 @@ function testAsyncParameter(handler, verb) {
                 .expect(422, done)
         }
     });
-    it ('should return 422 if request if the accepts_incomplete parameter is false', function(done) {
-        if (verb == 'PUT') {
+    it ('should return 422 if request if the accepts_incomplete parameter is false', function(done) {        
+	if (verb == 'PUT') {
             preparedRequest()
                 .put(handler + '?accepts_incomplete=false')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
-                .send({})
+                .send(myBody) 
                 .expect(422, done)
         } else if (verb == 'PATCH') {
             preparedRequest()
                 .patch(handler + '?accepts_incomplete=false')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
-                .send({})
+                .send(myBody) 
                 .expect(422, done)
         } else if (verb == 'DELETE') {
             preparedRequest()

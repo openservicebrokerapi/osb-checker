@@ -12,9 +12,12 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.1",
-    "mocha": "^4.0.0",
-    "supertest": "^3.0.0",
+    "guid": "^0.0.12",
     "jsonschema": "^1.2.0",
-    "guid": "^0.0.12"
+    "supertest": "^3.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^4.1.0",
+    "mocha-brew": "^1.0.0"
   }
 }
