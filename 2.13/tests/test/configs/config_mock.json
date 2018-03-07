@@ -3,19 +3,19 @@
     "apiVersion" : "2.13",
     "user": "username",
     "password": "password",
-    "authentication": "basic",    
+    "authentication": "basic",
     "provisions":[
         {
             "instance_id":"",
             "body": {
-                "plan_id": "d3031751-XXXX-XXXX-XXXX-a42377d3320e", 
-                "service_id" :"acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",                                
+                "plan_id": "d3031751-XXXX-XXXX-XXXX-a42377d3320e",
+                "service_id" :"acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",
                 "parameters": {
                     "billing-account": "fake-account"
                 },
                 "organization_guid": "org-guid-here",
-                "space_guid": "space-guid-here" 
-            },            
+                "space_guid": "space-guid-here"
+            },
             "scenario": "new",
             "notes": "Fake service instance",
             "async": true
@@ -23,14 +23,14 @@
         {
             "instance_id":"EXISTING_ID",
             "body": {
-                "plan_id": "d3031751-XXXX-XXXX-XXXX-a42377d3320e", 
-                "service_id" :"acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",                                
+                "plan_id": "d3031751-XXXX-XXXX-XXXX-a42377d3320e",
+                "service_id" :"acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",
                 "parameters": {
                     "billing-account": "fake-account"
                 },
                 "organization_guid": "org-guid-here",
-                "space_guid": "space-guid-here" 
-            },            
+                "space_guid": "space-guid-here"
+            },
             "scenario": "new",
             "notes": "Fake service instance",
             "async": true
@@ -38,14 +38,14 @@
         {
             "instance_id":"EXISTING_ID",
             "body": {
-                "plan_id": "0f4008b5-XXXX-XXXX-XXXX-dace631cd648", 
-                "service_id" :"acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",                                
+                "plan_id": "0f4008b5-XXXX-XXXX-XXXX-dace631cd648",
+                "service_id" :"acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",
                 "parameters": {
                     "billing-account": "fake-account"
                 },
                 "organization_guid": "org-guid-here",
-                "space_guid": "space-guid-here" 
-            },            
+                "space_guid": "space-guid-here"
+            },
             "scenario": "conflict",
             "notes": "Fake service instance",
             "async": true
@@ -92,17 +92,17 @@
                     "parameter1-name-here": 1,
                     "parameter2-name-here": "parameter2-value-here"
                 }
-            },            
+            },
             "async": true,
             "scenario": "new"
         },
         {
             "body": {
                 "service_id":"2e2fc314-37b6-4587-8127-8f9ee8b33fea",
-                "plan_id":"6ddf6b41-fb60-4b70-af99-8ecc4896b3cf"                
-            },            
+                "plan_id":"6ddf6b41-fb60-4b70-af99-8ecc4896b3cf"
+            },
             "async": true,
             "scenario": "delete"
         }
-    ]       
+    ]
 }

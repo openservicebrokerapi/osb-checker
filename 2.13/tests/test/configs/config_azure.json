@@ -3,13 +3,13 @@
     "apiVersion" : "2.13",
     "user": "username",
     "password": "password",
-    "authentication": "basic",    
+    "authentication": "basic",
     "provisions":[
         {
             "instance_id":"",
             "body": {
-                "plan_id": "6ddf6b41-fb60-4b70-af99-8ecc4896b3cf", 
-                "service_id" :"2e2fc314-37b6-4587-8127-8f9ee8b33fea", 
+                "plan_id": "6ddf6b41-fb60-4b70-af99-8ecc4896b3cf",
+                "service_id" :"2e2fc314-37b6-4587-8127-8f9ee8b33fea",
                 "parameters": {
                     "resourceGroup": "osb-test-group",
                     "storageAccountName": "wmll118",
@@ -17,8 +17,8 @@
                     "accountType": "Standard_LRS"
                 },
                 "organization_guid": "org-guid-here",
-                "space_guid": "space-guid-here" 
-            },            
+                "space_guid": "space-guid-here"
+            },
             "scenario": "new",
             "notes": "Azure Storage - General Purpose Storage Account",
             "async": true
@@ -65,17 +65,17 @@
                     "parameter1-name-here": 1,
                     "parameter2-name-here": "parameter2-value-here"
                 }
-            },            
+            },
             "async": true,
             "scenario": "new"
         },
         {
             "body": {
                 "service_id":"2e2fc314-37b6-4587-8127-8f9ee8b33fea",
-                "plan_id":"6ddf6b41-fb60-4b70-af99-8ecc4896b3cf"                
-            },            
+                "plan_id":"6ddf6b41-fb60-4b70-af99-8ecc4896b3cf"
+            },
             "async": true,
             "scenario": "delete"
         }
-    ]                     
+    ]
 }

@@ -23,7 +23,7 @@ This project should be considered **experimental**. You should validate the resu
 
 # Usage - test against your own OSB API endpoint
 
-1. Modify test configurations. By default, test parameters are loaded from the **test\config_mock.json** file so that you can run tests directly against the mock 
+1. Modify test configurations. By default, test parameters are loaded from the **test\config_mock.json** file so that you can run tests directly against the mock
 server. For your own environment, you should create a new config file based on **test\config_mock.json** and fill in your OSB endpoint info:
 
 ```json
@@ -64,7 +64,7 @@ var config = require('./configs/config_mock.json'); //replace config_mock.json w
 Provisioning requests are configured by the **provisions** array in your test configuration file. You can modify the array to use different *service_ids* and *plan_ids*. You can specify *instance_id*. If you leave the field as an empty string, a random instance id will be used during tests.
 Provision requests support a couple of different scenarios, driven by the "scenario" property:
 * **new** check for provisioning a new service instance
-* **conflict** check for service instance conflicts. To set this up, you need two provision requests with the same *instance_id* but different *plan_id* or *service_id*, with the first request marked as **new** and the second request marked as **conflict**. Please see the **EXISTING_ID** requests in **configs/config_mock.json** as an example. 
+* **conflict** check for service instance conflicts. To set this up, you need two provision requests with the same *instance_id* but different *plan_id* or *service_id*, with the first request marked as **new** and the second request marked as **conflict**. Please see the **EXISTING_ID** requests in **configs/config_mock.json** as an example.
 
 ## Mock OSB API Endpoint
 OSB Checker also comes with a mock OSB API server that can be used to test marketplace implementations. To launch the Mock server:
