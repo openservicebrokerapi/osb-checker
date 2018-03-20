@@ -223,6 +223,7 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
                     .expect(400, done)
             })
         });
+
         if (update.scenario == "update") {
             describe("UPDATE", function () {
                 it ('should accept a valid update request', function(done){
