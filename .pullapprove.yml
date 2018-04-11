@@ -7,14 +7,12 @@ signed_off_by:
 reviewers:
   required: 2
   members:
-    - duglin
-    - vaikas-google
-    - shalako
-    - angarg12
-    - pmorie
-    - fmui
-    - zrob
-    - avade
-    - mattmcneeney
-    - Haishi2016
-    - n3wscott
+      - duglin
+      - vaikas-google
+      - shalako
+      - pmorie
+      - fmui
+      - zrob
+      - avade
+      - mattmcneeney
+      - n3wscott
