@@ -143,7 +143,7 @@ describe('PUT /v2/service_instances/:instance_id', function(){
         });
         if (provision.scenario == "new") {
             describe("PROVISION - new", function () {
-                it ('should accept a valid provision request', function(done){
+                it ('should accept a valid provision request and return valid last operation data', function(done){
                     tempBody = JSON.parse(JSON.stringify(provision.body));
                     preparedRequest()
                     .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
@@ -157,31 +157,12 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                         if (message!="")
                             done(new Error(message));
                         else
-                            done();
+                            testLastOperationStatus(res.body, instance_id, done)
                     })
                 });
 
                 testAPIVersionHeader('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
                 testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
-
-                describe("PROVISION - query after new", function() {
-                    it ('should return last operation status', function(done){
-                        preparedRequest()
-                            .get('/v2/service_instances/' + instance_id + '/last_operation')
-                            .set('X-Broker-API-Version', apiVersion)
-                            .auth(config.user, config.password)
-                            .expect(200)
-                            .expect('Content-Type', /json/)
-                            .end(function(err, res){
-                                if (err) return done(err);
-                                var message = validateJsonSchema(res.body, lastOperationSchema);
-                                if (message!="")
-                                    done(new Error(message));
-                                else
-                                    done();
-                            })
-                        })
-                    });
             });
         } else if (provision.scenario == "conflict") {
             describe("PROVISION - conflict", function () {
@@ -229,26 +210,6 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
                 testAPIVersionHeader('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
                 testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
 
-                let testLastOperationStatus = function(body, done) {
-                    operation = JSON.parse(body.operation)
-                    endpoint = '/v2/service_instances/' + instance_id + '/last_operation'
-                    if (operation) {
-                        endpoint += "?operation=" + JSON.stringify(operation)
-                    }
-                    preparedRequest()
-                        .get(endpoint)
-                        .set('X-Broker-API-Version', apiVersion)
-                        .auth(config.user, config.password)
-                        .expect(200)
-                        .expect('Content-Type', /json/)
-                        .end(function(err, res){
-                            if (err) return done(err);
-                            var message = validateJsonSchema(res.body, lastOperationSchema);
-                            if (message!="") done(new Error(message));
-                            done();
-                        })
-                }
-
                 it('should accept a valid update request', function(done){
                     tempBody = JSON.parse(JSON.stringify(update.body));
                     preparedRequest()
@@ -261,7 +222,7 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
                             if (err) return done(err);
                             var message = validateJsonSchema(res.body, updateResponseSchema);
                             if (message!="") done(new Error(message));
-                            testLastOperationStatus(res.body, done)
+                            testLastOperationStatus(res.body, instance_id, done)
                         })
                 });
             });
@@ -601,4 +562,24 @@ function validateJsonSchema(body, schema) {
         return message;
     }
     return "";
+}
+
+function testLastOperationStatus(body, instance_id, done) {
+    operation = JSON.parse(body.operation)
+    endpoint = '/v2/service_instances/' + instance_id + '/last_operation'
+    if (operation) {
+        endpoint += "?operation=" + JSON.stringify(operation)
+    }
+    preparedRequest()
+        .get(endpoint)
+        .set('X-Broker-API-Version', apiVersion)
+        .auth(config.user, config.password)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res){
+            if (err) return done(err);
+            var message = validateJsonSchema(res.body, lastOperationSchema);
+            if (message!="") done(new Error(message));
+            done();
+        })
 }
