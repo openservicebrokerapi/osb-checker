@@ -18,7 +18,7 @@ This project should be considered **experimental**. You should validate the resu
 ```bash
     cd c:\osb-checker\2.13\tests
     npm install
-    mocha
+    npm test
 ```
 
 # Usage - test against your own OSB API endpoint
@@ -49,7 +49,7 @@ var config = require('./configs/config_mock.json'); //replace config_mock.json w
 ```bash
     cd c:\osb-checker\2.13\tests
     npm install
-    mocha
+    npm test
 ```
 
 ## What's covered
