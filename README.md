@@ -23,14 +23,14 @@ This project should be considered **experimental**. You should validate the resu
 
 # Usage - test against your own OSB API endpoint
 
-1. Modify test configurations. By default, test parameters are loaded from the **test\config_mock.json** file so that you can run tests directly against the mock 
-server. For your own environment, you should create a new config file based on **test\config_mock.json** and fill in your OSB endpoint info:
+1. Modify test configurations. By default, test parameters are loaded from the **test\configs\config_mock.json** file so that you can run tests directly against the mock server. For your own environment, you should create a new config file based on **test\configs\config_mock.json** and fill in your OSB endpoint info:
 
 ```json
     "url": "<your OSB endpoint>",
     "apiVersion" : "2.13",
     "user": "<your user name>",
     "password": "<your password>",
+    "authentication": "basic",
     "caCertFile": "<path to ca-cert (optional)>",
 ```
 
@@ -45,7 +45,7 @@ If your server uses TLS with an untrusted certificate authority, specify the pat
 ```javascript
 var config = require('./configs/config_mock.json'); //replace config_mock.json with your own configuration file
 ```
-3. Run tests
+4. Run tests
 ```bash
     cd c:\osb-checker\2.13\tests
     npm install
