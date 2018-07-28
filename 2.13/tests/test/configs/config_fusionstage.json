@@ -1,0 +1,206 @@
+{
+  "url": "http://10.184.13.66:8080",
+  "apiVersion": "2.13",
+  "user": "username",
+  "password": "password",
+  "authentication": "noauth",
+  "provisions": [
+    {
+      "instance_id": "",
+      "body": {
+        "organization_guid": "org-name-here",
+        "organization_id": "org-guid-here",
+        "plan_id": "d3031751-XXXX-XXXX-XXXX-a42377d3320e",
+        "service_id": "acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",
+        "space_guid": "space-guid-here",
+        "user_guid": "user-guid-here",
+        "cluster_id": "cluster-id-here",
+        "cluster_name": "cluster-name-here",
+        "cluster_namespace": "cluster-namespace-here",
+        "parameters": {
+          "parameter1": 1,
+          "parameter2": "value"
+        },
+        "dependInfo": [
+          {
+            "service_name": "hadoop",
+            "service_tags": [
+              "data_resource"
+            ],
+            "instance_id": "xxx-yyy-zzz",
+            "bing_parameters": "parameters for service bind",
+            "credentials": "credentials of this instance"
+          }
+        ],
+        "instance_name": "name of instance"
+      },
+      "scenario": "new",
+      "notes": "CSC service instance",
+      "async": true
+    },
+    {
+      "instance_id": "EXISTING_ID",
+      "body": {
+        "organization_guid": "org-name-here",
+        "organization_id": "org-guid-here",
+        "plan_id": "d3031751-XXXX-XXXX-XXXX-a42377d3320e",
+        "service_id": "acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",
+        "space_guid": "space-guid-here",
+        "user_guid": "user-guid-here",
+        "cluster_id": "cluster-id-here",
+        "cluster_name": "cluster-name-here",
+        "cluster_namespace": "cluster-namespace-here",
+        "parameters": {
+          "parameter1": 1,
+          "parameter2": "value"
+        },
+        "dependInfo": [
+          {
+            "service_name": "hadoop",
+            "service_tags": [
+              "data_resource"
+            ],
+            "instance_id": "xxx-yyy-zzz",
+            "bing_parameters": "parameters for service bind",
+            "credentials": "credentials of this instance"
+          }
+        ],
+        "instance_name": "name of instance"
+      },
+      "scenario": "new",
+      "notes": "CSC service instance",
+      "async": true
+    },
+    {
+      "instance_id": "EXISTING_ID",
+      "body": {
+        "organization_guid": "org-name-here",
+        "organization_id": "org-guid-here",
+        "plan_id": "0f4008b5-XXXX-XXXX-XXXX-dace631cd648",
+        "service_id": "acb56d7c-XXXX-XXXX-XXXX-feb140a59a66",
+        "space_guid": "space-guid-here",
+        "user_guid": "user-guid-here",
+        "cluster_id": "cluster-id-here",
+        "cluster_name": "cluster-name-here",
+        "cluster_namespace": "cluster-namespace-here",
+        "parameters": {
+          "parameter1": 1,
+          "parameter2": "value"
+        },
+        "dependInfo": [
+          {
+            "service_name": "hadoop",
+            "service_tags": [
+              "data_resource"
+            ],
+            "instance_id": "xxx-yyy-zzz",
+            "bing_parameters": "parameters for service bind",
+            "credentials": "credentials of this instance"
+          }
+        ],
+        "instance_name": "name of instance"
+      },
+      "scenario": "conflict",
+      "notes": "CSC service instance",
+      "async": true
+    }
+  ],
+  "updates": [
+    {
+      "instance_id": "",
+      "body": {
+        "organization_guid": "org-guid-here",
+        "organization_id": "org-id-here",
+        "user_guid": "user-guid-here",
+        "plan_id": "plan-name-here",
+        "blueprint_id": "blueprint_guid",
+        "service_id": "service-name-here",
+        "space_guid": "space-guid-here",
+        "accepts_incomplete": true,
+        "previous_values": {
+          "plan_name": "plan-name-old",
+          "parameters": {
+            "parameter1": 1,
+            "parameter2": "value1"
+          }
+        },
+        "parameters": {
+          "parameter1": 2,
+          "parameter2": "value2"
+        },
+        "scale_info": [
+          {
+            "node_id": "node1",
+            "instances": 2,
+            "scale_in_instances": [
+              "node1_tXK42"
+            ]
+          },
+          {
+            "node_id": "node2",
+            "instances": 5
+          },
+          {
+            "node_id": "node3",
+            "resource": {
+              "cpu": 2,
+              "memory": 1024,
+              "disk": 10
+            }
+          }
+        ],
+        "dependInfo": [
+          {
+            "service_name": "hadoop",
+            "service_tags": [
+              "service-tags01",
+              "service-tags02"
+            ],
+            "instance_id": "xxx-yyy-zzz",
+            "caller_flag": "caller-flag",
+            "bind_parameters": {
+              "parameter1": 2,
+              "parameter2": "value2"
+            },
+            "credentials": {
+              "uri": "mysql://mysqluser:pass@mysqlhost:3306/dbname",
+              "username": "mysqluser",
+              "password": "pass",
+              "host": "mysqlhost",
+              "port": 3306,
+              "database": "dbname"
+            }
+          }
+        ],
+        "userdata": "userdata"
+      },
+      "scenario": "update",
+      "async": true
+    }
+  ],
+  "bindings": [
+    {
+      "body": {
+        "service_id": "2e2fc314-37b6-4587-8127-8f9ee8b33fea",
+        "plan_id": "6ddf6b41-fb60-4b70-af99-8ecc4896b3cf",
+        "app_guid": "app-guid-here",
+        "parameters": {
+          "parameter1": 1,
+          "parameter2": "value",
+          "userdata": "user-data"
+        }
+      },
+      "async": true,
+      "scenario": "new"
+    },
+    {
+      "body": {
+        "service_id": "2e2fc314-37b6-4587-8127-8f9ee8b33fea",
+        "plan_id": "6ddf6b41-fb60-4b70-af99-8ecc4896b3cf",
+        "userdata": "user-data"
+      },
+      "async": true,
+      "scenario": "delete"
+    }
+  ]
+}
