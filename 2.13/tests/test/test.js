@@ -376,47 +376,46 @@ describe('DELETE /v2/service_instance/:instance_id/service_bindings/:binding_id'
 });
 
 describe('DELETE /v2/service_instance/:instance_id', function() {
-    config.bindings.forEach(function(binding) {
-        if (binding.scenario == "delete") {
-            var instance_id = binding.instance_id || guid.create().value;
+    config.provisions.forEach(function(provision) {
+        if (provision.scenario == "delete") {
+            var instance_id = provision.instance_id || guid.create().value;
 
             describe('DEPROVISIONING - delete syntax', function() {
 
                 testAPIVersionHeader('/v2/service_instances/' + instance_id, 'DELETE');
                 testAuthentication('/v2/service_instances/' + instance_id, 'DELETE');
 
-                if (binding.async) {
+                if (provision.async) {
                     testAsyncParameter(
                         '/v2/service_instances/' + instance_id
-                        + "?plan_id=" + binding.body.plan_id
-                        + "&service_id=" + binding.body.service_id,
-                        'DELETE', binding.body);
+                        + "?plan_id=" + provision.body.plan_id
+                        + "&service_id=" + provision.body.service_id,
+                        'DELETE', provision.body);
                 }
 
                 describe("DELETE", function () {
                     it ('should reject if missing service_id', function(done) {
                         preparedRequest()
-                            .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id)
+                            .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&plan_id=" + provision.body.plan_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
                             .expect(400, done)
                     })
                     it ('should reject if missing plan_id', function(done){
                         preparedRequest()
-                            .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&service_id=" + binding.body.service_id)
+                            .delete('/v2/service_instances/' + instance_id + "?accepts_incomplete=true&service_id=" + provision.body.service_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
                             .expect(400, done)
                     })
                     it ('should accept a valid service deletion request', function(done){
-                        tempBody = JSON.parse(JSON.stringify(binding.body));
                         preparedRequest()
                             .delete('/v2/service_instances/' + instance_id
-                                + "?accepts_incomplete=true&plan_id=" + binding.body.plan_id
-                                + "&service_id=" + binding.body.service_id)
+                                + "?accepts_incomplete=true&plan_id=" + provision.body.plan_id
+                                + "&service_id=" + provision.body.service_id)
                             .set('X-Broker-API-Version', apiVersion)
                             .auth(config.user, config.password)
-                            .expect(binding.async ? 202 : 200)
+                            .expect(provision.async ? 202 : 200)
                             .end(function(err, res){
                                 if (err) return done(err);
                                 var message = validateJsonSchema(res.body, provisioningDeleteResponseSchema);
