@@ -10,7 +10,7 @@ groups:
       enabled: true
       approve_regex: '(?i)LGTM'
       reject_regex: '(?i)NOT LGTM'
-    required: 4
+    required: 2
     users:
       - duglin
       - vaikas-google
