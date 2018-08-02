@@ -230,7 +230,7 @@ describe('PATCH /v2/service_instance/:instance_id', function() {
                 testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
 
                 let testLastOperationStatus = function(body, done) {
-                    operation = JSON.parse(body.operation)
+                    operation = body.operation
                     endpoint = '/v2/service_instances/' + instance_id + '/last_operation'
                     if (operation) {
                         endpoint += "?operation=" + JSON.stringify(operation)
