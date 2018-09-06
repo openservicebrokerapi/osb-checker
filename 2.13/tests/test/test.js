@@ -134,12 +134,28 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                     "can-not": "be-good"
                 }
                 preparedRequest()
-                .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                .get('/v2/catalog')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
-                .send(tempBody)
-                .expect(400, done)
-            })
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(function(err, res){
+                    if (err) return done(err);
+                    var message = validateJsonSchema(res.body, serviceCatalogSchema);
+                    if (message != "")
+                        done(new Error(message));
+                    else
+                        var catalog = JSON.parse(JSON.stringify(res.body));
+                        var schemaCheckResults = parametersSchemaCheck(catalog, tempBody.service_id, tempBody.plan_id, 'create', tempBody.parameters);
+                        if (schemaCheckResults != "")
+                            preparedRequest()
+                            .put('/v2/service_instances/' + instance_id + "?accepts_incomplete=true")
+                            .set('X-Broker-API-Version', apiVersion)
+                            .auth(config.user, config.password)
+                            .send(tempBody)
+                            .expect(400, done)
+                })
+            });
         });
         if (provision.scenario == "new") {
             describe("PROVISION - new", function () {
@@ -601,4 +617,44 @@ function validateJsonSchema(body, schema) {
         return message;
     }
     return "";
+}
+
+function containsKeyValue(obj, key, value ) {
+  if (!obj) {
+    return null;
+  }
+  if (obj[key] === value) {
+   return obj;
+ }
+  if (Array.isArray(obj)) {
+      for (var i in obj) {
+          var found = containsKeyValue(obj[i], key, value);
+          if (found) return found;
+      }
+  } else if (typeof obj == "object") {
+      for (var p in obj) {
+          if (p === key && obj[p] === value) {
+              return obj;
+          }
+          var found = containsKeyValue(p, key, value );
+          if(found) return found;
+      }
+  }
+  return null;
+}
+
+function parametersSchemaCheck(catalog, service_id, plan_id, action, parameters){
+  var service = containsKeyValue(catalog.services, 'id', service_id);
+  var plan = containsKeyValue(service.plans, 'id', plan_id);
+  var schemas = plan.schemas;
+  if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
+    return "";
+  }
+  var schema = schemas.service_instance[action].parameters;
+  if (!schema) {
+    return "";
+  }
+  console.log(JSON.stringify(parameters));
+  console.log(JSON.stringify(schema));
+  return validateJsonSchema(parameters, schema);
 }
