@@ -154,6 +154,8 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                             .auth(config.user, config.password)
                             .send(tempBody)
                             .expect(400, done)
+                        else
+                            done();
                 })
             });
         });
@@ -654,7 +656,5 @@ function parametersSchemaCheck(catalog, service_id, plan_id, action, parameters)
   if (!schema) {
     return "";
   }
-  console.log(JSON.stringify(parameters));
-  console.log(JSON.stringify(schema));
   return validateJsonSchema(parameters, schema);
 }
