@@ -143,6 +143,47 @@ describe('PUT /v2/service_instances/:instance_id', function(){
         });
         if (provision.scenario == "new") {
             describe("PROVISION - new", function () {
+
+                let testLastOperationStatus = function(body, done) {
+                    operation = body.operation
+                    endpoint = '/v2/service_instances/' + instance_id + '/last_operation'
+                    if (operation) {
+                        endpoint += "?operation=" + JSON.stringify(operation)
+                    }
+
+                    testAPIVersionHeader(endpoint, 'GET');
+                    testAuthentication(endpoint, 'GET');
+
+                    var pollDuration = 0;
+                    var succeededOrFailed = false;
+                    var interval = setInterval(function() {
+                        pollDuration += config.polling_interval;
+                        if (succeededOrFailed || (pollDuration > config.max_polling_duration)) {
+                            clearInterval(interval);
+                            return done();
+                        }
+                        preparedRequest()
+                        .get(endpoint)
+                        .set('X-Broker-API-Version', apiVersion)
+                        .auth(config.user, config.password)
+                        .expect(200)
+                        .expect('Content-Type', /json/)
+                        .end(function(err, res){
+                            if (err) return done(err);
+                            var message = validateJsonSchema(res.body, lastOperationSchema);
+                            if (message != "") return done(new Error(message));
+                            if (res.body.state != "in progress") {
+                                succeededOrFailed = true;
+                                if (res.body.state == "succeeded") return done();
+                                if (res.body.state == "failed") return done(new Error('The status of instance is failed'));
+                            } else {
+                                done();
+                            }
+                        })
+                    }, config.polling_interval*1000);
+                    done();
+                }
+
                 it ('should accept a valid provision request', function(done){
                     tempBody = JSON.parse(JSON.stringify(provision.body));
                     preparedRequest()
@@ -154,34 +195,10 @@ describe('PUT /v2/service_instances/:instance_id', function(){
                     .end(function(err, res){
                         if (err) return done(err);
                         var message = validateJsonSchema(res.body, provisionResponseSchema);
-                        if (message!="")
-                            done(new Error(message));
-                        else
-                            done();
+                        if (message!="") return done(new Error(message));
+                        testLastOperationStatus(res.body, done)
                     })
                 });
-
-                testAPIVersionHeader('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
-                testAuthentication('/v2/service_instances/' + instance_id + '/last_operation', 'GET');
-
-                describe("PROVISION - query after new", function() {
-                    it ('should return last operation status', function(done){
-                        preparedRequest()
-                            .get('/v2/service_instances/' + instance_id + '/last_operation')
-                            .set('X-Broker-API-Version', apiVersion)
-                            .auth(config.user, config.password)
-                            .expect(200)
-                            .expect('Content-Type', /json/)
-                            .end(function(err, res){
-                                if (err) return done(err);
-                                var message = validateJsonSchema(res.body, lastOperationSchema);
-                                if (message!="")
-                                    done(new Error(message));
-                                else
-                                    done();
-                            })
-                        })
-                    });
             });
         } else if (provision.scenario == "conflict") {
             describe("PROVISION - conflict", function () {

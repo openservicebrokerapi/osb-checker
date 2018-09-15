@@ -3,7 +3,9 @@
     "apiVersion" : "2.13",
     "user": "username",
     "password": "password",
-    "authentication": "basic",    
+    "authentication": "basic",
+    "polling_interval": 3,
+    "max_polling_duration": 100,
     "provisions":[
         {
             "instance_id":"",
