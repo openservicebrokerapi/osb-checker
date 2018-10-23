@@ -3,6 +3,7 @@ var request = require('supertest');
 var fs = require('fs');
 var guid = require('guid');
 var _ = require('underscore');
+var async = require('async');
 
 var config = require('./configs/config_mock.json');
 var serviceCatalogSchema = require('./schemas/service_catalog.json');
@@ -231,25 +232,11 @@ function testProvision(instanceId, validBody, isAsync){
         testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
 
         // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
-        // TODO: https://github.com/openservicebrokerapi/osb-checker/pull/47 should fix polling until success here.
         describe('PROVISION - poll', function() {
-            it ('should return last operation status', function(done){
-                preparedRequest()
-                    .get('/v2/service_instances/' + instanceId + '/last_operation')
-                    .set('X-Broker-API-Version', apiVersion)
-                    .auth(config.user, config.password)
-                    .expect(200)
-                    .expect('Content-Type', /json/)
-                    .end(function(err, res){
-                        if (err) return done(err);
-                        var message = validateJsonSchema(res.body, lastOperationSchema);
-                        if (message!='')
-                            done(new Error(message));
-                        else
-                            done();
-                    })
-                })
-            });
+            it ('should return succeeded operation status after provision', function(done){
+                pollInstanceLastOperationStatus(instanceId, done);
+            })
+        });
     });
 
     describe('PROVISION - conflict', function () {
@@ -297,27 +284,6 @@ function testUpdate(instanceId, validBody, isAsync){
         testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
         testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
 
-        // TODO: A similar fix like https://github.com/openservicebrokerapi/osb-checker/pull/47 should fix polling until success here.
-        let testLastOperationStatus = function(body, done) {
-            operation = body.operation
-            endpoint = '/v2/service_instances/' + instanceId + '/last_operation'
-            if (operation) {
-                endpoint += '?operation=' + JSON.stringify(operation)
-            }
-            preparedRequest()
-            .get(endpoint)
-            .set('X-Broker-API-Version', apiVersion)
-            .auth(config.user, config.password)
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .end(function(err, res){
-                if (err) return done(err);
-                var message = validateJsonSchema(res.body, lastOperationSchema);
-                if (message!='') done(new Error(message));
-                done();
-            })
-        }
-
         it('should accept a valid update request', function(done){
             var tempBody = _.clone(validBody);
             preparedRequest()
@@ -330,7 +296,13 @@ function testUpdate(instanceId, validBody, isAsync){
                 if (err) return done(err);
                 var message = validateJsonSchema(res.body, updateResponseSchema);
                 if (message!='') done(new Error(message));
-                testLastOperationStatus(res.body, done)
+                else done();
+            })
+        });
+        // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
+        describe('UPDATE - poll', function() {
+            it ('should return succeeded operation status after update', function(done){
+                pollInstanceLastOperationStatus(instanceId, done);
             })
         });
     });
@@ -473,8 +445,50 @@ function testDeprovision(instanceId, queryStrings, isAsync){
                     done();
                 })
             });
+            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
+            describe('DEPROVISION - poll', function() {
+                it ('should return succeeded operation status after deprovision', function(done){
+                    pollInstanceLastOperationStatus(instanceId, done);
+                })
+            });
         });
     });
+}
+
+function pollInstanceLastOperationStatus(instance_id, done) {
+    var count = 0;
+    var lastOperationState = 'in progress';
+    async.whilst(
+        function() {
+            return lastOperationState == "in progress" && count < config.maxPollingNum;
+        },
+        function(callback) {
+            count++;
+            preparedRequest()
+                .get('/v2/service_instances/' + instanceId + '/last_operation')
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(function(err, res){
+                    if (err) return done(err);
+                    var message = validateJsonSchema(res.body, lastOperationSchema);
+                    if (message != "") return done(new Error(message));
+                    lastOperationState = res.body.state;
+                })
+            setTimeout(callback(err, null), config.pollingInterval*1000);
+        },
+        function(err, n) {
+            if (err) {
+                return done(new Error("Polling last operation error!"))
+            } else if (lastOperationState == "failed") {
+                return done(new Error("Polling last operation stateus failed!"));
+            } else {
+                return done();
+            }
+        }
+    );
+    done();
 }
 
 function testAuthentication(handler, verb) {
