@@ -455,7 +455,7 @@ function testDeprovision(instanceId, queryStrings, isAsync){
     });
 }
 
-function pollInstanceLastOperationStatus(instance_id, done) {
+function pollInstanceLastOperationStatus(instanceId, done) {
     var count = 0;
     var lastOperationState = 'in progress';
     async.whilst(
@@ -476,7 +476,7 @@ function pollInstanceLastOperationStatus(instance_id, done) {
                     if (message != "") return done(new Error(message));
                     lastOperationState = res.body.state;
                 })
-            setTimeout(callback(err, null), config.pollingInterval*1000);
+            setTimeout(callback(null, count), config.pollingInterval*1000);
         },
         function(err, n) {
             if (err) {
