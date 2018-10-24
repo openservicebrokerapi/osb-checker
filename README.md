@@ -14,6 +14,7 @@ This repository comes with a mock OSBAPI compatible server. Follow the steps
 below to start the mock server and run tests against it.
 
 1. Run `git clone` to clone this repository to `$DIRECTORY`
+
 2. Launch the mock server
 
 ```bash
@@ -25,9 +26,9 @@ node mockOSB.js
 3. In a new terminal window, run the tests
 
 ```bash
-cd $DIRECTORY/2.13/tests
+cd $DIRECTORY/$VERSION_NUMBER/tests
 npm install
-mocha
+npm test
 ```
 
 ## Your own OSBAPI Endpoint
@@ -42,9 +43,10 @@ compatible server.
 
 ```json
 "url": "<your OSB endpoint>",
-"apiVersion" : "2.13",
+"apiVersion" : "<OSB API version number>",
 "user": "<your user name>",
 "password": "<your password>",
+"authentication": "basic",
 "caCertFile": "<path to ca-cert (optional)>",
 ```
 
@@ -65,22 +67,23 @@ path to the CA certificate using the `caCertFile` property.
 var config = require("./configs/config_mock.json"); //replace config_mock.json with your own configuration file
 ```
 
-3. Run tests
+4. Run tests
 
 ```bash
-    cd c:\osb-checker\2.13\tests
+    cd $DIRECTORY/$VERSION_NUMBER/tests
     npm install
-    mocha
+    npm test
 ```
 
 # What's Covered
 
 The following functionality is covered by the tests:
 
-* All OSBAPI 2.13 verbs (~60 test cases)
-* JSON schema check against all requests/responses (7 schemas)
-* JSON schema check if OSBAPI returns schemas for parameters
-* Extensible test cases by configuration files
+* OSBAPI 2.13
+  * All OSBAPI 2.13 verbs (~60 test cases)
+  * JSON schema check against all requests/responses (7 schemas)
+  * JSON schema check if OSBAPI returns schemas for parameters
+  * Extensible test cases by configuration files
 
 # Customize
 
@@ -97,7 +100,7 @@ Provision requests support a couple of different scenarios, driven by the "scena
 OSB Checker also comes with a mock OSBAPI server that can be used to test marketplace implementations. To launch the Mock server:
 
 ```bash
-    cd c:\osb-checker\2.13\mocks
+    cd $DIRECTORY/$VERSION_NUMBER/mocks
     npm install
     node mockOSB.js
 ```
