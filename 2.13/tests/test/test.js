@@ -228,15 +228,17 @@ function testProvision(instanceId, validBody, isAsync){
             })
         });
 
-        testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
-        testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
+        if (isAsync) {
+            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
+            describe('PROVISION - poll', function() {
+                testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
+                testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
 
-        // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
-        describe('PROVISION - poll', function() {
-            it ('should return succeeded operation status after provision', function(done){
-                pollInstanceLastOperationStatus(instanceId, done);
-            })
-        });
+                it ('should return succeeded operation status after provision', function(done){
+                    pollInstanceLastOperationStatus(instanceId, done);
+                })
+            });
+        }
     });
 
     describe('PROVISION - conflict', function () {
@@ -281,9 +283,6 @@ function testUpdate(instanceId, validBody, isAsync){
     });
 
     describe('UPDATE', function () {
-        testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
-        testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
-
         it('should accept a valid update request', function(done){
             var tempBody = _.clone(validBody);
             preparedRequest()
@@ -299,12 +298,18 @@ function testUpdate(instanceId, validBody, isAsync){
                 else done();
             })
         });
-        // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
-        describe('UPDATE - poll', function() {
-            it ('should return succeeded operation status after update', function(done){
-                pollInstanceLastOperationStatus(instanceId, done);
-            })
-        });
+
+        if (isAsync) {
+            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
+            describe('UPDATE - poll', function() {
+                testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
+                testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
+
+                it ('should return succeeded operation status after update', function(done){
+                    pollInstanceLastOperationStatus(instanceId, done);
+                })
+            });
+        }
     });
 }
 
@@ -445,12 +450,18 @@ function testDeprovision(instanceId, queryStrings, isAsync){
                     done();
                 })
             });
-            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
-            describe('DEPROVISION - poll', function() {
-                it ('should return succeeded operation status after deprovision', function(done){
-                    pollInstanceLastOperationStatus(instanceId, done);
-                })
-            });
+
+            if (isAsync) {
+                // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
+                describe('DEPROVISION - poll', function() {
+                    testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
+                    testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
+
+                    it ('should return succeeded operation status after deprovision', function(done){
+                        pollInstanceLastOperationStatus(instanceId, done);
+                    })
+                });
+            }
         });
     });
 }
