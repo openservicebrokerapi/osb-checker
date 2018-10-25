@@ -482,7 +482,7 @@ function pollInstanceLastOperationStatus(instanceId, done) {
             if (err) {
                 return done(new Error("Polling last operation error!"))
             } else if (lastOperationState == "failed") {
-                return done(new Error("Polling last operation stateus failed!"));
+                return done(new Error("Polling last operation status failed!"));
             } else {
                 return done();
             }
