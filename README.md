@@ -26,7 +26,7 @@ node mockOSB.js
 3. In a new terminal window, run the tests
 
 ```bash
-cd $DIRECTORY/$VERSION_NUMBER/tests
+cd $DIRECTORY/$VERSION_NUMBER/tests/test
 npm install
 npm test
 ```
@@ -70,7 +70,7 @@ var config = require("./configs/config_mock.json"); //replace config_mock.json w
 4. Run tests
 
 ```bash
-    cd $DIRECTORY/$VERSION_NUMBER/tests
+    cd $DIRECTORY/$VERSION_NUMBER/tests/test
     npm install
     npm test
 ```
