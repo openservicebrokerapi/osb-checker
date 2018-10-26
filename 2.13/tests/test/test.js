@@ -18,6 +18,7 @@ var validator = new Validator();
 
 var url = config.url;
 var apiVersion = config.apiVersion;
+var maxDelayTimeout = 1800;
 
 var caCert;
 if (config.caCertFile) {
@@ -231,6 +232,7 @@ function testProvision(instanceId, validBody, isAsync){
         if (isAsync) {
             // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
             describe('PROVISION - poll', function() {
+                this.timeout(maxDelayTimeout*1000);
                 testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
                 testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
 
@@ -302,6 +304,7 @@ function testUpdate(instanceId, validBody, isAsync){
         if (isAsync) {
             // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
             describe('UPDATE - poll', function() {
+                this.timeout(maxDelayTimeout*1000);
                 it ('should return succeeded operation status after update', function(done){
                     pollInstanceLastOperationStatus(instanceId, done);
                 })
@@ -451,6 +454,7 @@ function testDeprovision(instanceId, queryStrings, isAsync){
             if (isAsync) {
                 // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
                 describe('DEPROVISION - poll', function() {
+                    this.timeout(maxDelayTimeout*1000);
                     it ('should return succeeded operation status after deprovision', function(done){
                         pollInstanceLastOperationStatus(instanceId, done);
                     })
@@ -465,10 +469,11 @@ function pollInstanceLastOperationStatus(instanceId, done) {
     var lastOperationState = 'in progress';
     async.whilst(
         function() {
-            return lastOperationState == "in progress" && count < config.maxPollingNum;
+            return lastOperationState == "in progress" && count <= config.maxPollingNum;
         },
         function(callback) {
             count++;
+            console.log(count.toString() + 'th polling last operation...');
             preparedRequest()
                 .get('/v2/service_instances/' + instanceId + '/last_operation')
                 .set('X-Broker-API-Version', apiVersion)
@@ -476,14 +481,16 @@ function pollInstanceLastOperationStatus(instanceId, done) {
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .end(function(err, res){
-                    if (err) return done(err);
+                    if (err) callback(err);
                     var message = validateJsonSchema(res.body, lastOperationSchema);
-                    if (message != "") return done(new Error(message));
+                    if (message != "") callback(new Error(message));
                     lastOperationState = res.body.state;
                 })
-            setTimeout(callback(null, count), config.pollingInterval*1000);
+            setTimeout(function() {
+                callback(null);
+            }, config.pollingInterval*1000);
         },
-        function(err, n) {
+        function(err) {
             if (err) {
                 return done(new Error("Polling last operation error!"))
             } else if (lastOperationState == "failed") {
@@ -493,7 +500,6 @@ function pollInstanceLastOperationStatus(instanceId, done) {
             }
         }
     );
-    done();
 }
 
 function testAuthentication(handler, verb) {
