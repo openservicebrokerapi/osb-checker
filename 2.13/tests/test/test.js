@@ -593,10 +593,6 @@ function testAsyncParameter(handler, verb, body) {
                 .delete(handler)
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
-                .send({
-                    service_id: body.service_id,
-                    plan_id: body.plan_id
-                })
                 .expect(422, done)
         }
     });
@@ -624,13 +620,9 @@ function testAsyncParameter(handler, verb, body) {
                 .expect(422, done)
         } else if (verb == 'DELETE') {
             preparedRequest()
-                .delete(handler + '?accepts_incomplete=false')
+                .delete(handler + '&accepts_incomplete=false')
                 .set('X-Broker-API-Version', apiVersion)
                 .auth(config.user, config.password)
-                .send({
-                    service_id: body.service_id,
-                    plan_id: body.plan_id
-                })
                 .expect(422, done)
         }
     });
