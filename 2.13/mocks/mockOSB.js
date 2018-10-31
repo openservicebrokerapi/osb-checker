@@ -5,7 +5,7 @@ const app = express()
             .use(bodyParser.json());
 
 const maxLastOperationQueries = 0; //After this number of LastOperation queries, the operation result is set to "succeeded"
-            
+
 var Validator = require('jsonschema').Validator;
 var validator = new Validator();
 var provisionRequestSchema = require('./schemas/provision_request.json');
@@ -75,7 +75,7 @@ app.put('/v2/service_instances/:instance_id', function (req, res) {
     });
     lastOperationQueries = 0;
   }
-  
+
   res.status(202).send(
     {
       "dashboard_url" :"http://example-dashboard.example.com/9189kdfsk0vfnku",
@@ -113,7 +113,7 @@ app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', funct
     res.sendStatus(422);
     return;
   }
-  
+
   var messages = validateJsonSchema(req.body, bindingRequestSchema);
   if (messages != "") {
     console.log(messages);
@@ -141,7 +141,7 @@ app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', fu
     res.sendStatus(422);
     return;
   }
-  
+
   if (!req.query.service_id || !req.query.plan_id) {
     res.sendStatus(400);
   } else {
@@ -157,7 +157,7 @@ app.delete('/v2/service_instances/:instance_id', function (req, res) {
     res.sendStatus(422);
     return;
   }
-  
+
   if (!req.query.service_id || !req.query.plan_id) {
     res.sendStatus(400);
   } else {
@@ -279,7 +279,7 @@ function containsKeyValue(obj, key, value ) {
 function parametersSchemaCheck(catalog, service_id, plan_id, action, parameters){
   var service = containsKeyValue(catalog.services, 'id', service_id);
   var plan = containsKeyValue(service.plans, 'id', plan_id);
-  var schemas = plan.schemas;  
+  var schemas = plan.schemas;
   if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
     return "";
   }

@@ -1,0 +1,12 @@
+language: node_js
+
+sudo: required
+
+node_js:
+  - node
+
+before_script:
+  - ./ci/2.13/before_script.sh
+
+script:
+  - ./ci/2.13/script.sh

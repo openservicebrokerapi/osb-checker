@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-06/schema#",
     "title": "OSB Binding Response",
     "description": "OSB Binding Response",
-    "type": "object",    
+    "type": "object",
     "properties": {
         "credentials":{ "type":"object"},
         "syslog_drain_url":{"type":"string"},
