@@ -234,7 +234,6 @@ function testProvision(instanceId, validBody, isAsync){
         });
 
         if (isAsync) {
-            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
             describe('PROVISION - poll', function() {
                 this.timeout(maxDelayTimeout*1000);
                 testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
@@ -311,7 +310,6 @@ function testUpdate(instanceId, validBody, isAsync){
         });
 
         if (isAsync) {
-            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
             describe('UPDATE - poll', function() {
                 this.timeout(maxDelayTimeout*1000);
                 it ('should return succeeded operation status after update', function(done){
@@ -464,7 +462,6 @@ function testDeprovision(instanceId, queryStrings, isAsync){
             });
 
             if (isAsync) {
-                // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
                 describe('DEPROVISION - poll', function() {
                     this.timeout(maxDelayTimeout*1000);
                     it ('should return succeeded operation status after deprovision', function(done){
