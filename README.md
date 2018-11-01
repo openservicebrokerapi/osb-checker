@@ -17,20 +17,30 @@ below to start the mock server and run tests against it.
 
 1. Run `git clone` to clone this repository to `$DIRECTORY`
 
-2. Launch the mock server
+2. Build and launch the mock server
 
 ```bash
-cd $DIRECTORY/$VERSION_NUMBER/mocks
-npm install
-node mockOSB.js
+cd $DIRECTORY && make
+cd $DIRECTORY/$VERSION_NUMBER/mocks && node mockOSB.js
+```
+
+Or you can build mock server docker image and run containerized mock server.
+
+```bash
+cd $DIRECTORY && make docker
+docker run -d --net=host osb-checker/mock-broker:2.13
 ```
 
 3. In a new terminal window, run the tests
 
 ```bash
-cd $DIRECTORY/$VERSION_NUMBER/tests/test
-npm install
-npm test
+cd $DIRECTORY/$VERSION_NUMBER/tests/test && npm test
+```
+
+If you have built docker image, then you can run this command:
+
+```bash
+docker run -it --net=host osb-checker/test-job:2.13
 ```
 
 ## Your own OSBAPI Endpoint
@@ -72,9 +82,7 @@ var config = require("./configs/config_mock.json"); //replace config_mock.json w
 4. Run tests
 
 ```bash
-    cd $DIRECTORY/$VERSION_NUMBER/tests/test
-    npm install
-    npm test
+    cd $DIRECTORY/$VERSION_NUMBER/tests/test && npm test
 ```
 
 # What's Covered
@@ -102,8 +110,7 @@ Provision requests support a couple of different scenarios, driven by the "scena
 OSB Checker also comes with a mock OSBAPI server that can be used to test marketplace implementations. To launch the Mock server:
 
 ```bash
-    cd $DIRECTORY/$VERSION_NUMBER/mocks
-    npm install
+    cd $DIRECTORY/$VERSION_NUMBER/mocks && npm install
     node mockOSB.js
 ```
 
