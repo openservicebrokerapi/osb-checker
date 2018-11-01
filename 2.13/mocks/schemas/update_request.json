@@ -28,7 +28,7 @@
       "type":"string",
       "pattern": "\\S+"
     },
-    "previous_values.space_id": { 
+    "previous_values.space_id": {
       "type":"string",
       "pattern": "\\S+"
     }

@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-06/schema#",
     "title": "OSB Provision Response",
     "description": "OSB Provision Response",
-    "type": "object",    
+    "type": "object",
     "properties": {
         "dashboard_url": {
             "type": "string",
