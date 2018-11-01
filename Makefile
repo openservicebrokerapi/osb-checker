@@ -1,3 +1,5 @@
+VERSION_NUMBER := 2.13
+
 .PHONY: all build docker clean
 
 all: build
@@ -15,14 +17,14 @@ prebuild:
 	  && sudo apt-get install -y nodejs
 
 mockbroker:
-	cd ./2.13/mocks && sudo npm install
+	cd ./$(VERSION_NUMBER)/mocks && sudo npm install
 
 testjob:
-	cd ./2.13/tests && sudo npm install
+	cd ./$(VERSION_NUMBER)/tests && sudo npm install
 
 docker:
-	cd ./2.13/mocks && docker build . -t osb-checker/mock-broker:2.13
-	cd ./2.13/tests && docker build . -t osb-checker/test-job:2.13
+	cd ./$(VERSION_NUMBER)/mocks && docker build . -t osb-checker/mock-broker:$(VERSION_NUMBER)
+	cd ./$(VERSION_NUMBER)/tests && docker build . -t osb-checker/test-job:$(VERSION_NUMBER)
 
 clean:
 	sudo apt-get uninstall -y nodejs \

@@ -1,5 +1,3 @@
 #!/bin/bash
 
-cd 2.13/tests
-npm install
-npm test
+cd 2.13/tests && npm test

@@ -28,7 +28,7 @@ Or you can build mock server docker image and run containerized mock server.
 
 ```bash
 cd $DIRECTORY && make docker
-docker run -d --net=host osb-checker/mock-broker:2.13
+docker run -d --net=host osb-checker/mock-broker:$VERSION_NUMBER
 ```
 
 3. In a new terminal window, run the tests
@@ -40,7 +40,7 @@ cd $DIRECTORY/$VERSION_NUMBER/tests/test && npm test
 If you have built docker image, then you can run this command:
 
 ```bash
-docker run -it --net=host osb-checker/test-job:2.13
+docker run -it --net=host osb-checker/test-job:$VERSION_NUMBER
 ```
 
 ## Your own OSBAPI Endpoint
