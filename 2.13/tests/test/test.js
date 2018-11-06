@@ -197,15 +197,28 @@ function testProvision(instanceId, validBody, isAsync){
             tempBody.parameters = {
                 'can-not': 'be-good'
             }
-            var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'create')
-            if (schemaCheckResult != '') {
-                preparedRequest()
-                .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
-                .set('X-Broker-API-Version', apiVersion)
-                .auth(config.user, config.password)
-                .send(tempBody)
-                .expect(400, done)
-            }
+            async.waterfall([
+                function(callback) {
+                    var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'create');
+                    callback(null, schemaCheckResult);
+				},
+                function(arg1, callback) {
+                    if (arg1 != '') {
+                        preparedRequest()
+                        .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+                        .set('X-Broker-API-Version', apiVersion)
+                        .auth(config.user, config.password)
+                        .send(tempBody)
+                        .expect(400, done)
+                    }
+                    callback(null);
+				},
+            ], function (err) {
+                if (err)
+                return done(err);
+                else
+                done();
+            });
         })
     });
 
@@ -293,15 +306,28 @@ function testUpdate(instanceId, validBody, isAsync){
             tempBody.parameters = {
                 'can-not': 'be-good'
             }
-            var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'update')
-            if (schemaCheckResult != '') {
-                preparedRequest()
-                .patch('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
-                .set('X-Broker-API-Version', apiVersion)
-                .auth(config.user, config.password)
-                .send(tempBody)
-                .expect(400, done)
-            }
+            async.waterfall([
+                function(callback) {
+                    var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'update');
+                    callback(null, schemaCheckResult);
+				},
+                function(arg1, callback) {
+                    if (arg1 != '') {
+                        preparedRequest()
+                        .patch('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+                        .set('X-Broker-API-Version', apiVersion)
+                        .auth(config.user, config.password)
+                        .send(tempBody)
+                        .expect(400, done)
+                    }
+                    callback(null);
+				},
+            ], function (err) {
+                if (err)
+                return done(err);
+                else
+                done();
+            });
         })
     });
 
@@ -369,15 +395,28 @@ function testBind(instanceId, bindingId, validBody){
             tempBody.parameters = {
                 'can-not': 'be-good'
             }
-            var schemaCheckResult = validateCatalogSchema(tempBody, 'service_binding', 'create')
-            if (schemaCheckResult != '') {
-                preparedRequest()
-                .put('/v2/service_instances/' + instanceId +  '/service_bindings/' + bindingId)
-                .set('X-Broker-API-Version', apiVersion)
-                .auth(config.user, config.password)
-                .send(tempBody)
-                .expect(400, done)
-            }
+            async.waterfall([
+                function(callback) {
+                    var schemaCheckResult = validateCatalogSchema(tempBody, 'service_binding', 'create');
+                    callback(null, schemaCheckResult);
+				},
+                function(arg1, callback) {
+                    if (arg1 != '') {
+                        preparedRequest()
+                        .put('/v2/service_instances/' + instanceId +  '/service_bindings/' + bindingId)
+                        .set('X-Broker-API-Version', apiVersion)
+                        .auth(config.user, config.password)
+                        .send(tempBody)
+                        .expect(400, done)
+                    }
+                    callback(null);
+				},
+            ], function (err) {
+                if (err)
+                return done(err);
+                else
+                done();
+            });
         })
 
         describe('NEW', function () {
