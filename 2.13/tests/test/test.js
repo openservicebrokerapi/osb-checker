@@ -201,7 +201,7 @@ function testProvision(instanceId, validBody, isAsync){
                 function(callback) {
                     var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'create');
                     callback(null, schemaCheckResult);
-				},
+                },
                 function(arg1, callback) {
                     if (arg1 != '') {
                         preparedRequest()
@@ -212,7 +212,7 @@ function testProvision(instanceId, validBody, isAsync){
                         .expect(400, done)
                     }
                     callback(null);
-				},
+                },
             ], function (err) {
                 if (err)
                 return done(err);
@@ -310,7 +310,7 @@ function testUpdate(instanceId, validBody, isAsync){
                 function(callback) {
                     var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'update');
                     callback(null, schemaCheckResult);
-				},
+                },
                 function(arg1, callback) {
                     if (arg1 != '') {
                         preparedRequest()
@@ -321,7 +321,7 @@ function testUpdate(instanceId, validBody, isAsync){
                         .expect(400, done)
                     }
                     callback(null);
-				},
+                },
             ], function (err) {
                 if (err)
                 return done(err);
@@ -399,7 +399,7 @@ function testBind(instanceId, bindingId, validBody){
                 function(callback) {
                     var schemaCheckResult = validateCatalogSchema(tempBody, 'service_binding', 'create');
                     callback(null, schemaCheckResult);
-				},
+                },
                 function(arg1, callback) {
                     if (arg1 != '') {
                         preparedRequest()
@@ -410,7 +410,7 @@ function testBind(instanceId, bindingId, validBody){
                         .expect(400, done)
                     }
                     callback(null);
-				},
+                },
             ], function (err) {
                 if (err)
                 return done(err);
