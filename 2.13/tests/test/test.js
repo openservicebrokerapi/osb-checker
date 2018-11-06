@@ -709,7 +709,7 @@ function validateJsonSchema(body, schema) {
     return '';
 }
 
-function validateCatalogSchema(tempBody, type, action) {
+function validateCatalogSchema(tempBody, schema_type, action) {
     preparedRequest()
         .get('/v2/catalog')
         .set('X-Broker-API-Version', apiVersion)
@@ -721,8 +721,8 @@ function validateCatalogSchema(tempBody, type, action) {
                 var message = "Get catalog result failed: " + err;
                 return message;
             }
-            var catalog = JSON.parse(JSON.parse(JSON.stringify(res.body));
-            var schemaCheckResults = parametersSchemaCheck(catalog, tempBody.service_id, tempBody.plan_id, type, action, tempBody.parameters);
+            var catalog = JSON.parse(JSON.stringify(res.body));
+            var schemaCheckResults = parametersSchemaCheck(catalog, tempBody.service_id, tempBody.plan_id, schema_type, action, tempBody.parameters);
             if (schemaCheckResults != '') {
                 var message = "Validate schema parameters failed!";
                 return message;
@@ -755,24 +755,24 @@ function containsKeyValue(obj, key, value) {
     return null;
 }
 
-function parametersSchemaCheck(catalog, service_id, plan_id, type, action, parameters){
+function parametersSchemaCheck(catalog, service_id, plan_id, schema_type, action, parameters){
     var service = containsKeyValue(catalog.services, 'id', service_id);
     var plan = containsKeyValue(service.plans, 'id', plan_id);
     var schemas = plan.schemas;
-    if type == "service_instance" {
+    var schema_parameters;
+    if (schema_type == 'service_instance') {
         if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
             return "";
         }
-        var schema = schemas.service_instance[action].parameters;
-    }
-    if type == "service_binding" {
+        schema_parameters = schemas.service_instance[action].parameters;
+    } else if (schema_type == 'service_binding') {
         if (!schemas || !schemas.service_binding || !schemas.service_binding[action]) {
             return "";
         }
-        var schema = schemas.service_binding[action].parameters;
+        schema_parameters = schemas.service_binding[action].parameters;
     }
-    if (!schema) {
+    if (!schema_parameters) {
         return "";
     }
-    return validateJsonSchema(parameters, schema);
+    return validateJsonSchema(parameters, schema_parameters);
 }
