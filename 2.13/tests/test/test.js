@@ -197,12 +197,15 @@ function testProvision(instanceId, validBody, isAsync){
             tempBody.parameters = {
                 'can-not': 'be-good'
             }
-            preparedRequest()
-            .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
-            .set('X-Broker-API-Version', apiVersion)
-            .auth(config.user, config.password)
-            .send(tempBody)
-            .expect(400, done)
+            var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'create')
+            if (schemaCheckResult != '') {
+                preparedRequest()
+                .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .send(tempBody)
+                .expect(400, done)
+            }
         })
     });
 
@@ -285,6 +288,21 @@ function testUpdate(instanceId, validBody, isAsync){
             .send(tempBody)
             .expect(400, done)
         })
+        it ('should reject if parameters are not following schema', function(done){
+            var tempBody = _.clone(validBody);
+            tempBody.parameters = {
+                'can-not': 'be-good'
+            }
+            var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'update')
+            if (schemaCheckResult != '') {
+                preparedRequest()
+                .patch('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .send(tempBody)
+                .expect(400, done)
+            }
+        })
     });
 
     var lastOperationName;
@@ -346,6 +364,21 @@ function testBind(instanceId, bindingId, validBody){
             .send(tempBody)
             .expect(400, done)
         });
+        it ('should reject if parameters are not following schema', function(done){
+            var tempBody = _.clone(validBody);
+            tempBody.parameters = {
+                'can-not': 'be-good'
+            }
+            var schemaCheckResult = validateCatalogSchema(tempBody, 'service_binding', 'create')
+            if (schemaCheckResult != '') {
+                preparedRequest()
+                .put('/v2/service_instances/' + instanceId +  '/service_bindings/' + bindingId)
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .send(tempBody)
+                .expect(400, done)
+            }
+        })
 
         describe('NEW', function () {
             it ('should accept a valid binding request', function(done){
@@ -674,4 +707,72 @@ function validateJsonSchema(body, schema) {
         return message;
     }
     return '';
+}
+
+function validateCatalogSchema(tempBody, type, action) {
+    preparedRequest()
+        .get('/v2/catalog')
+        .set('X-Broker-API-Version', apiVersion)
+        .auth(config.user, config.password)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res){
+            if (err) {
+                var message = "Get catalog result failed: " + err;
+                return message;
+            }
+            var catalog = JSON.parse(JSON.parse(JSON.stringify(res.body));
+            var schemaCheckResults = parametersSchemaCheck(catalog, tempBody.service_id, tempBody.plan_id, type, action, tempBody.parameters);
+            if (schemaCheckResults != '') {
+                var message = "Validate schema parameters failed!";
+                return message;
+            }
+        })
+    return '';
+}
+
+function containsKeyValue(obj, key, value) {
+    if (!obj) {
+        return null;
+    }
+    if (obj[key] === value) {
+       return obj;
+    }
+    if (Array.isArray(obj)) {
+        for (var i in obj) {
+            var found = containsKeyValue(obj[i], key, value);
+            if (found) return found;
+        }
+    } else if (typeof obj == "object") {
+        for (var p in obj) {
+            if (p === key && obj[p] === value) {
+                return obj;
+            }
+            var found = containsKeyValue(p, key, value);
+            if(found) return found;
+        }
+    }
+    return null;
+}
+
+function parametersSchemaCheck(catalog, service_id, plan_id, type, action, parameters){
+    var service = containsKeyValue(catalog.services, 'id', service_id);
+    var plan = containsKeyValue(service.plans, 'id', plan_id);
+    var schemas = plan.schemas;
+    if type == "service_instance" {
+        if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
+            return "";
+        }
+        var schema = schemas.service_instance[action].parameters;
+    }
+    if type == "service_binding" {
+        if (!schemas || !schemas.service_binding || !schemas.service_binding[action]) {
+            return "";
+        }
+        var schema = schemas.service_binding[action].parameters;
+    }
+    if (!schema) {
+        return "";
+    }
+    return validateJsonSchema(parameters, schema);
 }
