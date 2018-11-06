@@ -210,6 +210,7 @@ function testProvision(instanceId, validBody, isAsync){
         testAsyncParameter('/v2/service_instances/' + instanceId, 'PUT', validBody);
     }
 
+    var lastOperationName;
     describe('PROVISION - new', function () {
         it ('should accept a valid provision request', function(done){
             var tempBody = _.clone(validBody);
@@ -224,20 +225,22 @@ function testProvision(instanceId, validBody, isAsync){
                 var message = validateJsonSchema(res.body, provisionResponseSchema);
                 if (message!='')
                     done(new Error(message));
-                else
+                else {
+                    lastOperationName = res.body.operation;
                     done();
+                }
+
             })
         });
 
         if (isAsync) {
-            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
             describe('PROVISION - poll', function() {
                 this.timeout(maxDelayTimeout*1000);
                 testAPIVersionHeader('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
                 testAuthentication('/v2/service_instances/' + instanceId + '/last_operation', 'GET');
 
                 it ('should return succeeded operation status after provision', function(done){
-                    pollInstanceLastOperationStatus(instanceId, done);
+                    pollInstanceLastOperationStatus(instanceId, lastOperationName, done);
                 })
             });
         }
@@ -284,6 +287,7 @@ function testUpdate(instanceId, validBody, isAsync){
         })
     });
 
+    var lastOperationName;
     describe('UPDATE', function () {
         it('should accept a valid update request', function(done){
             var tempBody = _.clone(validBody);
@@ -296,17 +300,20 @@ function testUpdate(instanceId, validBody, isAsync){
             .end(function(err, res){
                 if (err) return done(err);
                 var message = validateJsonSchema(res.body, updateResponseSchema);
-                if (message!='') done(new Error(message));
-                else done();
+                if (message!='')
+                    done(new Error(message));
+                else {
+                    lastOperationName = res.body.operation;
+                    done();
+                }
             })
         });
 
         if (isAsync) {
-            // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
             describe('UPDATE - poll', function() {
                 this.timeout(maxDelayTimeout*1000);
                 it ('should return succeeded operation status after update', function(done){
-                    pollInstanceLastOperationStatus(instanceId, done);
+                    pollInstanceLastOperationStatus(instanceId, lastOperationName, done);
                 })
             });
         }
@@ -433,6 +440,7 @@ function testDeprovision(instanceId, queryStrings, isAsync){
                 .auth(config.user, config.password)
                 .expect(400, done)
             })
+            var lastOperationName;
             it ('should accept a valid service deletion request', function(done){
                 preparedRequest()
                 .delete('/v2/service_instances/' + instanceId
@@ -445,18 +453,19 @@ function testDeprovision(instanceId, queryStrings, isAsync){
                     if (err) return done(err);
                     var message = validateJsonSchema(res.body, provisioningDeleteResponseSchema);
                     if (message!='')
-                    done(new Error(message));
-                    else
-                    done();
+                        done(new Error(message));
+                    else {
+                        lastOperationName = res.body.operation;
+                        done();
+                    }
                 })
             });
 
             if (isAsync) {
-                // TODO: the query string should contain 'operation' for the last operation. FYI: https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#parameters.
                 describe('DEPROVISION - poll', function() {
                     this.timeout(maxDelayTimeout*1000);
                     it ('should return succeeded operation status after deprovision', function(done){
-                        pollInstanceLastOperationStatus(instanceId, done);
+                        pollInstanceLastOperationStatus(instanceId, lastOperationName, done);
                     })
                 });
             }
@@ -464,7 +473,7 @@ function testDeprovision(instanceId, queryStrings, isAsync){
     });
 }
 
-function pollInstanceLastOperationStatus(instanceId, done) {
+function pollInstanceLastOperationStatus(instanceId, lastOperationName, done) {
     var count = 0;
     var lastOperationState = 'in progress';
     async.whilst(
@@ -472,21 +481,23 @@ function pollInstanceLastOperationStatus(instanceId, done) {
             return lastOperationState == "in progress" && count <= config.maxPollingNum;
         },
         function(callback) {
-            count++;
-            console.log(count.toString() + 'th polling last operation...');
-            preparedRequest()
-                .get('/v2/service_instances/' + instanceId + '/last_operation')
-                .set('X-Broker-API-Version', apiVersion)
-                .auth(config.user, config.password)
-                .expect(200)
-                .expect('Content-Type', /json/)
-                .end(function(err, res){
-                    if (err) callback(err);
-                    var message = validateJsonSchema(res.body, lastOperationSchema);
-                    if (message != "") callback(new Error(message));
-                    lastOperationState = res.body.state;
-                })
             setTimeout(function() {
+                count++;
+                console.log(count.toString() + 'th polling last operation...');
+                var url = '/v2/service_instances/' + instanceId + '/last_operation';
+                if (lastOperationName) url += '?operation=' + lastOperationName;
+                preparedRequest()
+                    .get(url)
+                    .set('X-Broker-API-Version', apiVersion)
+                    .auth(config.user, config.password)
+                    .expect(200)
+                    .expect('Content-Type', /json/)
+                    .end(function(err, res){
+                        if (err) callback(err);
+                        var message = validateJsonSchema(res.body, lastOperationSchema);
+                        if (message != "") callback(new Error(message));
+                        lastOperationState = res.body.state;
+                    })
                 callback(null);
             }, config.pollingInterval*1000);
         },
