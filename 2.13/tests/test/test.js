@@ -124,6 +124,11 @@ function testLifecycle (testCase) {
   })
 }
 
+const TYPE_SERVICE_INSTANCE = 'service_instance'
+const TYPE_SERVICE_BINDING = 'service_binding'
+const ACTION_CREATE = 'create'
+const ACTION_UPDATE = 'update'
+
 function testProvision (instanceId, validBody, isAsync) {
   describe('PROVISION - request syntax', function () {
     testAPIVersionHeader('/v2/service_instances/' + instanceId, 'PUT')
@@ -194,12 +199,28 @@ function testProvision (instanceId, validBody, isAsync) {
       tempBody.parameters = {
         'can-not': 'be-good'
       }
-      preparedRequest()
-        .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
-        .set('X-Broker-API-Version', apiVersion)
-        .auth(config.user, config.password)
-        .send(tempBody)
-        .expect(400, done)
+      async.waterfall([
+        function(callback) {
+            var schemaCheckResult = validateCatalogSchema(tempBody, TYPE_SERVICE_INSTANCE, ACTION_CREATE);
+            callback(null, schemaCheckResult);
+        },
+        function(arg1, callback) {
+            if (arg1 != '') {
+                preparedRequest()
+                .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+                .set('X-Broker-API-Version', apiVersion)
+                .auth(config.user, config.password)
+                .send(tempBody)
+                .expect(400, done)
+            }
+            callback(null);
+        },
+      ], function (err) {
+        if (err)
+        return done(err);
+        else
+        done();
+      });
     })
   })
 
@@ -278,6 +299,34 @@ function testUpdate (instanceId, validBody, isAsync) {
         .send(tempBody)
         .expect(400, done)
     })
+    it ('should reject if parameters are not following schema', function(done){
+      var tempBody = _.clone(validBody);
+      tempBody.parameters = {
+          'can-not': 'be-good'
+      }
+      async.waterfall([
+          function(callback) {
+              var schemaCheckResult = validateCatalogSchema(tempBody, TYPE_SERVICE_INSTANCE, ACTION_UPDATE);
+              callback(null, schemaCheckResult);
+          },
+          function(arg1, callback) {
+              if (arg1 != '') {
+                  preparedRequest()
+                  .patch('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+                  .set('X-Broker-API-Version', apiVersion)
+                  .auth(config.user, config.password)
+                  .send(tempBody)
+                  .expect(400, done)
+              }
+              callback(null);
+          },
+      ], function (err) {
+          if (err)
+          return done(err);
+          else
+          done();
+      });
+    })
   })
 
   var lastOperationName
@@ -335,6 +384,34 @@ function testBind (instanceId, bindingId, validBody) {
         .auth(config.user, config.password)
         .send(tempBody)
         .expect(400, done)
+    })
+    it ('should reject if parameters are not following schema', function(done){
+      var tempBody = _.clone(validBody);
+      tempBody.parameters = {
+          'can-not': 'be-good'
+      }
+      async.waterfall([
+          function(callback) {
+              var schemaCheckResult = validateCatalogSchema(tempBody, TYPE_SERVICE_BINDING, ACTION_CREATE);
+              callback(null, schemaCheckResult);
+          },
+          function(arg1, callback) {
+              if (arg1 != '') {
+                  preparedRequest()
+                  .put('/v2/service_instances/' + instanceId +  '/service_bindings/' + bindingId)
+                  .set('X-Broker-API-Version', apiVersion)
+                  .auth(config.user, config.password)
+                  .send(tempBody)
+                  .expect(400, done)
+              }
+              callback(null);
+          },
+      ], function (err) {
+          if (err)
+          return done(err);
+          else
+          done();
+      });
     })
 
     describe('NEW', function () {
@@ -654,4 +731,72 @@ function validateJsonSchema (body, schema) {
     return message
   }
   return ''
+}
+
+function validateCatalogSchema(tempBody, schemaType, action) {
+  preparedRequest()
+      .get('/v2/catalog')
+      .set('X-Broker-API-Version', apiVersion)
+      .auth(config.user, config.password)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res){
+          if (err) {
+              var message = "Get catalog result failed: " + err;
+              return message;
+          }
+          var catalog = _.clone(res.body);
+          var schemaCheckResults = parametersSchemaCheck(catalog, tempBody.service_id, tempBody.plan_id, schemaType, action, tempBody.parameters);
+          if (schemaCheckResults != '') {
+              var message = "Validate schema parameters failed!";
+              return message;
+          }
+      })
+  return '';
+}
+
+function findWhichContains(obj, key, value) {
+  if (!obj) {
+      return null;
+  }
+  if (obj[key] === value) {
+     return obj;
+  }
+  if (Array.isArray(obj)) {
+      for (var i in obj) {
+          var found = findWhichContains(obj[i], key, value);
+          if (found) return found;
+      }
+  } else if (typeof obj == "object") {
+      for (var p in obj) {
+          if (p === key && obj[p] === value) {
+              return obj;
+          }
+          var found = findWhichContains(p, key, value);
+          if(found) return found;
+      }
+  }
+  return null;
+}
+
+function parametersSchemaCheck(catalog, serviceId, planId, schemaType, action, parameters){
+  var service = findWhichContains(catalog.services, 'id', serviceId);
+  var plan = findWhichContains(service.plans, 'id', planId);
+  var schemas = plan.schemas;
+  var schemaParameters;
+  if (schemaType == TYPE_SERVICE_INSTANCE) {
+      if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
+          return "";
+      }
+      schemaParameters = schemas.service_instance[action].parameters;
+  } else if (schemaType == TYPE_SERVICE_BINDING) {
+      if (!schemas || !schemas.service_binding || !schemas.service_binding[action]) {
+          return "";
+      }
+      schemaParameters = schemas.service_binding[action].parameters;
+  }
+  if (!schemaParameters) {
+      return "";
+  }
+  return validateJsonSchema(parameters, schemaParameters);
 }
