@@ -5,5 +5,5 @@
     "type": "object",
     "properties": {
     },
-    "additionalProperties": false
+    "additionalProperties": true
 }

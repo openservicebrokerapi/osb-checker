@@ -13,5 +13,5 @@
             "pattern": "\\S+"
         }
     },
-    "additionalProperties": false
+    "additionalProperties": true
 }

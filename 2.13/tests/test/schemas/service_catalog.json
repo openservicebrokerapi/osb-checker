@@ -122,5 +122,5 @@
             }
         }
     },
-    "additionalProperties": false
+    "additionalProperties": true
 }
