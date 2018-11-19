@@ -127,6 +127,11 @@ function testLifecycle(testCase){
     });
 }
 
+const TYPE_SERVICE_INSTANCE = 'service_instance'
+const TYPE_SERVICE_BINDING = 'service_binding'
+const ACTION_CREATE = 'create'
+const ACTION_UPDATE = 'update'
+
 function testProvision(instanceId, validBody, isAsync){
     describe('PROVISION - request syntax', function() {
         testAPIVersionHeader('/v2/service_instances/' + instanceId, 'PUT');
@@ -199,7 +204,7 @@ function testProvision(instanceId, validBody, isAsync){
             }
             async.waterfall([
                 function(callback) {
-                    var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'create');
+                    var schemaCheckResult = validateCatalogSchema(tempBody, TYPE_SERVICE_INSTANCE, ACTION_CREATE);
                     callback(null, schemaCheckResult);
                 },
                 function(arg1, callback) {
@@ -308,7 +313,7 @@ function testUpdate(instanceId, validBody, isAsync){
             }
             async.waterfall([
                 function(callback) {
-                    var schemaCheckResult = validateCatalogSchema(tempBody, 'service_instance', 'update');
+                    var schemaCheckResult = validateCatalogSchema(tempBody, TYPE_SERVICE_INSTANCE, ACTION_UPDATE);
                     callback(null, schemaCheckResult);
                 },
                 function(arg1, callback) {
@@ -397,7 +402,7 @@ function testBind(instanceId, bindingId, validBody){
             }
             async.waterfall([
                 function(callback) {
-                    var schemaCheckResult = validateCatalogSchema(tempBody, 'service_binding', 'create');
+                    var schemaCheckResult = validateCatalogSchema(tempBody, TYPE_SERVICE_BINDING, ACTION_CREATE);
                     callback(null, schemaCheckResult);
                 },
                 function(arg1, callback) {
@@ -748,7 +753,7 @@ function validateJsonSchema(body, schema) {
     return '';
 }
 
-function validateCatalogSchema(tempBody, schema_type, action) {
+function validateCatalogSchema(tempBody, schemaType, action) {
     preparedRequest()
         .get('/v2/catalog')
         .set('X-Broker-API-Version', apiVersion)
@@ -760,8 +765,8 @@ function validateCatalogSchema(tempBody, schema_type, action) {
                 var message = "Get catalog result failed: " + err;
                 return message;
             }
-            var catalog = JSON.parse(JSON.stringify(res.body));
-            var schemaCheckResults = parametersSchemaCheck(catalog, tempBody.service_id, tempBody.plan_id, schema_type, action, tempBody.parameters);
+            var catalog = _.clone(res.body);
+            var schemaCheckResults = parametersSchemaCheck(catalog, tempBody.service_id, tempBody.plan_id, schemaType, action, tempBody.parameters);
             if (schemaCheckResults != '') {
                 var message = "Validate schema parameters failed!";
                 return message;
@@ -770,7 +775,7 @@ function validateCatalogSchema(tempBody, schema_type, action) {
     return '';
 }
 
-function containsKeyValue(obj, key, value) {
+function findWhichContains(obj, key, value) {
     if (!obj) {
         return null;
     }
@@ -779,7 +784,7 @@ function containsKeyValue(obj, key, value) {
     }
     if (Array.isArray(obj)) {
         for (var i in obj) {
-            var found = containsKeyValue(obj[i], key, value);
+            var found = findWhichContains(obj[i], key, value);
             if (found) return found;
         }
     } else if (typeof obj == "object") {
@@ -787,31 +792,31 @@ function containsKeyValue(obj, key, value) {
             if (p === key && obj[p] === value) {
                 return obj;
             }
-            var found = containsKeyValue(p, key, value);
+            var found = findWhichContains(p, key, value);
             if(found) return found;
         }
     }
     return null;
 }
 
-function parametersSchemaCheck(catalog, service_id, plan_id, schema_type, action, parameters){
-    var service = containsKeyValue(catalog.services, 'id', service_id);
-    var plan = containsKeyValue(service.plans, 'id', plan_id);
+function parametersSchemaCheck(catalog, serviceId, planId, schemaType, action, parameters){
+    var service = findWhichContains(catalog.services, 'id', serviceId);
+    var plan = findWhichContains(service.plans, 'id', planId);
     var schemas = plan.schemas;
-    var schema_parameters;
-    if (schema_type == 'service_instance') {
+    var schemaParameters;
+    if (schemaType == TYPE_SERVICE_INSTANCE) {
         if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
             return "";
         }
-        schema_parameters = schemas.service_instance[action].parameters;
-    } else if (schema_type == 'service_binding') {
+        schemaParameters = schemas.service_instance[action].parameters;
+    } else if (schemaType == TYPE_SERVICE_BINDING) {
         if (!schemas || !schemas.service_binding || !schemas.service_binding[action]) {
             return "";
         }
-        schema_parameters = schemas.service_binding[action].parameters;
+        schemaParameters = schemas.service_binding[action].parameters;
     }
-    if (!schema_parameters) {
+    if (!schemaParameters) {
         return "";
     }
-    return validateJsonSchema(parameters, schema_parameters);
+    return validateJsonSchema(parameters, schemaParameters);
 }
