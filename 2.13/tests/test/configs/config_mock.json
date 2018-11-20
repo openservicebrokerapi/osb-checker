@@ -4,8 +4,8 @@
     "user": "username",
     "password": "password",
     "authentication": "basic",
-    "pollingInterval": 10,
-    "maxPollingNum": 30,
+    "pollingInterval": 5,
+    "maxPollingNum": 60,
     "cases": [
         {
             "name": "Mock Service Test",
