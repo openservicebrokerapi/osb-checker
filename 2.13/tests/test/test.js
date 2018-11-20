@@ -216,7 +216,7 @@ function testProvision (instanceId, validBody, isAsync) {
           callback(null)
         }
       ], function (err) {
-        if (err) { return done(err) } else { done() }
+        done(err)
       })
     })
   })
@@ -318,7 +318,7 @@ function testUpdate (instanceId, validBody, isAsync) {
           callback(null)
         }
       ], function (err) {
-        if (err) { return done(err) } else { done() }
+        done(err)
       })
     })
   })
@@ -401,7 +401,7 @@ function testBind (instanceId, bindingId, validBody) {
           callback(null)
         }
       ], function (err) {
-        if (err) { return done(err) } else { done() }
+        done(err)
       })
     })
 
@@ -750,20 +750,17 @@ function findWhichContains (obj, key, value) {
   if (!obj) {
     return null
   }
-  if (obj[key] === value) {
-    return obj
-  }
   if (Array.isArray(obj)) {
     for (var i in obj) {
       var found = findWhichContains(obj[i], key, value)
       if (found) return found
     }
   } else if (typeof obj === 'object') {
-    for (var p in obj) {
-      if (p === key && obj[p] === value) {
+    for (var k in obj) {
+      if (k === key && obj[k] === value) {
         return obj
       }
-      found = findWhichContains(p, key, value)
+      found = findWhichContains(obj[k], key, value)
       if (found) return found
     }
   }
