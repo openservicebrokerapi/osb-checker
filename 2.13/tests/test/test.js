@@ -258,8 +258,20 @@ function testProvision (instanceId, validBody, isAsync) {
     }
   })
 
+  describe('PROVISION - existed', function () {
+    it('should return 200 OK when instance Id exists with identical properties', function (done) {
+      var tempBody = _.clone(validBody)
+      preparedRequest()
+        .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+        .set('X-Broker-API-Version', apiVersion)
+        .auth(config.user, config.password)
+        .send(tempBody)
+        .expect(200, done)
+    })
+  })
+
   describe('PROVISION - conflict', function () {
-    it('should return conflict when instance Id exists with different properties', function (done) {
+    it('should return 409 Conflict when instance Id exists with different properties', function (done) {
       if (!config.conflictiveProvision) {
         return done(new Error('missing conflictiveProvision in config file'))
       }
@@ -351,6 +363,18 @@ function testUpdate (instanceId, validBody, isAsync) {
         })
       })
     }
+
+    describe('UPDATE - existed', function () {
+      it('should return 200 OK when the request changes have been applied', function (done) {
+        var tempBody = _.clone(validBody)
+        preparedRequest()
+          .patch('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+          .set('X-Broker-API-Version', apiVersion)
+          .auth(config.user, config.password)
+          .send(tempBody)
+          .expect(200, done)
+      })
+    })
   })
 }
 
@@ -420,6 +444,36 @@ function testBind (instanceId, bindingId, validBody) {
             if (message !== '') { done(new Error(message)) } else { done() }
           })
       })
+
+      describe('NEW - existed', function () {
+        it('should return 200 OK when binding Id with same instance Id exists with identical properties', function (done) {
+          var tempBody = _.clone(validBody)
+          preparedRequest()
+            .put('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .send(tempBody)
+            .expect(200, done)
+        })
+      })
+
+      describe('NEW - conflict', function () {
+        it('should return 409 Conflict when bingding Id with same instance Id exists with different properties', function (done) {
+          if (!config.conflictiveBind) {
+            return done(new Error('missing conflictiveBind in config file'))
+          }
+          var tempBody = _.clone(validBody)
+          tempBody.service_id = config.conflictiveBind.service_id
+          tempBody.plan_id = config.conflictiveBind.plan_id
+          tempBody.parameters = config.conflictiveBind.parameters
+          preparedRequest()
+            .put('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .send(tempBody)
+            .expect(409, done)
+        })
+      })
     })
   })
 }
@@ -457,6 +511,18 @@ function testUnbind (instanceId, bindingId, queryStrings) {
             var message = validateJsonSchema(res.body, bindingDeleteResponseSchema)
             if (message !== '') { done(new Error(message)) } else { done() }
           })
+      })
+
+      describe('DELETE - gone', function () {
+        it('should return 410 Gone when binding Id does not exist', function (done) {
+          preparedRequest()
+            .delete('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId +
+            '?plan_id=' + queryStrings.plan_id +
+            '&service_id=' + queryStrings.service_id)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .expect(410, done)
+        })
       })
     })
   })
@@ -510,13 +576,25 @@ function testDeprovision (instanceId, queryStrings, isAsync) {
       })
 
       if (isAsync) {
-        describe('DEPROVISION - poll', function () {
+        describe('DELETE - poll', function () {
           this.timeout(maxDelayTimeout * 1000)
           it('should return succeeded operation status after deprovision', function (done) {
             pollInstanceLastOperationStatus(instanceId, lastOperationName, done)
           })
         })
       }
+
+      describe('DELETE - gone', function () {
+        it('should return 410 Gone when binding Id does not exist', function (done) {
+          preparedRequest()
+            .delete('/v2/service_instances/' + instanceId +
+            '?accepts_incomplete=true&plan_id=' + queryStrings.plan_id +
+            '&service_id=' + queryStrings.service_id)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .expect(410, done)
+        })
+      })
     })
   })
 }
