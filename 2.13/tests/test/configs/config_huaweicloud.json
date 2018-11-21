@@ -1,0 +1,191 @@
+{
+    "url": "http://localhost:3000",
+    "apiVersion": "2.13",
+    "user": "{{ broker_username }}",
+    "password": "{{ broker_password }}",
+    "authentication": "basic",
+    "pollingInterval": 10,
+    "maxPollingNum": 50,
+    "cases": [
+        {
+            "name": "Redis Single Node Test",
+            "service_id" :"45d162e1-cf1e-455c-beff-cc0765d9a377",
+            "organization_guid": "organization_id",
+            "space_guid": "space_id",
+            "lifecycle": [
+                {
+                    "operation": "provision",
+                    "plan_id": "d54d393b-f5ce-4eb7-86be-49da00606368",
+                    "async": true,
+                    "parameters": {
+                        "username": "username",
+                        "password": "Password1234!",
+                        "name": "osb-checker-dcs-redis-{{ name_uuid }}",
+                        "description": "Redis Single Node Test"
+
+                    }
+                },
+                {
+                    "operation": "update",
+                    "plan_id": "d54d393b-f5ce-4eb7-86be-49da00606368",
+                    "async": true,
+                    "parameters": {
+                        "name": "osb-checker-dcs-redis-updated-{{ name_uuid }}",
+                        "description": "Redis Single Node Test1",
+                        "old_password": "Password1234!",
+                        "new_password": "Password1234$"
+                    }
+                },
+                {
+                    "operation": "bind",
+                    "parameters": {
+                        "service_id": "45d162e1-cf1e-455c-beff-cc0765d9a377",
+                        "plan_id": "d54d393b-f5ce-4eb7-86be-49da00606368"
+                    }
+                },
+                {
+                    "operation": "unbind"
+                },
+                {
+                    "operation": "deprovision",
+                    "async": true
+                }
+            ]
+        },
+        {
+            "name": "Distributed Message Service for RabbitMQ",
+            "service_id" :"fc0c6ad1-ff5a-499a-8598-fda9fb414fcb",
+            "organization_guid": "organization_id",
+            "space_guid": "space_id",
+            "lifecycle": [
+                {
+                    "operation": "provision",
+                    "plan_id": "d0c150cb-6a2a-47aa-8937-9c55d4615e14",
+                    "async": true,
+                    "parameters": {
+                        "username": "username",
+                        "password": "Password1234!",
+                        "name": "osb-checker-dms-{{ name_uuid }}",
+                        "description": "RabbitMQ Single Node Test"
+
+                    }
+                },
+                {
+                    "operation": "update",
+                    "plan_id": "d0c150cb-6a2a-47aa-8937-9c55d4615e14",
+                    "async": true,
+                    "parameters": {
+                        "name": "osb-checker-dms-updated-{{ name_uuid }}",
+                        "description": "RabbitMQ Single Node Test1"
+                    }
+                },
+                {
+                    "operation": "bind",
+                    "parameters": {
+                        "service_id": "fc0c6ad1-ff5a-499a-8598-fda9fb414fcb",
+                        "plan_id": "d0c150cb-6a2a-47aa-8937-9c55d4615e14"
+                    }
+                },
+                {
+                    "operation": "unbind"
+                },
+                {
+                    "operation": "deprovision",
+                    "async": true
+                }
+            ]
+        },
+        {
+            "name": "Object Storage Service Test",
+            "service_id" :"94e8ffdf-bf9c-422f-b73c-776a3ca69f35",
+            "organization_guid": "organization_id",
+            "space_guid": "space_id",
+            "lifecycle": [
+                {
+                    "operation": "provision",
+                    "plan_id": "df0312bf-8189-4482-826e-2370a7f4d805",
+                    "async": false,
+                    "parameters": {
+                        "bucket_name": "osb-checker-obs-{{ name_uuid }}",
+                        "bucket_policy": "public-read-write"
+
+                    }
+                },
+                {
+                    "operation": "update",
+                    "plan_id": "df0312bf-8189-4482-826e-2370a7f4d805",
+                    "async": false,
+                    "parameters": {
+                        "bucket_policy": "private",
+                        "status": "Enabled"
+                    }
+                },
+                {
+                    "operation": "bind",
+                    "parameters": {
+                        "service_id": "94e8ffdf-bf9c-422f-b73c-776a3ca69f35",
+                        "plan_id": "df0312bf-8189-4482-826e-2370a7f4d805"
+                    }
+                },
+                {
+                    "operation": "unbind"
+                },
+                {
+                    "operation": "deprovision",
+                    "async": false
+                }
+            ]
+        },
+        {
+            "name": "RDS SQLServer Service",
+            "service_id" :"275f3e0b-86fd-4303-946c-171374d29150",
+            "organization_guid": "organization_id",
+            "space_guid": "space_id",
+            "lifecycle": [
+                {
+                    "operation": "provision",
+                    "plan_id": "839f4458-309a-4e05-a069-807e950cf6da",
+                    "async": true,
+                    "parameters": {
+                        "name": "osb-checker-rds-mysql-{{ name_uuid }}",
+                        "database_password": "Password1234!"
+
+                    }
+                },
+                {
+                    "operation": "update",
+                    "plan_id": "839f4458-309a-4e05-a069-807e950cf6da",
+                    "async": true,
+                    "parameters": {
+                        "volume_size": 200
+                    }
+                },
+                {
+                    "operation": "bind",
+                    "parameters": {
+                        "service_id": "275f3e0b-86fd-4303-946c-171374d29150",
+                        "plan_id": "839f4458-309a-4e05-a069-807e950cf6da"
+                    }
+                },
+                {
+                    "operation": "unbind"
+                },
+                {
+                    "operation": "deprovision",
+                    "async": true
+                }
+            ]
+        }
+    ],
+    "conflictiveProvision": {
+        "service_id" :"45d162e1-cf1e-455c-beff-cc0765d9a377",
+        "plan_id": "d54d393b-f5ce-4eb7-86be-49da00606368",
+        "async": true,
+        "parameters": {
+            "name": "osb-checker-dcs-redis-{{ name_uuid }}",
+            "username": "username",
+            "password": "Password1234!",
+            "description": "Redis Single Node Test"
+        }
+    }
+}
