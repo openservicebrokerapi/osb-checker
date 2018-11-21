@@ -223,12 +223,12 @@ function validateJsonSchema (body, schema) {
 }
 
 function serviceIdExists (catalog, serviceId) {
-  return (containsKeyValue(catalog.services, 'id', serviceId) !== null)
+  return (findWhichContains(catalog.services, 'id', serviceId) !== null)
 }
 
 function planIdExists (catalog, serviceId, planId) {
-  var service = containsKeyValue(catalog.services, 'id', serviceId)
-  return (containsKeyValue(service.plans, 'id', planId) !== null)
+  var service = findWhichContains(catalog.services, 'id', serviceId)
+  return (findWhichContains(service.plans, 'id', planId) !== null)
 }
 
 function serviceInstanceExistsWithDifferentProperties (serviceId, planId, instanceId) {
@@ -252,25 +252,22 @@ function serviceInstanceExists (serviceId, planId, instanceId) {
   return false
 }
 
-function containsKeyValue (obj, key, value) {
+function findWhichContains (obj, key, value) {
   if (!obj) {
     return null
-  }
-  if (obj[key] === value) {
-    return obj
   }
   var found
   if (Array.isArray(obj)) {
     for (var i in obj) {
-      found = containsKeyValue(obj[i], key, value)
+      found = findWhichContains(obj[i], key, value)
       if (found) return found
     }
   } else if (typeof obj === 'object') {
-    for (var p in obj) {
-      if (p === key && obj[p] === value) {
+    for (var k in obj) {
+      if (k === key && obj[k] === value) {
         return obj
       }
-      found = containsKeyValue(p, key, value)
+      found = findWhichContains(obj[k], key, value)
       if (found) return found
     }
   }
@@ -278,8 +275,8 @@ function containsKeyValue (obj, key, value) {
 }
 
 function parametersSchemaCheck (catalog, serviceId, planId, action, parameters) {
-  var service = containsKeyValue(catalog.services, 'id', serviceId)
-  var plan = containsKeyValue(service.plans, 'id', planId)
+  var service = findWhichContains(catalog.services, 'id', serviceId)
+  var plan = findWhichContains(service.plans, 'id', planId)
   var schemas = plan.schemas
   if (!schemas || !schemas.service_instance || !schemas.service_instance[action]) {
     return ''
