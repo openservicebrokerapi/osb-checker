@@ -432,6 +432,36 @@ function testBind (instanceId, bindingId, validBody) {
             if (message !== '') { done(new Error(message)) } else { done() }
           })
       })
+
+      describe('NEW - existed', function () {
+        it('should return 200 OK when binding Id with same instance Id exists with identical properties', function (done) {
+          var tempBody = _.clone(validBody)
+          preparedRequest()
+            .put('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .send(tempBody)
+            .expect(200, done)
+        })
+      })
+
+      describe('NEW - conflict', function () {
+        it('should return 409 Conflict when bingding Id with same instance Id exists with different properties', function (done) {
+          if (!config.conflictiveBind) {
+            return done(new Error('missing conflictiveBind in config file'))
+          }
+          var tempBody = _.clone(validBody)
+          tempBody.service_id = config.conflictiveBind.service_id
+          tempBody.plan_id = config.conflictiveBind.plan_id
+          tempBody.parameters = config.conflictiveBind.parameters
+          preparedRequest()
+            .put('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .send(tempBody)
+            .expect(409, done)
+        })
+      })
     })
   })
 }

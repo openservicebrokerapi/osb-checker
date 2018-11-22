@@ -13,6 +13,7 @@ var updateRequestSchema = require('./schemas/update_request.json')
 var bindingRequestSchema = require('./schemas/binding_request.json')
 var serviceCatalog = require('./data/service_catalog.json')
 var serviceInstances = []
+var serviceBindings = []
 var lastOperationQueries = 0
 
 // Enable CORS
@@ -122,6 +123,29 @@ app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', funct
     console.log(messages)
     res.sendStatus(400)
     return
+  }
+
+  if (!serviceIdExists(serviceCatalog, req.body.service_id) ||
+    !planIdExists(serviceCatalog, req.body.service_id, req.body.plan_id)) {
+    res.sendStatus(400)
+    return
+  }
+
+  if (serviceBindingExistsWithDifferentProperties(req.body.service_id, req.body.plan_id, req.params.instance_id, req.params.binding_id)) {
+    res.status(409).send({})
+    return
+  }
+
+  if (serviceBindingExists(req.body.service_id, req.body.plan_id, req.params.instance_id, req.params.binding_id)) {
+    res.status(200).send({})
+    return
+  } else {
+    serviceBindings.push({
+      'service_id': req.body.service_id,
+      'plan_id': req.body.plan_id,
+      'instance_id': req.params.instance_id,
+      'binding_id': req.params.binding_id
+    })
   }
 
   res.status(201).send({
@@ -249,6 +273,29 @@ function serviceInstanceExists (serviceId, planId, instanceId) {
     if (serviceInstances[i].instance_id === instanceId &&
       serviceInstances[i].service_id === serviceId &&
       serviceInstances[i].plan_id === planId) {
+      return true
+    }
+  }
+  return false
+}
+
+function serviceBindingExistsWithDifferentProperties (serviceId, planId, instanceId, bindingId) {
+  for (var i = 0; i < serviceBindings.length; i++) {
+    if (serviceBindings[i].binding_id === bindingId &&
+      serviceBindings[i].instance_id === instanceId &&
+      (serviceBindings[i].service_id !== serviceId || serviceBindings[i].plan_id !== planId)) {
+      return true
+    }
+  }
+  return false
+}
+
+function serviceBindingExists (serviceId, planId, instanceId, bindingId) {
+  for (var i = 0; i < serviceBindings.length; i++) {
+    if (serviceBindings[i].binding_id === bindingId &&
+      serviceBindings[i].instance_id === instanceId &&
+      serviceBindings[i].service_id === serviceId &&
+      serviceBindings[i].plan_id === planId) {
       return true
     }
   }
