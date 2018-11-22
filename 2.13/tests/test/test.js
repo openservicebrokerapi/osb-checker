@@ -230,7 +230,7 @@ function testProvision (instanceId, validBody, isAsync) {
     it('should accept a valid provision request', function (done) {
       var tempBody = _.clone(validBody)
       preparedRequest()
-        .put('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
+        .put('/v2/service_instances/' + instanceId + (isAsync ? '?accepts_incomplete=true' : ''))
         .set('X-Broker-API-Version', apiVersion)
         .auth(config.user, config.password)
         .send(tempBody)
@@ -258,8 +258,20 @@ function testProvision (instanceId, validBody, isAsync) {
     }
   })
 
+  describe('PROVISION - existed', function () {
+    it('should return 200 OK when instance Id exists with identical properties', function (done) {
+      var tempBody = _.clone(validBody)
+      preparedRequest()
+        .put('/v2/service_instances/' + instanceId + (isAsync ? '?accepts_incomplete=true' : ''))
+        .set('X-Broker-API-Version', apiVersion)
+        .auth(config.user, config.password)
+        .send(tempBody)
+        .expect(200, done)
+    })
+  })
+
   describe('PROVISION - conflict', function () {
-    it('should return conflict when instance Id exists with different properties', function (done) {
+    it('should return 409 Conflict when instance Id exists with different properties', function (done) {
       if (!config.conflictiveProvision) {
         return done(new Error('missing conflictiveProvision in config file'))
       }

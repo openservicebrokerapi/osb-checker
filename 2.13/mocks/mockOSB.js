@@ -67,7 +67,10 @@ app.put('/v2/service_instances/:instance_id', function (req, res) {
     return
   }
 
-  if (!serviceInstanceExists(req.body.service_id, req.body.plan_id, req.params.instance_id)) {
+  if (serviceInstanceExists(req.body.service_id, req.body.plan_id, req.params.instance_id)) {
+    res.status(200).send({})
+    return
+  } else {
     serviceInstances.push({
       'service_id': req.body.service_id,
       'plan_id': req.body.plan_id,
