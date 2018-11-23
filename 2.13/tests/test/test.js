@@ -573,7 +573,7 @@ function testDeprovision (instanceId, queryStrings, isAsync) {
       }
 
       describe('DELETE - gone', function () {
-        it('should return 410 Gone when binding Id does not exist', function (done) {
+        it('should return 410 Gone when instance Id does not exist', function (done) {
           preparedRequest()
             .delete('/v2/service_instances/' + instanceId +
             '?accepts_incomplete=true&plan_id=' + queryStrings.plan_id +
