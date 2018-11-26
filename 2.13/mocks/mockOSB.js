@@ -177,13 +177,12 @@ app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', fu
   if (!serviceBindingExists(req.query.service_id, req.query.plan_id, req.params.instance_id, req.params.binding_id)) {
     res.status(410).send({})
     return
-  } else {
-    var found = findWhichContains(serviceBindings, 'binding_id', req.params.binding_id)
-    for (var i in serviceBindings) {
-      if (serviceBindings[i] === found) {
-        delete serviceBindings[i]
-      }
-    }
+  }
+
+  var found = findWhichContains(serviceBindings, 'binding_id', req.params.binding_id)
+  var i = serviceBindings.indexOf(found)
+  if (i > -1) {
+    delete serviceBindings[i]
   }
 
   res.status(200).send({})
@@ -207,21 +206,20 @@ app.delete('/v2/service_instances/:instance_id', function (req, res) {
   if (!found) {
     res.status(410).send({})
     return
-  } else {
-    for (var i in serviceInstances) {
-      if (serviceInstances[i] === found) {
-        delete serviceInstances[i]
-      }
-    }
-    // Deprovision operation will also remove all binding info related to the instance
-    found = findWhichContains(serviceBindings, 'instance_id', req.params.instance_id)
-    for (var k in serviceBindings) {
-      if (serviceBindings[k] === found) {
-        delete serviceBindings[k]
-      }
-    }
-    lastOperationQueries = 0
   }
+  var i = serviceInstances.indexOf(found)
+  if (i > -1) {
+    delete serviceInstances[i]
+  }
+
+  // Although the spec doesn't fomulate how to deal with related binding resource when deleting
+  // service instances, the mock server would remove all binding info related to the instance.
+  found = findWhichContains(serviceBindings, 'instance_id', req.params.instance_id)
+  var k = serviceBindings.indexOf(found)
+  if (k > -1) {
+    delete serviceBindings[k]
+  }
+  lastOperationQueries = 0
 
   res.status(202).send({
     'operation': 'task_10'
