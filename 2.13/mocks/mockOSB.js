@@ -214,11 +214,13 @@ app.delete('/v2/service_instances/:instance_id', function (req, res) {
 
   // Although the spec doesn't fomulate how to deal with related binding resource when deleting
   // service instances, the mock server would remove all binding info related to the instance.
-  found = findWhichContains(serviceBindings, 'instance_id', req.params.instance_id)
-  var k = serviceBindings.indexOf(found)
-  if (k > -1) {
-    delete serviceBindings[k]
-  }
+  do {
+    found = findWhichContains(serviceBindings, 'instance_id', req.params.instance_id)
+    var k = serviceBindings.indexOf(found)
+    if (k > -1) {
+      delete serviceBindings[k]
+    }
+  } while (k > -1);
   lastOperationQueries = 0
 
   res.status(202).send({
