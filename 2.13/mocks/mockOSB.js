@@ -171,9 +171,21 @@ app.delete('/v2/service_instances/:instance_id/service_bindings/:binding_id', fu
 
   if (!req.query.service_id || !req.query.plan_id) {
     res.sendStatus(400)
-  } else {
-    res.status(200).send({})
+    return
   }
+  
+  if (!serviceBindingExists(req.query.service_id, req.query.plan_id, req.params.instance_id, req.params.binding_id)) {
+    res.status(410).send({})
+    return
+  }
+
+  var found = findWhichContains(serviceBindings, 'binding_id', req.params.binding_id)
+  var i = serviceBindings.indexOf(found)
+  if (i > -1) {
+    delete serviceBindings[i]
+  }
+
+  res.status(200).send({})
 })
 
 app.delete('/v2/service_instances/:instance_id', function (req, res) {
@@ -187,11 +199,33 @@ app.delete('/v2/service_instances/:instance_id', function (req, res) {
 
   if (!req.query.service_id || !req.query.plan_id) {
     res.sendStatus(400)
-  } else {
-    res.status(202).send({
-      'operation': 'task_10'
-    })
+    return
   }
+  
+  var found = findWhichContains(serviceInstances, 'instance_id', req.params.instance_id)
+  if (!found) {
+    res.status(410).send({})
+    return
+  }
+  var i = serviceInstances.indexOf(found)
+  if (i > -1) {
+    delete serviceInstances[i]
+  }
+
+  // Although the spec doesn't fomulate how to deal with related binding resource when deleting
+  // service instances, the mock server would remove all binding info related to the instance.
+  do {
+    found = findWhichContains(serviceBindings, 'instance_id', req.params.instance_id)
+    var k = serviceBindings.indexOf(found)
+    if (k > -1) {
+      delete serviceBindings[k]
+    }
+  } while (k > -1);
+  lastOperationQueries = 0
+
+  res.status(202).send({
+    'operation': 'task_10'
+  })
 })
 
 app.get('/v2/service_instances/:instance_id/last_operation', function (req, res) {
@@ -259,7 +293,7 @@ function planIdExists (catalog, serviceId, planId) {
 }
 
 function serviceInstanceExistsWithDifferentProperties (serviceId, planId, instanceId) {
-  for (var i = 0; i < serviceInstances.length; i++) {
+  for (var i in serviceInstances) {
     if (serviceInstances[i].instance_id === instanceId &&
       (serviceInstances[i].service_id !== serviceId || serviceInstances[i].plan_id !== planId)) {
       return true
@@ -269,7 +303,7 @@ function serviceInstanceExistsWithDifferentProperties (serviceId, planId, instan
 }
 
 function serviceInstanceExists (serviceId, planId, instanceId) {
-  for (var i = 0; i < serviceInstances.length; i++) {
+  for (var i in serviceInstances) {
     if (serviceInstances[i].instance_id === instanceId &&
       serviceInstances[i].service_id === serviceId &&
       serviceInstances[i].plan_id === planId) {
@@ -280,7 +314,7 @@ function serviceInstanceExists (serviceId, planId, instanceId) {
 }
 
 function serviceBindingExistsWithDifferentProperties (serviceId, planId, instanceId, bindingId) {
-  for (var i = 0; i < serviceBindings.length; i++) {
+  for (var i in serviceBindings) {
     if (serviceBindings[i].binding_id === bindingId &&
       serviceBindings[i].instance_id === instanceId &&
       (serviceBindings[i].service_id !== serviceId || serviceBindings[i].plan_id !== planId)) {
@@ -291,7 +325,7 @@ function serviceBindingExistsWithDifferentProperties (serviceId, planId, instanc
 }
 
 function serviceBindingExists (serviceId, planId, instanceId, bindingId) {
-  for (var i = 0; i < serviceBindings.length; i++) {
+  for (var i in serviceBindings) {
     if (serviceBindings[i].binding_id === bindingId &&
       serviceBindings[i].instance_id === instanceId &&
       serviceBindings[i].service_id === serviceId &&
