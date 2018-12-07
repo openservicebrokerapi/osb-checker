@@ -270,23 +270,22 @@ function testProvision (instanceId, validBody, isAsync) {
     })
   })
 
-  describe('PROVISION - conflict', function () {
-    it('should return 409 Conflict when instance Id exists with different properties', function (done) {
-      if (!config.conflictiveProvision) {
-        return done(new Error('missing conflictiveProvision in config file'))
-      }
-      var tempBody = _.clone(validBody)
-      tempBody.service_id = config.conflictiveProvision.service_id
-      tempBody.plan_id = config.conflictiveProvision.plan_id
-      tempBody.parameters = config.conflictiveProvision.parameters
-      preparedRequest()
-        .put('/v2/service_instances/' + instanceId + (config.conflictiveProvision.async ? '?accepts_incomplete=true' : ''))
-        .set('X-Broker-API-Version', apiVersion)
-        .auth(config.user, config.password)
-        .send(tempBody)
-        .expect(409, done)
+  if (config.conflictiveProvision) {
+    describe('PROVISION - conflict', function () {
+      it('should return 409 Conflict when instance Id exists with different properties', function (done) {
+        var tempBody = _.clone(validBody)
+        tempBody.service_id = config.conflictiveProvision.service_id
+        tempBody.plan_id = config.conflictiveProvision.plan_id
+        tempBody.parameters = config.conflictiveProvision.parameters
+        preparedRequest()
+          .put('/v2/service_instances/' + instanceId + (config.conflictiveProvision.async ? '?accepts_incomplete=true' : ''))
+          .set('X-Broker-API-Version', apiVersion)
+          .auth(config.user, config.password)
+          .send(tempBody)
+          .expect(409, done)
+      })
     })
-  })
+  }
 }
 
 function testUpdate (instanceId, validBody, isAsync) {
@@ -445,23 +444,22 @@ function testBind (instanceId, bindingId, validBody) {
         })
       })
 
-      describe('NEW - conflict', function () {
-        it('should return 409 Conflict when bingding Id with same instance Id exists with different properties', function (done) {
-          if (!config.conflictiveBind) {
-            return done(new Error('missing conflictiveBind in config file'))
-          }
-          var tempBody = _.clone(validBody)
-          tempBody.service_id = config.conflictiveBind.service_id
-          tempBody.plan_id = config.conflictiveBind.plan_id
-          tempBody.parameters = config.conflictiveBind.parameters
-          preparedRequest()
-            .put('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId)
-            .set('X-Broker-API-Version', apiVersion)
-            .auth(config.user, config.password)
-            .send(tempBody)
-            .expect(409, done)
+      if (config.conflictiveBind) {
+        describe('NEW - conflict', function () {
+          it('should return 409 Conflict when bingding Id with same instance Id exists with different properties', function (done) {
+            var tempBody = _.clone(validBody)
+            tempBody.service_id = config.conflictiveBind.service_id
+            tempBody.plan_id = config.conflictiveBind.plan_id
+            tempBody.parameters = config.conflictiveBind.parameters
+            preparedRequest()
+              .put('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId)
+              .set('X-Broker-API-Version', apiVersion)
+              .auth(config.user, config.password)
+              .send(tempBody)
+              .expect(409, done)
+          })
         })
-      })
+      }
     })
   })
 }
