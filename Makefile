@@ -4,7 +4,7 @@ VERSION_NUMBER := 2.13
 
 all: build
 
-build: prebuild mockbroker testjob
+build: prebuild mockbroker testjob testcommon
 
 prebuild:
 	sudo apt-get update && sudo apt-get install -y --no-install-recommends \
@@ -21,6 +21,9 @@ mockbroker:
 
 testjob:
 	cd ./$(VERSION_NUMBER)/tests && sudo npm install
+
+testcommon:
+	cd ./common && sudo npm install
 
 docker:
 	cd ./$(VERSION_NUMBER)/mocks && docker build . -t osb-checker/mock-broker:$(VERSION_NUMBER)
