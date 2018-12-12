@@ -69,7 +69,12 @@ app.put('/v2/service_instances/:instance_id', function (req, res) {
   }
 
   if (serviceInstanceExists(req.body.service_id, req.body.plan_id, req.params.instance_id)) {
-    res.status(200).send({})
+    res.status(200).send(
+      {
+        'dashboard_url': 'http://example-dashboard.example.com/9189kdfsk0vfnku',
+        'operation': 'task_10'
+      }
+    )
     return
   } else {
     serviceInstances.push({
@@ -137,7 +142,16 @@ app.put('/v2/service_instances/:instance_id/service_bindings/:binding_id', funct
   }
 
   if (serviceBindingExists(req.body.service_id, req.body.plan_id, req.params.instance_id, req.params.binding_id)) {
-    res.status(200).send({})
+    res.status(200).send({
+      'credentials': {
+        'uri': 'mysql://mysqluser:pass@mysqlhost:3306/dbname',
+        'username': 'mysqluser',
+        'password': 'pass',
+        'host': 'mysqlhost',
+        'port': 3306,
+        'database': 'dbname'
+      }
+    })
     return
   } else {
     serviceBindings.push({
