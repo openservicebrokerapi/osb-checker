@@ -99,7 +99,12 @@ function testBind (instanceId, bindingId, validBody, apiVersion) {
             .set('X-Broker-API-Version', apiVersion)
             .auth(config.user, config.password)
             .send(tempBody)
-            .expect(200, done)
+            .expect(200)
+            .end(function (err, res) {
+              if (err) return done(err)
+              var message = validateJsonSchema(res.body, bindingResponseSchema)
+              if (message !== '') { done(new Error(message)) } else { done() }
+            })
         })
       })
 
