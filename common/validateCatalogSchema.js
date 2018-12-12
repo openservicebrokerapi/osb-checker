@@ -15,7 +15,7 @@ function validateCatalogSchema (tempBody, schemaType, action, apiVersion) {
     preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
-    throw Error('testProvision doesn\'t support this api version')
+    throw Error('validateCatalogSchema doesn\'t support this api version')
   }
 
   preparedRequest()

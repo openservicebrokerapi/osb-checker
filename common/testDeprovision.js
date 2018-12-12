@@ -21,7 +21,7 @@ function testDeprovision (instanceId, queryStrings, isAsync, apiVersion) {
     preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
-    throw Error('testProvision doesn\'t support this api version')
+    throw Error('testDeprovision doesn\'t support this api version')
   }
 
   describe('DEPROVISIONING - delete syntax', function () {

@@ -17,7 +17,7 @@ function testUnbind (instanceId, bindingId, queryStrings, apiVersion) {
     preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
-    throw Error('testProvision doesn\'t support this api version')
+    throw Error('testUnbind doesn\'t support this api version')
   }
 
   describe('UNBINDING - delete syntax', function () {

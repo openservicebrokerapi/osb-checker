@@ -26,7 +26,7 @@ function testUpdate (instanceId, validBody, isAsync, apiVersion) {
     preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
-    throw Error('testProvision doesn\'t support this api version')
+    throw Error('testUpdate doesn\'t support this api version')
   }
 
   describe('UPDATE - request syntax', function () {

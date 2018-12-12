@@ -16,7 +16,7 @@ function pollInstanceLastOperationStatus (instanceId, lastOperationName, apiVers
     lastOperationSchema = require('../2.13/tests/test/schemas/last_operation.json')
   } else {
     // supprt 2.14 here
-    throw Error('testProvision doesn\'t support this api version')
+    throw Error('pollInstanceLastOperationStatus doesn\'t support this api version')
   }
 
   var count = 0

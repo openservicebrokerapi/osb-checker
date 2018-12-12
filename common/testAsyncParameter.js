@@ -11,7 +11,7 @@ function testAsyncParameter (handler, verb, body, apiVersion) {
     preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
-    throw Error('testProvision doesn\'t support this api version')
+    throw Error('testAsyncParameter doesn\'t support this api version')
   }
 
   it('should return 422 if request doesn\'t have the accepts_incomplete parameter', function (done) {

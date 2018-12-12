@@ -11,7 +11,7 @@ function testAuthentication (handler, verb, apiVersion) {
     preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
-    throw Error('testProvision doesn\'t support this api version')
+    throw Error('testAuthentication doesn\'t support this api version')
   }
 
   if (config.authentication === 'basic') {
