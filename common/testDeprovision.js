@@ -71,13 +71,25 @@ function testDeprovision (instanceId, queryStrings, isAsync, apiVersion) {
       })
 
       if (isAsync) {
-        describe('DEPROVISION - poll', function () {
+        describe('DELETE - poll', function () {
           this.timeout(maxDelayTimeout * 1000)
           it('should return succeeded operation status after deprovision', function (done) {
             pollInstanceLastOperationStatus(instanceId, lastOperationName, apiVersion, done)
           })
         })
       }
+
+      describe('DELETE - gone', function () {
+        it('should return 410 Gone when instance Id does not exist', function (done) {
+          preparedRequest()
+            .delete('/v2/service_instances/' + instanceId +
+            '?accepts_incomplete=true&plan_id=' + queryStrings.plan_id +
+            '&service_id=' + queryStrings.service_id)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .expect(410, done)
+        })
+      })
     })
   })
 }

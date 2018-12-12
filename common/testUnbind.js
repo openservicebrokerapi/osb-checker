@@ -53,6 +53,18 @@ function testUnbind (instanceId, bindingId, queryStrings, apiVersion) {
             if (message !== '') { done(new Error(message)) } else { done() }
           })
       })
+
+      describe('DELETE - gone', function () {
+        it('should return 410 Gone when binding Id does not exist', function (done) {
+          preparedRequest()
+            .delete('/v2/service_instances/' + instanceId + '/service_bindings/' + bindingId +
+            '?plan_id=' + queryStrings.plan_id +
+            '&service_id=' + queryStrings.service_id)
+            .set('X-Broker-API-Version', apiVersion)
+            .auth(config.user, config.password)
+            .expect(410, done)
+        })
+      })
     })
   })
 }
