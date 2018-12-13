@@ -109,6 +109,22 @@ app.patch('/v2/service_instances/:instance_id', function (req, res) {
     return
   }
 
+  if (!serviceIdExists(serviceCatalog, req.body.service_id)) {
+    res.sendStatus(400)
+    return
+  }
+
+  if (req.body.plan_id !== '' && serviceInstanceExists(req.body.service_id, req.body.plan_id, req.params.instance_id)) {
+    res.status(200).send({})
+    return
+  } else {
+    var found = findWhichContains(serviceInstances, 'instance_id', req.params.instance_id)
+    var i = serviceInstances.indexOf(found)
+    if (i > -1) {
+      serviceInstances[i].planId = req.body.planId
+    }
+  }
+
   res.status(202).send({
     'operation': 'task_10'
   })
