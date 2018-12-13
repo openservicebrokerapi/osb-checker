@@ -3,45 +3,20 @@ var guid = require('guid')
 var _ = require('underscore')
 
 var config = require('./configs/config_mock.json')
-var serviceCatalogSchema = require('./schemas/service_catalog.json')
 
-var apiVersion = config.apiVersion
-
-var preparedRequest = require('./preparedRequest')
-
-var testAPIVersionHeader = require('../../../common/testAPIVersionHeader')
-var testAuthentication = require('../../../common/testAuthentication')
+var testCatalog = require('../../../common/testCatalog')
 var testProvision = require('../../../common/testProvision')
 var testUpdate = require('../../../common/testUpdate')
 var testBind = require('../../../common/testBind')
 var testUnbind = require('../../../common/testUnbind')
 var testDeprovision = require('../../../common/testDeprovision')
-var validateJsonSchema = require('../../../common/validateJsonSchema')
 
 describe('GET /v2/catalog', function () {
   before(function () {
     // Plug in your environment initializer here
     // TODO: move it to the config file
   })
-
-  describe('Query service catalog', function () {
-    testAPIVersionHeader('/v2/catalog', 'GET')
-    testAuthentication('/v2/catalog', 'GET')
-
-    it('should return list of registered service classes as JSON payload', function (done) {
-      preparedRequest()
-        .get('/v2/catalog')
-        .set('X-Broker-API-Version', apiVersion)
-        .auth(config.user, config.password)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function (err, res) {
-          if (err) return done(err)
-          var message = validateJsonSchema(res.body, serviceCatalogSchema)
-          if (message !== '') { done(new Error(message)) } else { done() }
-        })
-    })
-  })
+  testCatalog()
 })
 
 describe('Customized test cases', function () {
