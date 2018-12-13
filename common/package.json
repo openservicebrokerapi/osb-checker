@@ -1,0 +1,11 @@
+{
+  "name": "osb-checker-common",
+  "version": "1.0.0",
+  "author": "Haishi",
+  "license": "MIT",
+  "dependencies": {
+    "jsonschema": "^1.2.0",
+    "underscore": "1.9.1",
+    "async": "2.6.1"
+  }
+}

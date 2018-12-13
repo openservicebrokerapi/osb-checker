@@ -4,7 +4,7 @@
   "description": "An automated checker to validate if an OSB API implementation is spec-compliant",
   "scripts": {
     "test": "npm -s run-script eslint && mocha",
-    "eslint": "eslint --cache=true --max-warnings 0 test/*.js"
+    "eslint": "eslint --cache=true --max-warnings 0 test/*.js ../../common/*.js"
   },
   "keywords": [
     "OSB"
@@ -15,10 +15,8 @@
     "express": "^4.16.1",
     "mocha": "^4.0.0",
     "supertest": "^3.0.0",
-    "jsonschema": "^1.2.0",
     "guid": "^0.0.12",
-    "underscore": "1.9.1",
-    "async": "2.6.1"
+    "underscore": "1.9.1"
   },
   "devDependencies": {
     "eslint": "^5.9.0",
