@@ -121,7 +121,7 @@ app.patch('/v2/service_instances/:instance_id', function (req, res) {
     var found = findWhichContains(serviceInstances, 'instance_id', req.params.instance_id)
     var i = serviceInstances.indexOf(found)
     if (i > -1) {
-      serviceInstances[i].planId = req.body.planId
+      serviceInstances[i].plan_id = req.body.plan_id
     }
   }
 
