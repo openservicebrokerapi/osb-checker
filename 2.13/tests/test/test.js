@@ -69,8 +69,8 @@ function testLifecycle (testCase) {
             currentPlanId = step.plan_id
             validBody.plan_id = currentPlanId
           }
-          if (testCase.parameters) {
-            validBody.parameters = testCase.parameters
+          if (step.parameters) {
+            validBody.parameters = step.parameters
           }
           testUpdate(instanceId, validBody, step.async)
           break
