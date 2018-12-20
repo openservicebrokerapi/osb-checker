@@ -48,10 +48,11 @@ docker run -it --net=host osb-checker/test-job:$VERSION_NUMBER
 Follow the below instructions to run tests against your own OSBAPI
 compatible server.
 
-1. Modify test configurations. By default, test parameters are loaded from the
+1. Set test configurations. By default, test parameters are loaded from the
    `test\config_mock.json` file so that you can run tests directly against the mock
-   server. For your own environment, you should create a new config file based on
-   `test\config_mock.json` and fill in your OSB endpoint info:
+   server. For your own environment, your configurations should follow the format of
+   `test\config_mock.json` and set the environment variable `OSB_CHECKER_CONFIG_FILE`
+   with your configurations file path.
 
 ```json
 "url": "<your OSB endpoint>",
@@ -65,24 +66,17 @@ compatible server.
 If your server uses TLS with an untrusted certificate authority, specify the
 path to the CA certificate using the `caCertFile` property.
 
-2. Modify your test configuration file to use match with your environment,
-   such as using the correct service ids and plan ids. OSB-Checker is data-driven.
-   You can define more test cases by modifying the test configuration file.
-   For instance, to add a new service instance provision case, simply add a new
-   item into the `provisions` array.
-
-> **CALL TO ACTION** Please contribute your test configurations back to the community.
-
-3. Update **test.js** to use your own configuration:
-
-```javascript
-var config = require("./configs/config_mock.json"); //replace config_mock.json with your own configuration file
-```
-
-4. Run tests
+2. Run tests
 
 ```bash
     cd $DIRECTORY/$VERSION_NUMBER/tests/test && npm test
+```
+
+or set `OSB_CHECKER_CONFIG_FILE` inline:
+
+```bash
+    cd $DIRECTORY/$VERSION_NUMBER/tests/test
+    OSB_CHECKER_CONFIG_FILE="<config-path>" npm test
 ```
 
 # What's Covered
