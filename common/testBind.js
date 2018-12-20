@@ -9,8 +9,8 @@ var constants = require('./constants')
 var validateJsonSchema = require('./validateJsonSchema')
 
 var bindingResponseSchema
-var config
-var preparedRequest
+var config = require('./config').getConfig()
+var preparedRequest = require('./preparedRequest')
 
 function testBind (instanceId, bindingId, validBody, apiVersion) {
   if (!apiVersion) {
@@ -18,8 +18,6 @@ function testBind (instanceId, bindingId, validBody, apiVersion) {
   }
   if (apiVersion === '2.13') {
     bindingResponseSchema = require('../2.13/tests/test/schemas/binding_response.json')
-    config = require('../2.13/tests/test/configs/config_mock.json')
-    preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
     throw Error('testBind doesn\'t support this api version')

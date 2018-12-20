@@ -1,16 +1,12 @@
 /* eslint-env node, mocha */
-var config
-var preparedRequest
+var config = require('./config').getConfig()
+var preparedRequest = require('./preparedRequest')
 
 function testAsyncParameter (handler, verb, body, apiVersion) {
   if (!apiVersion) {
     apiVersion = '2.13'
   }
-  if (apiVersion === '2.13') {
-    config = require('../2.13/tests/test/configs/config_mock.json')
-    preparedRequest = require('../2.13/tests/test/preparedRequest')
-  } else {
-    // supprt 2.14 here
+  if (apiVersion !== '2.13') {
     throw Error('testAsyncParameter doesn\'t support this api version')
   }
 

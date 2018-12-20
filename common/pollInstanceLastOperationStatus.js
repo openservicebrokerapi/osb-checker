@@ -2,8 +2,8 @@ var async = require('async')
 
 var validateJsonSchema = require('./validateJsonSchema')
 
-var config
-var preparedRequest
+var config = require('./config').getConfig()
+var preparedRequest = require('./preparedRequest')
 var lastOperationSchema
 
 function pollInstanceLastOperationStatus (instanceId, lastOperationName, apiVersion, done) {
@@ -11,8 +11,6 @@ function pollInstanceLastOperationStatus (instanceId, lastOperationName, apiVers
     apiVersion = '2.13'
   }
   if (apiVersion === '2.13') {
-    config = require('../2.13/tests/test/configs/config_mock.json')
-    preparedRequest = require('../2.13/tests/test/preparedRequest')
     lastOperationSchema = require('../2.13/tests/test/schemas/last_operation.json')
   } else {
     // supprt 2.14 here

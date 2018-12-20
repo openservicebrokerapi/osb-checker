@@ -3,18 +3,14 @@ var _ = require('underscore')
 var constants = require('./constants')
 var validateJsonSchema = require('./validateJsonSchema')
 
-var config
-var preparedRequest
+var config = require('./config').getConfig()
+var preparedRequest = require('./preparedRequest')
 
 function validateCatalogSchema (tempBody, schemaType, action, apiVersion) {
   if (!apiVersion) {
     apiVersion = '2.13'
   }
-  if (apiVersion === '2.13') {
-    config = require('../2.13/tests/test/configs/config_mock.json')
-    preparedRequest = require('../2.13/tests/test/preparedRequest')
-  } else {
-    // supprt 2.14 here
+  if (apiVersion !== '2.13') {
     throw Error('validateCatalogSchema doesn\'t support this api version')
   }
 
