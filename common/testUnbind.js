@@ -4,8 +4,8 @@ var testAuthentication = require('./testAuthentication')
 var validateJsonSchema = require('./validateJsonSchema')
 
 var bindingDeleteResponseSchema
-var config
-var preparedRequest
+var config = require('./config').getConfig()
+var preparedRequest = require('./preparedRequest')
 
 function testUnbind (instanceId, bindingId, queryStrings, apiVersion) {
   if (!apiVersion) {
@@ -13,8 +13,6 @@ function testUnbind (instanceId, bindingId, queryStrings, apiVersion) {
   }
   if (apiVersion === '2.13') {
     bindingDeleteResponseSchema = require('../2.13/tests/test/schemas/binding_delete_response.json')
-    config = require('../2.13/tests/test/configs/config_mock.json')
-    preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
     throw Error('testUnbind doesn\'t support this api version')

@@ -6,8 +6,8 @@ var pollInstanceLastOperationStatus = require('./pollInstanceLastOperationStatus
 var validateJsonSchema = require('./validateJsonSchema')
 
 var provisioningDeleteResponseSchema
-var config
-var preparedRequest
+var config = require('./config').getConfig()
+var preparedRequest = require('./preparedRequest')
 
 var maxDelayTimeout = 1800
 
@@ -17,8 +17,6 @@ function testDeprovision (instanceId, queryStrings, isAsync, apiVersion) {
   }
   if (apiVersion === '2.13') {
     provisioningDeleteResponseSchema = require('../2.13/tests/test/schemas/provisioning_delete_response.json')
-    config = require('../2.13/tests/test/configs/config_mock.json')
-    preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
     throw Error('testDeprovision doesn\'t support this api version')

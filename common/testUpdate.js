@@ -11,8 +11,8 @@ var constants = require('./constants')
 var validateJsonSchema = require('./validateJsonSchema')
 
 var updateResponseSchema
-var config
-var preparedRequest
+var config = require('./config').getConfig()
+var preparedRequest = require('./preparedRequest')
 
 var maxDelayTimeout = 1800
 
@@ -22,8 +22,6 @@ function testUpdate (instanceId, validBody, isAsync, apiVersion) {
   }
   if (apiVersion === '2.13') {
     updateResponseSchema = require('../2.13/tests/test/schemas/update_response.json')
-    config = require('../2.13/tests/test/configs/config_mock.json')
-    preparedRequest = require('../2.13/tests/test/preparedRequest')
   } else {
     // supprt 2.14 here
     throw Error('testUpdate doesn\'t support this api version')

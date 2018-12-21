@@ -1,7 +1,7 @@
 var fs = require('fs')
 var request = require('supertest')
 
-var config = require('./configs/config_mock.json')
+var config = require('./config').getConfig()
 var url = config.url
 
 var caCert

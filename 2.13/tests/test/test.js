@@ -2,7 +2,13 @@
 var guid = require('guid')
 var _ = require('underscore')
 
-var config = require('./configs/config_mock.json')
+var config
+if (!process.env['OSB_CHECKER_CONFIG_FILE']) {
+  config = require('./configs/config_mock.json')
+} else {
+  config = require(process.env['OSB_CHECKER_CONFIG_FILE'])
+}
+require('../../../common/config').setConfig(config)
 
 var testCatalog = require('../../../common/testCatalog')
 var testProvision = require('../../../common/testProvision')

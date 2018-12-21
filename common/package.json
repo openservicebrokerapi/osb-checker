@@ -4,8 +4,9 @@
   "author": "Haishi",
   "license": "MIT",
   "dependencies": {
+    "async": "2.6.1",
     "jsonschema": "^1.2.0",
-    "underscore": "1.9.1",
-    "async": "2.6.1"
+    "supertest": "^3.3.0",
+    "underscore": "1.9.1"
   }
 }
