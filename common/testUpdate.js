@@ -100,18 +100,6 @@ function testUpdate (instanceId, validBody, isAsync, apiVersion) {
         })
       })
     }
-
-    describe('UPDATE - applied', function () {
-      it('should return 200 OK when the request changes have been applied', function (done) {
-        var tempBody = _.clone(validBody)
-        preparedRequest()
-          .patch('/v2/service_instances/' + instanceId + '?accepts_incomplete=true')
-          .set('X-Broker-API-Version', apiVersion)
-          .auth(config.user, config.password)
-          .send(tempBody)
-          .expect(200, done)
-      })
-    })
   })
 }
 
