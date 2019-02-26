@@ -2,10 +2,8 @@ package receiver
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"strings"
 	"time"
 
@@ -22,7 +20,7 @@ type BrokerResponse struct {
 
 // Receiver
 type Receiver interface {
-	Recv(url string, method string, headers HeaderOption, input interface{}) (*BrokerResponse, error)
+	Recv(url, method string, headers HeaderOption, input interface{}) (*BrokerResponse, error)
 }
 
 // NewReceiver
@@ -36,7 +34,6 @@ func (*receiver) Recv(
 	url, method string,
 	headers HeaderOption,
 	input interface{},
-	output interface{}
 ) (*BrokerResponse, error) {
 
 	req := newRequest(url, method, headers, input)
@@ -49,7 +46,7 @@ func newRequest(url, method string, headers HeaderOption, input interface{}) *ht
 	// Set the request timeout a little bit longer.
 	req.SetTimeout(time.Minute*6, time.Minute*6)
 	// init body
-	log.Printf("%s %s\n", strings.ToUpper(method), urlStr)
+	log.Printf("%s %s\n", strings.ToUpper(method), url)
 	if input != nil {
 		body, _ := json.MarshalIndent(input, "", "  ")
 		log.Printf("Request body:\n%s\n", string(body))
@@ -78,7 +75,7 @@ func receive(req *httplib.BeegoHTTPRequest) (*BrokerResponse, error) {
 	}
 
 	return &BrokerResponse{
-		Status:  resp.StatusCode,
+		Code:    resp.StatusCode,
 		Message: string(rbody),
 	}, nil
 }

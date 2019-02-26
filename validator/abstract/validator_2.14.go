@@ -1,13 +1,13 @@
 package abstract
 
 import (
-	"github.com/openservicebrokerapi/osb-checker/pkg/receiver"
+	"github.com/openservicebrokerapi/osb-checker/receiver"
 
 	osb "github.com/pmorie/go-open-service-broker-client/v2"
 )
 
 func NewValidatorV214(edp string) *validatorV214 {
-	return *validatorV214{
+	return &validatorV214{
 		Receiver:       receiver.NewReceiver(),
 		brokerEndpoint: edp,
 	}

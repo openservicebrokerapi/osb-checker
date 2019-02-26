@@ -31,7 +31,7 @@ type AbstractValidator interface {
 }
 
 type Validator struct {
-	*BaseValidator
+	*common.BaseValidator
 	AbstractValidator
 
 	Version string
