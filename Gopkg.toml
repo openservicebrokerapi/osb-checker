@@ -26,12 +26,40 @@
 
 
 [[constraint]]
-  name = "github.com/astaxie/beego"
-  version = "1.11.1"
+  name = "github.com/go-openapi/errors"
+  version = "0.18.0"
 
 [[constraint]]
-  name = "github.com/pmorie/go-open-service-broker-client"
-  version = "0.0.12"
+  name = "github.com/go-openapi/loads"
+  version = "0.18.0"
+
+[[constraint]]
+  name = "github.com/go-openapi/runtime"
+  version = "0.18.0"
+
+[[constraint]]
+  name = "github.com/go-openapi/spec"
+  version = "0.18.0"
+
+[[constraint]]
+  name = "github.com/go-openapi/strfmt"
+  version = "0.18.0"
+
+[[constraint]]
+  name = "github.com/go-openapi/swag"
+  version = "0.18.0"
+
+[[constraint]]
+  name = "github.com/go-openapi/validate"
+  version = "0.18.0"
+
+[[constraint]]
+  name = "github.com/jessevdk/go-flags"
+  version = "1.4.0"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/net"
 
 [prune]
   non-go = true
