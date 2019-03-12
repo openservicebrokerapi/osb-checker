@@ -26,6 +26,14 @@
   version = "v9"
 
 [[projects]]
+  digest = "1:02ffd222370c4bee4b4fbefcea8eb0def8c9d58ee9818de640e4de1d0bb74df1"
+  name = "github.com/astaxie/beego"
+  packages = ["httplib"]
+  pruneopts = "NUT"
+  revision = "1b6edafc96ad27b6515fafeccd7339dda3e997b1"
+  version = "v1.11.1"
+
+[[projects]]
   digest = "1:4340101f42556a9cb2f7a360a0e95a019bfef6247d92e6c4c46f2433cf86a482"
   name = "github.com/docker/go-units"
   packages = ["."]
@@ -174,7 +182,7 @@
     "netutil",
   ]
   pruneopts = "NUT"
-  revision = "16b79f2e4e95ea23b2bf9903c9809ff7b013ce85"
+  revision = "d8887717615a059821345a5c23649351b52a1c0b"
 
 [[projects]]
   digest = "1:e33513a825fcd765e97b5de639a2f7547542d1a8245df0cef18e1fd390b778a9"
@@ -212,6 +220,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/astaxie/beego/httplib",
     "github.com/go-openapi/errors",
     "github.com/go-openapi/loads",
     "github.com/go-openapi/runtime",
@@ -225,6 +234,7 @@
     "github.com/go-openapi/validate",
     "github.com/jessevdk/go-flags",
     "golang.org/x/net/netutil",
+    "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

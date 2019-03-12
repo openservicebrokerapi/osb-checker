@@ -26,6 +26,10 @@
 
 
 [[constraint]]
+  name = "github.com/astaxie/beego"
+  version = "1.11.1"
+
+[[constraint]]
   name = "github.com/go-openapi/errors"
   version = "0.18.0"
 
@@ -60,6 +64,10 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/net"
+
+[[constraint]]
+  name = "gopkg.in/yaml.v2"
+  version = "2.2.2"
 
 [prune]
   non-go = true
