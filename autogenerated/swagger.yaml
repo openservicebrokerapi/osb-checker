@@ -33,7 +33,7 @@ paths:
         '200':
           description: catalog response
           schema:
-                $ref: '#/definitions/Catalog'
+            $ref: '#/definitions/Catalog'
   '/v2/service_instances/{instance_id}':
     parameters:
       - $ref: '#/parameters/APIVersion'

@@ -4,23 +4,30 @@ package test
 
 import (
 	"flag"
+	"testing"
 
-	"github.com/openservicebrokerapi/osb-checker/constants"
+	. "github.com/openservicebrokerapi/osb-checker/config"
 	"github.com/openservicebrokerapi/osb-checker/validator"
 )
 
 var (
-	version        string
-	brokerEndpoint string
+	configPath string
 
 	v *validator.Validator
 )
 
 func init() {
 	// Parse some configuration fields from command line.
-	flag.StringVar(&version, "version", constants.Version214, "Please specify the version of service broker you want to test!")
-	flag.StringVar(&brokerEndpoint, "endpoint", constants.MockBrokerEndpoint, "Please specify the endpoint of broker!")
+	flag.StringVar(&configFile, "config-file", "", "Please specify the config file of service broker you want to test!")
 	flag.Parse()
 
-	v = validator.NewValidator(version, brokerEndpoint)
+	if err := Load(configPath); err != nil {
+		panic(err)
+	}
+
+	v = validator.NewValidator(CONF.APIVersion, CONF.URL)
+}
+
+func TestCatalog(t *testing.T) {
+
 }
