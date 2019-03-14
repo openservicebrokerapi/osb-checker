@@ -15,8 +15,6 @@ func TestProvision(
 	req *v2.ServiceInstanceProvisionRequest,
 	async bool,
 ) {
-	t.Parallel()
-
 	Convey("PROVISION - request syntax", t, func() {
 
 		So(testAPIVersionHeader(GenerateInstanceURL(instanceID), "PUT"), ShouldEqual, nil)

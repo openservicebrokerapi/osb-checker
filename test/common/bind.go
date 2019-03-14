@@ -15,8 +15,6 @@ func TestBind(
 	req *v2.ServiceBindingRequest,
 	async bool,
 ) {
-	t.Parallel()
-
 	Convey("BINDING - request syntax", t, func() {
 
 		So(testAPIVersionHeader(GenerateBindingURL(instanceID, bindingID), "PUT"), ShouldEqual, nil)

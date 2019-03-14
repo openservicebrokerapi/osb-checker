@@ -25,6 +25,10 @@ func init() {
 }
 
 func TestLifeCycle(t *testing.T) {
+	t.Parallel()
+
+	common.TestGetCatalog(t)
+
 	for _, svc := range CONF.Services {
 		instanceID := uuid.NewV4().String()
 		bindingID := uuid.NewV4().String()
@@ -64,6 +68,8 @@ func TestLifeCycle(t *testing.T) {
 				}
 
 				common.TestBind(t, instanceID, bindingID, req, operation.Async)
+				break
+			default:
 				break
 			}
 		}

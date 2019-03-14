@@ -15,8 +15,6 @@ func TestUpdateInstance(
 	req *v2.ServiceInstanceUpdateRequest,
 	async bool,
 ) {
-	t.Parallel()
-
 	Convey("UPDATE - request syntax", t, func() {
 
 		So(testAPIVersionHeader(GenerateInstanceURL(instanceID), "PATCH"), ShouldEqual, nil)
