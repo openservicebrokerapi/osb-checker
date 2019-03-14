@@ -1,7 +1,6 @@
 package client
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"strings"
 	"time"
@@ -52,10 +51,9 @@ func newRequest(params *BrokerRequestParams) *httplib.BeegoHTTPRequest {
 	// Set the request timeout a little bit longer.
 	params.Timeout = config.HTTPRequestTimeout
 	req.SetTimeout(params.Timeout, params.Timeout)
-	// init body
+	// init JSON body
 	if params.InputData != nil {
-		body, _ := json.MarshalIndent(params.InputData, "", "  ")
-		req.Body(body)
+		req.JSONBody(params.InputData)
 	}
 	// init header
 	if params.HeaderOption != nil {

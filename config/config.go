@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"net/url"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -31,7 +32,7 @@ func Load(path string) error {
 		break
 	}
 
-	return nil
+	return validate(CONF)
 }
 
 func loadFromJSON(path string) error {
@@ -61,4 +62,16 @@ func getFileType(path string) string {
 	}
 
 	return ""
+}
+
+func validate(cfg *Config) error {
+	// Currently the test framework only supports v2.14
+	if cfg.APIVersion != Version214 {
+		return errors.New("version " + cfg.APIVersion + " is not supported")
+	}
+	// Validate the legality of url
+	if _, err := url.Parse(cfg.URL); err != nil {
+		return err
+	}
+	return nil
 }

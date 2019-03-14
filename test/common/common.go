@@ -1,7 +1,6 @@
 package common
 
 import (
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -83,12 +82,18 @@ func testAsyncParameters(url, method string) error {
 
 type Schema interface {
 	Validate(formats strfmt.Registry) error
+
+	MarshalBinary() ([]byte, error)
+
+	UnmarshalBinary(b []byte) error
 }
 
 func testJSONSchema(schema Schema) error {
 	return schema.Validate(strfmt.Default)
 }
 
+// TODO: For provision, update and bind operation, testCatalogSchema should be
+// called to assert the legality of parameters schema.
 func testCatalogSchema() error {
 	_, _, err := apiclient.Default.GetCatalog()
 	if err != nil {
@@ -98,11 +103,11 @@ func testCatalogSchema() error {
 	return nil
 }
 
-func deepCopy(src, dst interface{}) error {
-	srcByte, err := json.Marshal(src)
+func deepCopy(src Schema, dst Schema) error {
+	srcByte, err := src.MarshalBinary()
 	if err != nil {
 		return err
 	}
 
-	return json.Unmarshal(srcByte, dst)
+	return dst.UnmarshalBinary(srcByte)
 }

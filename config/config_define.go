@@ -22,8 +22,8 @@ type Service struct {
 }
 
 type Operation struct {
-	Type       string      `yaml:"type"`
-	PlanID     string      `yaml:"plan_id,omitempty"`
-	Async      bool        `yaml:"async,omitempty"`
-	Parameters interface{} `yaml:"parameters,omitempty"`
+	Type       string                 `yaml:"type"`
+	PlanID     string                 `yaml:"plan_id,omitempty"`
+	Async      bool                   `yaml:"async,omitempty"`
+	Parameters map[string]interface{} `yaml:"parameters,omitempty"`
 }

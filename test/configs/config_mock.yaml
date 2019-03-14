@@ -1,11 +1,9 @@
 url: "http://localhost:3000"
-apiVersion: "2.13"
+apiVersion: "2.14"
 authentication:
   authType: "basic"
   username: "username"
   password: "password"
-pollingInterval: 5
-maxPollingNum: 60
 services:
   - name: "Mock Service Test"
     service_id: "acb56d7c-XXXX-XXXX-XXXX-feb140a59a66"
@@ -17,6 +15,7 @@ services:
         async: true
         parameters:
           billing-account: "fake-account"
+      - type: "get_instance"
       - type: "update"
         plan_id: "0f4008b5-XXXX-XXXX-XXXX-dace631cd648"
         async: true
@@ -27,6 +26,7 @@ services:
         parameters:
           parameter1-name-here: 1
           parameter2-name-here: "parameter2-value-here"
+      - type: "get_binding"
       - type: "unbind"
       - type: "deprovision"
         async: true

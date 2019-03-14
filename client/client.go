@@ -44,9 +44,9 @@ func (c *Client) GetCatalog() (int, *v2.Catalog, error) {
 func (c *Client) Provision(
 	instanceID string,
 	req *v2.ServiceInstanceProvisionRequest,
-	async bool,
-) (int, *v2.ServiceInstanceAsyncOperation, error) {
+) (int, *v2.ServiceInstanceProvision, *v2.ServiceInstanceAsyncOperation, error) {
 
+	var provision v2.ServiceInstanceProvision
 	var asyncOperation v2.ServiceInstanceAsyncOperation
 	params := &BrokerRequestParams{
 		URL:    GenerateInstanceURL(instanceID),
@@ -55,7 +55,7 @@ func (c *Client) Provision(
 			"X-Broker-API-Version": CONF.APIVersion,
 		},
 		QueryParam: map[string]string{
-			"accepts_incomplete": strconv.FormatBool(async),
+			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username:  CONF.Authentication.Username,
 		Password:  CONF.Authentication.Password,
@@ -64,11 +64,20 @@ func (c *Client) Provision(
 
 	res, err := c.Recv(params)
 	if err != nil {
-		return -1, nil, err
+		return -1, nil, nil, err
 	}
-	json.Unmarshal(res.Message, &asyncOperation)
+	switch res.Code {
+	case 200, 201:
+		json.Unmarshal(res.Message, &provision)
+		break
+	case 202:
+		json.Unmarshal(res.Message, &asyncOperation)
+		break
+	default:
+		break
+	}
 
-	return res.Code, &asyncOperation, nil
+	return res.Code, &provision, &asyncOperation, nil
 }
 
 func (c *Client) PollInstanceLastOperation(
@@ -122,7 +131,6 @@ func (c *Client) GetInstance(
 func (c *Client) UpdateInstance(
 	instanceID string,
 	req *v2.ServiceInstanceUpdateRequest,
-	async bool,
 ) (int, *v2.ServiceInstanceAsyncOperation, error) {
 
 	var asyncOperation v2.ServiceInstanceAsyncOperation
@@ -133,7 +141,7 @@ func (c *Client) UpdateInstance(
 			"X-Broker-API-Version": CONF.APIVersion,
 		},
 		QueryParam: map[string]string{
-			"accepts_incomplete": strconv.FormatBool(async),
+			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username:  CONF.Authentication.Username,
 		Password:  CONF.Authentication.Password,
@@ -144,7 +152,13 @@ func (c *Client) UpdateInstance(
 	if err != nil {
 		return -1, nil, err
 	}
-	json.Unmarshal(res.Message, &asyncOperation)
+	switch res.Code {
+	case 202:
+		json.Unmarshal(res.Message, &asyncOperation)
+		break
+	default:
+		break
+	}
 
 	return res.Code, &asyncOperation, nil
 }
@@ -152,9 +166,9 @@ func (c *Client) UpdateInstance(
 func (c *Client) Deprovision(
 	instanceID string,
 	serviceID, planID string,
-	async bool,
-) (int, error) {
+) (int, *v2.AsyncOperation, error) {
 
+	var asyncOperation v2.AsyncOperation
 	params := &BrokerRequestParams{
 		URL:    GenerateInstanceURL(instanceID),
 		Method: "DELETE",
@@ -164,7 +178,7 @@ func (c *Client) Deprovision(
 		QueryParam: map[string]string{
 			"service_id":         serviceID,
 			"plan_id":            planID,
-			"accepts_incomplete": strconv.FormatBool(async),
+			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username: CONF.Authentication.Username,
 		Password: CONF.Authentication.Password,
@@ -172,19 +186,26 @@ func (c *Client) Deprovision(
 
 	res, err := c.Recv(params)
 	if err != nil {
-		return -1, err
+		return -1, nil, err
+	}
+	switch res.Code {
+	case 202:
+		json.Unmarshal(res.Message, &asyncOperation)
+		break
+	default:
+		break
 	}
 
-	return res.Code, nil
+	return res.Code, &asyncOperation, nil
 }
 
 func (c *Client) Bind(
 	instanceID, bindingID string,
 	req *v2.ServiceBindingRequest,
-	async bool,
-) (int, *v2.ServiceBinding, error) {
+) (int, *v2.ServiceBinding, *v2.AsyncOperation, error) {
 
 	var binding v2.ServiceBinding
+	var asyncOperation v2.AsyncOperation
 	params := &BrokerRequestParams{
 		URL:    GenerateBindingURL(instanceID, bindingID),
 		Method: "PUT",
@@ -192,7 +213,7 @@ func (c *Client) Bind(
 			"X-Broker-API-Version": CONF.APIVersion,
 		},
 		QueryParam: map[string]string{
-			"accepts_incomplete": strconv.FormatBool(async),
+			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username:  CONF.Authentication.Username,
 		Password:  CONF.Authentication.Password,
@@ -201,11 +222,20 @@ func (c *Client) Bind(
 
 	res, err := c.Recv(params)
 	if err != nil {
-		return -1, nil, err
+		return -1, nil, nil, err
 	}
-	json.Unmarshal(res.Message, &binding)
+	switch res.Code {
+	case 200, 201:
+		json.Unmarshal(res.Message, &binding)
+		break
+	case 202:
+		json.Unmarshal(res.Message, &asyncOperation)
+		break
+	default:
+		break
+	}
 
-	return res.Code, &binding, nil
+	return res.Code, &binding, &asyncOperation, nil
 }
 
 func (c *Client) PollBindingLastOperation(
@@ -259,9 +289,9 @@ func (c *Client) GetBinding(
 func (c *Client) Unbind(
 	instanceID, bindingID,
 	serviceID, planID string,
-	async bool,
-) (int, error) {
+) (int, *v2.AsyncOperation, error) {
 
+	var asyncOperation v2.AsyncOperation
 	params := &BrokerRequestParams{
 		URL:    GenerateBindingURL(instanceID, bindingID),
 		Method: "DELETE",
@@ -271,7 +301,7 @@ func (c *Client) Unbind(
 		QueryParam: map[string]string{
 			"service_id":         serviceID,
 			"plan_id":            planID,
-			"accepts_incomplete": strconv.FormatBool(async),
+			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username: CONF.Authentication.Username,
 		Password: CONF.Authentication.Password,
@@ -279,8 +309,15 @@ func (c *Client) Unbind(
 
 	res, err := c.Recv(params)
 	if err != nil {
-		return -1, err
+		return -1, nil, err
+	}
+	switch res.Code {
+	case 202:
+		json.Unmarshal(res.Message, &asyncOperation)
+		break
+	default:
+		break
 	}
 
-	return res.Code, nil
+	return res.Code, &asyncOperation, nil
 }
