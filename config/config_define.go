@@ -16,8 +16,8 @@ type AuthOption struct {
 type Service struct {
 	Name             string       `yaml:"name"`
 	ServiceID        string       `yaml:"service_id"`
-	OrganizationGuid string       `yaml:"organization_guid"`
-	SpaceGuid        string       `yaml:"space_guid"`
+	OrganizationGUID string       `yaml:"organization_guid"`
+	SpaceGUID        string       `yaml:"space_guid"`
 	Operations       []*Operation `yaml:"operations"`
 }
 

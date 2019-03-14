@@ -3,29 +3,16 @@ package common
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"reflect"
 	"strconv"
 
 	apiclient "github.com/openservicebrokerapi/osb-checker/client"
 	. "github.com/openservicebrokerapi/osb-checker/config"
 
-	"github.com/go-openapi/spec"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/validate"
 )
 
-func NewValidator() *Validator {
-	return &Validator{
-		client: apiclient.Default,
-	}
-}
-
-type Validator struct {
-	client *apiclient.Client
-}
-
-func (v *Validator) testAPIVersionHeader(url, method string) error {
+func testAPIVersionHeader(url, method string) error {
 	params := &apiclient.BrokerRequestParams{
 		URL:          url,
 		Method:       method,
@@ -37,7 +24,7 @@ func (v *Validator) testAPIVersionHeader(url, method string) error {
 		Password: CONF.Authentication.Password,
 	}
 
-	res, err := v.client.Recv(params)
+	res, err := apiclient.Default.Recv(params)
 	if err != nil {
 		return err
 	}
@@ -48,7 +35,7 @@ func (v *Validator) testAPIVersionHeader(url, method string) error {
 	return nil
 }
 
-func (v *Validator) testAuthentication(url, method string) error {
+func testAuthentication(url, method string) error {
 	params := &apiclient.BrokerRequestParams{
 		URL:    url,
 		Method: method,
@@ -60,7 +47,7 @@ func (v *Validator) testAuthentication(url, method string) error {
 		},
 	}
 
-	res, err := v.client.Recv(params)
+	res, err := apiclient.Default.Recv(params)
 	if err != nil {
 		return err
 	}
@@ -71,7 +58,7 @@ func (v *Validator) testAuthentication(url, method string) error {
 	return nil
 }
 
-func (v *Validator) testAsyncParameters(url, method string) error {
+func testAsyncParameters(url, method string) error {
 	params := &apiclient.BrokerRequestParams{
 		URL:    url,
 		Method: method,
@@ -83,7 +70,7 @@ func (v *Validator) testAsyncParameters(url, method string) error {
 		Password:   CONF.Authentication.Password,
 	}
 
-	res, err := v.client.Recv(params)
+	res, err := apiclient.Default.Recv(params)
 	if err != nil {
 		return err
 	}
@@ -94,22 +81,28 @@ func (v *Validator) testAsyncParameters(url, method string) error {
 	return nil
 }
 
-func (v *Validator) testJSONSchema(data interface{}, schemaFile string) error {
-	schemaBody, err := ioutil.ReadFile(schemaFile)
-	if err != nil {
-		return err
-	}
-	schema := new(spec.Schema)
-	json.Unmarshal(schemaBody, schema)
-
-	return validate.AgainstSchema(schema, data, strfmt.Default)
+type Schema interface {
+	Validate(formats strfmt.Registry) error
 }
 
-func (v *Validator) testCatalogSchema() error {
-	_, _, err := v.client.GetCatalog()
+func testJSONSchema(schema Schema) error {
+	return schema.Validate(strfmt.Default)
+}
+
+func testCatalogSchema() error {
+	_, _, err := apiclient.Default.GetCatalog()
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func deepCopy(src, dst interface{}) error {
+	srcByte, err := json.Marshal(src)
+	if err != nil {
+		return err
+	}
+
+	return json.Unmarshal(srcByte, dst)
 }

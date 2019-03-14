@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/astaxie/beego/httplib"
-	"github.com/openservicebrokerapi/osb-checker/constants"
+	"github.com/openservicebrokerapi/osb-checker/config"
 )
 
 // ParamOption
@@ -50,7 +50,7 @@ func newRequest(params *BrokerRequestParams) *httplib.BeegoHTTPRequest {
 	req := httplib.NewBeegoRequest(params.URL, strings.ToUpper(params.Method))
 
 	// Set the request timeout a little bit longer.
-	params.Timeout = constants.HTTPRequestTimeout
+	params.Timeout = config.HTTPRequestTimeout
 	req.SetTimeout(params.Timeout, params.Timeout)
 	// init body
 	if params.InputData != nil {
