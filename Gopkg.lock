@@ -96,11 +96,10 @@
   version = "v0.18.0"
 
 [[projects]]
-  digest = "1:0dd5c870695a594f3799a6501148db7f47e1fbaf297a4edab4dcc2b554e4ed16"
+  digest = "1:07db956f02b4373fa863e560f6c4a821a4c514fe6de429d2ac994b913577d96a"
   name = "github.com/go-openapi/runtime"
   packages = [
     ".",
-    "client",
     "flagext",
     "logger",
     "middleware",
@@ -146,6 +145,14 @@
   version = "v0.18.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:f14d1b50e0075fb00177f12a96dd7addf93d1e2883c25befd17285b779549795"
+  name = "github.com/gopherjs/gopherjs"
+  packages = ["js"]
+  pruneopts = "NUT"
+  revision = "847fc94819f9d5a4e7154e2203b36f6dbace6f48"
+
+[[projects]]
   digest = "1:d0fbb40af7faf9cc62d1728be5fdd140ae17ce6e2aac6371971a0a6a2cc139d3"
   name = "github.com/jessevdk/go-flags"
   packages = ["."]
@@ -154,8 +161,16 @@
   version = "v1.4.0"
 
 [[projects]]
+  digest = "1:395b1480ae42c3fec6fff19823e66e173819f85826811387f9045c88515a7f0f"
+  name = "github.com/jtolds/gls"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "b4936e06046bbecbb94cae9c18127ebe510a2cb9"
+  version = "v4.20"
+
+[[projects]]
   branch = "master"
-  digest = "1:84a5a2b67486d5d67060ac393aa255d05d24ed5ee41daecd5635ec22657b6492"
+  digest = "1:df495c9184b4e6cbb9d55652236dbcbe72c65a1c8b6469da50722628cea474e7"
   name = "github.com/mailru/easyjson"
   packages = [
     "buffer",
@@ -163,7 +178,7 @@
     "jwriter",
   ]
   pruneopts = "NUT"
-  revision = "6243d8e04c3f819e79757e8bc3faa15c3cb27003"
+  revision = "1de009706dbeb9d05f18586f0735fcdb7c524481"
 
 [[projects]]
   digest = "1:a45ae66dea4c899d79fceb116accfa1892105c251f0dcd9a217ddc276b42ec68"
@@ -174,6 +189,38 @@
   version = "v1.1.2"
 
 [[projects]]
+  digest = "1:6bc0652ea6e39e22ccd522458b8bdd8665bf23bdc5a20eec90056e4dc7e273ca"
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
+
+[[projects]]
+  digest = "1:1f0b284a6858827de4c27c66b49b2b25df3e16b031c2b57b7892273131e7dd2b"
+  name = "github.com/smartystreets/assertions"
+  packages = [
+    ".",
+    "internal/go-render/render",
+    "internal/oglematchers",
+  ]
+  pruneopts = "NUT"
+  revision = "7678a5452ebea5b7090a6b163f844c133f523da2"
+  version = "1.8.3"
+
+[[projects]]
+  digest = "1:7efd0b2309cdd6468029fa30c808c50a820c9344df07e1a4bbdaf18f282907aa"
+  name = "github.com/smartystreets/goconvey"
+  packages = [
+    "convey",
+    "convey/gotest",
+    "convey/reporting",
+  ]
+  pruneopts = "NUT"
+  revision = "9e8dc3f972df6c8fcc0375ef492c24d0bb204857"
+  version = "1.6.3"
+
+[[projects]]
   branch = "master"
   digest = "1:bbd232f46e33dfb01068e0f4193a3da2d662a350873804bc964f697de5f39ac7"
   name = "golang.org/x/net"
@@ -182,7 +229,7 @@
     "netutil",
   ]
   pruneopts = "NUT"
-  revision = "d8887717615a059821345a5c23649351b52a1c0b"
+  revision = "9f648a60d9775ef5c977e7669d1673a7a67bef33"
 
 [[projects]]
   digest = "1:e33513a825fcd765e97b5de639a2f7547542d1a8245df0cef18e1fd390b778a9"
@@ -224,7 +271,6 @@
     "github.com/go-openapi/errors",
     "github.com/go-openapi/loads",
     "github.com/go-openapi/runtime",
-    "github.com/go-openapi/runtime/client",
     "github.com/go-openapi/runtime/flagext",
     "github.com/go-openapi/runtime/middleware",
     "github.com/go-openapi/runtime/security",
@@ -233,6 +279,8 @@
     "github.com/go-openapi/swag",
     "github.com/go-openapi/validate",
     "github.com/jessevdk/go-flags",
+    "github.com/satori/go.uuid",
+    "github.com/smartystreets/goconvey/convey",
     "golang.org/x/net/netutil",
     "gopkg.in/yaml.v2",
   ]

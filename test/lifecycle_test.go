@@ -1,7 +1,5 @@
 package test
 
-// +build lifecycle
-
 import (
 	"flag"
 	"testing"
