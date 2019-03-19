@@ -23,21 +23,21 @@ func TestUnbind(
 		}
 
 		Convey("should reject if missing service_id", func() {
-			code, _, err := apiclient.Default.Unbind(instanceID, bindingID, "", planID)
+			code, _, err := apiclient.Default.Unbind(instanceID, bindingID, "", planID, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
 		})
 
 		Convey("should reject if missing plan_id", func() {
-			code, _, err := apiclient.Default.Unbind(instanceID, bindingID, serviceID, "")
+			code, _, err := apiclient.Default.Unbind(instanceID, bindingID, serviceID, "", async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
 		})
 
 		Convey("should accept a valid service binding deletion request", func() {
-			code, asyncBody, err := apiclient.Default.Unbind(instanceID, bindingID, serviceID, planID)
+			code, asyncBody, err := apiclient.Default.Unbind(instanceID, bindingID, serviceID, planID, async)
 
 			So(err, ShouldEqual, nil)
 			if async {

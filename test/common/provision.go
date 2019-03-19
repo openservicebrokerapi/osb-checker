@@ -28,7 +28,7 @@ func TestProvision(
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
 			tempBody.ServiceID = &emptyValue
-			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -38,7 +38,7 @@ func TestProvision(
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
 			tempBody.PlanID = &emptyValue
-			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -48,7 +48,7 @@ func TestProvision(
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
 			tempBody.OrganizationGUID = &emptyValue
-			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -58,7 +58,7 @@ func TestProvision(
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
 			tempBody.SpaceGUID = &emptyValue
-			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -68,7 +68,7 @@ func TestProvision(
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
 			tempBody.ServiceID = &fakeValue
-			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -78,7 +78,28 @@ func TestProvision(
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
 			tempBody.PlanID = &fakeValue
-			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
+
+			So(err, ShouldEqual, nil)
+			So(code, ShouldEqual, 400)
+		})
+
+		Convey("should reject if parameters are not following schema", func() {
+			tempBody := new(v2.ServiceInstanceProvisionRequest)
+			deepCopy(req, tempBody)
+			tempBody.Parameters = map[string]interface{}{
+				"can-not": "be-good",
+			}
+			if err := testCatalogSchema(&SchemaOpts{
+				ServiceID:  *tempBody.ServiceID,
+				PlanID:     *tempBody.PlanID,
+				Parameters: tempBody.Parameters,
+				SchemaType: config.TypeServiceInstance,
+				Action:     config.ActionCreate,
+			}); err == nil {
+				return
+			}
+			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -87,7 +108,7 @@ func TestProvision(
 		Convey("should accept a valid provision request", func() {
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
-			code, syncBody, asyncBody, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, syncBody, asyncBody, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			if async {
@@ -103,7 +124,7 @@ func TestProvision(
 		Convey("should return 200 OK when instance Id exists with identical properties", func() {
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
-			code, syncBody, _, err := apiclient.Default.Provision(instanceID, tempBody)
+			code, syncBody, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 200)

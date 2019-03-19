@@ -44,18 +44,17 @@ func (c *Client) GetCatalog() (int, *v2.Catalog, error) {
 func (c *Client) Provision(
 	instanceID string,
 	req *v2.ServiceInstanceProvisionRequest,
+	async bool,
 ) (int, *v2.ServiceInstanceProvision, *v2.ServiceInstanceAsyncOperation, error) {
 
 	var provision v2.ServiceInstanceProvision
 	var asyncOperation v2.ServiceInstanceAsyncOperation
 	params := &BrokerRequestParams{
-		URL:    GenerateInstanceURL(instanceID),
+		URL: GenerateInstanceURL(instanceID) +
+			"?accepts_incomplete=" + strconv.FormatBool(async),
 		Method: "PUT",
 		HeaderOption: map[string]string{
 			"X-Broker-API-Version": CONF.APIVersion,
-		},
-		QueryParam: map[string]string{
-			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username:  CONF.Authentication.Username,
 		Password:  CONF.Authentication.Password,
@@ -131,17 +130,16 @@ func (c *Client) GetInstance(
 func (c *Client) UpdateInstance(
 	instanceID string,
 	req *v2.ServiceInstanceUpdateRequest,
+	async bool,
 ) (int, *v2.ServiceInstanceAsyncOperation, error) {
 
 	var asyncOperation v2.ServiceInstanceAsyncOperation
 	params := &BrokerRequestParams{
-		URL:    GenerateInstanceURL(instanceID),
+		URL: GenerateInstanceURL(instanceID) +
+			"?accepts_incomplete=" + strconv.FormatBool(async),
 		Method: "PATCH",
 		HeaderOption: map[string]string{
 			"X-Broker-API-Version": CONF.APIVersion,
-		},
-		QueryParam: map[string]string{
-			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username:  CONF.Authentication.Username,
 		Password:  CONF.Authentication.Password,
@@ -166,19 +164,17 @@ func (c *Client) UpdateInstance(
 func (c *Client) Deprovision(
 	instanceID string,
 	serviceID, planID string,
+	async bool,
 ) (int, *v2.AsyncOperation, error) {
 
 	var asyncOperation v2.AsyncOperation
 	params := &BrokerRequestParams{
-		URL:    GenerateInstanceURL(instanceID),
+		URL: GenerateInstanceURL(instanceID) +
+			"?accepts_incomplete=" + strconv.FormatBool(async) +
+			"&service_id=" + serviceID + "&plan_id=" + planID,
 		Method: "DELETE",
 		HeaderOption: map[string]string{
 			"X-Broker-API-Version": CONF.APIVersion,
-		},
-		QueryParam: map[string]string{
-			"service_id":         serviceID,
-			"plan_id":            planID,
-			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username: CONF.Authentication.Username,
 		Password: CONF.Authentication.Password,
@@ -202,18 +198,17 @@ func (c *Client) Deprovision(
 func (c *Client) Bind(
 	instanceID, bindingID string,
 	req *v2.ServiceBindingRequest,
+	async bool,
 ) (int, *v2.ServiceBinding, *v2.AsyncOperation, error) {
 
 	var binding v2.ServiceBinding
 	var asyncOperation v2.AsyncOperation
 	params := &BrokerRequestParams{
-		URL:    GenerateBindingURL(instanceID, bindingID),
+		URL: GenerateBindingURL(instanceID, bindingID) +
+			"?accepts_incomplete=" + strconv.FormatBool(async),
 		Method: "PUT",
 		HeaderOption: map[string]string{
 			"X-Broker-API-Version": CONF.APIVersion,
-		},
-		QueryParam: map[string]string{
-			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username:  CONF.Authentication.Username,
 		Password:  CONF.Authentication.Password,
@@ -289,19 +284,17 @@ func (c *Client) GetBinding(
 func (c *Client) Unbind(
 	instanceID, bindingID,
 	serviceID, planID string,
+	async bool,
 ) (int, *v2.AsyncOperation, error) {
 
 	var asyncOperation v2.AsyncOperation
 	params := &BrokerRequestParams{
-		URL:    GenerateBindingURL(instanceID, bindingID),
+		URL: GenerateBindingURL(instanceID, bindingID) +
+			"?accepts_incomplete=" + strconv.FormatBool(async) +
+			"&service_id=" + serviceID + "&plan_id=" + planID,
 		Method: "DELETE",
 		HeaderOption: map[string]string{
 			"X-Broker-API-Version": CONF.APIVersion,
-		},
-		QueryParam: map[string]string{
-			"service_id":         serviceID,
-			"plan_id":            planID,
-			"accepts_incomplete": strconv.FormatBool(true),
 		},
 		Username: CONF.Authentication.Username,
 		Password: CONF.Authentication.Password,

@@ -28,7 +28,7 @@ func TestUpdateInstance(
 			tempBody := new(v2.ServiceInstanceUpdateRequest)
 			deepCopy(req, tempBody)
 			tempBody.ServiceID = &emptyValue
-			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody)
+			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -38,7 +38,28 @@ func TestUpdateInstance(
 			tempBody := new(v2.ServiceInstanceUpdateRequest)
 			deepCopy(req, tempBody)
 			tempBody.ServiceID = &fakeValue
-			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody)
+			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
+
+			So(err, ShouldEqual, nil)
+			So(code, ShouldEqual, 400)
+		})
+
+		Convey("should reject if parameters are not following schema", func() {
+			tempBody := new(v2.ServiceInstanceUpdateRequest)
+			deepCopy(req, tempBody)
+			tempBody.Parameters = map[string]interface{}{
+				"can-not": "be-good",
+			}
+			if err := testCatalogSchema(&SchemaOpts{
+				ServiceID:  *tempBody.ServiceID,
+				PlanID:     tempBody.PlanID,
+				Parameters: tempBody.Parameters,
+				SchemaType: config.TypeServiceInstance,
+				Action:     config.ActionUpdate,
+			}); err == nil {
+				return
+			}
+			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -47,7 +68,7 @@ func TestUpdateInstance(
 		Convey("should accept a valid update request", func() {
 			tempBody := new(v2.ServiceInstanceUpdateRequest)
 			deepCopy(req, tempBody)
-			code, asyncBody, err := apiclient.Default.UpdateInstance(instanceID, tempBody)
+			code, asyncBody, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			if async {

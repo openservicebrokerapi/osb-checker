@@ -28,7 +28,7 @@ func TestBind(
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
 			tempBody.ServiceID = &emptyValue
-			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody)
+			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -38,7 +38,7 @@ func TestBind(
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
 			tempBody.PlanID = &emptyValue
-			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody)
+			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -48,7 +48,7 @@ func TestBind(
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
 			tempBody.ServiceID = &fakeValue
-			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody)
+			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -58,7 +58,28 @@ func TestBind(
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
 			tempBody.PlanID = &fakeValue
-			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody)
+			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
+
+			So(err, ShouldEqual, nil)
+			So(code, ShouldEqual, 400)
+		})
+
+		Convey("should reject if parameters are not following schema", func() {
+			tempBody := new(v2.ServiceBindingRequest)
+			deepCopy(req, tempBody)
+			tempBody.Parameters = map[string]interface{}{
+				"can-not": "be-good",
+			}
+			if err := testCatalogSchema(&SchemaOpts{
+				ServiceID:  *tempBody.ServiceID,
+				PlanID:     *tempBody.PlanID,
+				Parameters: tempBody.Parameters,
+				SchemaType: config.TypeServiceBinding,
+				Action:     config.ActionCreate,
+			}); err == nil {
+				return
+			}
+			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
@@ -67,7 +88,7 @@ func TestBind(
 		Convey("should accept a valid binding request", func() {
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
-			code, syncBody, asyncBody, err := apiclient.Default.Bind(instanceID, bindingID, tempBody)
+			code, syncBody, asyncBody, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			if async {
@@ -83,7 +104,7 @@ func TestBind(
 		Convey("should return 200 OK when binding Id with same instance Id exists with identical properties", func() {
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
-			code, syncBody, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody)
+			code, syncBody, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 200)
