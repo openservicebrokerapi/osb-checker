@@ -14,15 +14,15 @@ func TestGetInstance(
 ) {
 	Convey("RETRIEVE INSTANCE", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "GET"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateInstanceURL(instanceID), "GET"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "GET"), ShouldBeNil)
+		So(testAuthentication(config.GenerateInstanceURL(instanceID), "GET"), ShouldBeNil)
 
 		Convey("should accept a valid get instance request", func() {
 			code, body, err := apiclient.Default.GetInstance(instanceID)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 200)
-			So(testJSONSchema(body), ShouldEqual, nil)
+			So(testJSONSchema(body), ShouldBeNil)
 		})
 	})
 }
@@ -33,15 +33,15 @@ func TestGetBinding(
 ) {
 	Convey("RETRIEVE BINDING", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateBindingURL(instanceID, bindingID), "GET"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateBindingURL(instanceID, bindingID), "GET"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateBindingURL(instanceID, bindingID), "GET"), ShouldBeNil)
+		So(testAuthentication(config.GenerateBindingURL(instanceID, bindingID), "GET"), ShouldBeNil)
 
 		Convey("should accept a valid get binding request", func() {
 			code, body, err := apiclient.Default.GetBinding(instanceID, bindingID)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 200)
-			So(testJSONSchema(body), ShouldEqual, nil)
+			So(testJSONSchema(body), ShouldBeNil)
 		})
 	})
 }

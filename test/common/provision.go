@@ -17,10 +17,10 @@ func TestProvision(
 ) {
 	Convey("PROVISIONING - request syntax", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "PUT"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateInstanceURL(instanceID), "PUT"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "PUT"), ShouldBeNil)
+		So(testAuthentication(config.GenerateInstanceURL(instanceID), "PUT"), ShouldBeNil)
 		if async {
-			So(testAsyncParameters(config.GenerateInstanceURL(instanceID), "PUT"), ShouldEqual, nil)
+			So(testAsyncParameters(config.GenerateInstanceURL(instanceID), "PUT"), ShouldBeNil)
 		}
 
 		var emptyValue, fakeValue = "", "xxxx-xxxx"
@@ -30,7 +30,7 @@ func TestProvision(
 			tempBody.ServiceID = &emptyValue
 			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -40,7 +40,7 @@ func TestProvision(
 			tempBody.PlanID = &emptyValue
 			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -50,7 +50,7 @@ func TestProvision(
 			tempBody.OrganizationGUID = &emptyValue
 			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -60,7 +60,7 @@ func TestProvision(
 			tempBody.SpaceGUID = &emptyValue
 			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -70,7 +70,7 @@ func TestProvision(
 			tempBody.ServiceID = &fakeValue
 			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -80,7 +80,7 @@ func TestProvision(
 			tempBody.PlanID = &fakeValue
 			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -101,7 +101,7 @@ func TestProvision(
 			}
 			code, _, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 	})
@@ -112,21 +112,23 @@ func TestProvision(
 			deepCopy(req, tempBody)
 			code, syncBody, asyncBody, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			if async {
 				So(code, ShouldEqual, 202)
-				So(testJSONSchema(asyncBody), ShouldEqual, nil)
+				So(testJSONSchema(asyncBody), ShouldBeNil)
 			} else {
 				So(code, ShouldEqual, 201)
-				So(testJSONSchema(syncBody), ShouldEqual, nil)
+				So(testJSONSchema(syncBody), ShouldBeNil)
 			}
 		})
 	})
 
 	if async {
-		TestPollInstanceLastOperation(t, instanceID)
+		Convey("PROVISIONING - poll", t, func(c C) {
+			testPollInstanceLastOperation(instanceID)
 
-		So(pollInstanceLastOperationStatus(instanceID), ShouldEqual, nil)
+			So(pollInstanceLastOperationStatus(instanceID), ShouldBeNil)
+		})
 	}
 
 	Convey("PROVISIONING - existed", t, func() {
@@ -135,9 +137,9 @@ func TestProvision(
 			deepCopy(req, tempBody)
 			code, syncBody, _, err := apiclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 200)
-			So(testJSONSchema(syncBody), ShouldEqual, nil)
+			So(testJSONSchema(syncBody), ShouldBeNil)
 		})
 	})
 }

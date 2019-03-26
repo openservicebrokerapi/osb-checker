@@ -17,10 +17,10 @@ func TestBind(
 ) {
 	Convey("BINDING - request syntax", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateBindingURL(instanceID, bindingID), "PUT"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateBindingURL(instanceID, bindingID), "PUT"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateBindingURL(instanceID, bindingID), "PUT"), ShouldBeNil)
+		So(testAuthentication(config.GenerateBindingURL(instanceID, bindingID), "PUT"), ShouldBeNil)
 		if async {
-			So(testAsyncParameters(config.GenerateBindingURL(instanceID, bindingID), "PUT"), ShouldEqual, nil)
+			So(testAsyncParameters(config.GenerateBindingURL(instanceID, bindingID), "PUT"), ShouldBeNil)
 		}
 
 		var emptyValue, fakeValue = "", "xxxx-xxxx"
@@ -30,7 +30,7 @@ func TestBind(
 			tempBody.ServiceID = &emptyValue
 			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -40,7 +40,7 @@ func TestBind(
 			tempBody.PlanID = &emptyValue
 			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -50,7 +50,7 @@ func TestBind(
 			tempBody.ServiceID = &fakeValue
 			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -60,7 +60,7 @@ func TestBind(
 			tempBody.PlanID = &fakeValue
 			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -81,7 +81,7 @@ func TestBind(
 			}
 			code, _, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 	})
@@ -92,21 +92,23 @@ func TestBind(
 			deepCopy(req, tempBody)
 			code, syncBody, asyncBody, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			if async {
 				So(code, ShouldEqual, 202)
-				So(testJSONSchema(asyncBody), ShouldEqual, nil)
+				So(testJSONSchema(asyncBody), ShouldBeNil)
 			} else {
 				So(code, ShouldEqual, 201)
-				So(testJSONSchema(syncBody), ShouldEqual, nil)
+				So(testJSONSchema(syncBody), ShouldBeNil)
 			}
 		})
 	})
 
 	if async {
-		TestPollBindingLastOperation(t, instanceID, bindingID)
+		Convey("BINDING - poll", t, func(c C) {
+			testPollBindingLastOperation(instanceID, bindingID)
 
-		So(pollBindingLastOperationStatus(instanceID, bindingID), ShouldEqual, nil)
+			So(pollBindingLastOperationStatus(instanceID, bindingID), ShouldBeNil)
+		})
 	}
 
 	Convey("BINDING - existed", t, func() {
@@ -115,9 +117,9 @@ func TestBind(
 			deepCopy(req, tempBody)
 			code, syncBody, _, err := apiclient.Default.Bind(instanceID, bindingID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 200)
-			So(testJSONSchema(syncBody), ShouldEqual, nil)
+			So(testJSONSchema(syncBody), ShouldBeNil)
 		})
 	})
 }

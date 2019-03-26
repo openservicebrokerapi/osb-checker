@@ -11,15 +11,15 @@ import (
 func TestGetCatalog(t *testing.T) {
 	Convey("Query service catalog", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateCatalogURL(), "GET"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateCatalogURL(), "GET"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateCatalogURL(), "GET"), ShouldBeNil)
+		So(testAuthentication(config.GenerateCatalogURL(), "GET"), ShouldBeNil)
 
 		Convey("should return list of registered service classes as JSON payload", func() {
 			code, body, err := apiclient.Default.GetCatalog()
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 200)
-			So(testJSONSchema(body), ShouldEqual, nil)
+			So(testJSONSchema(body), ShouldBeNil)
 		})
 	})
 }

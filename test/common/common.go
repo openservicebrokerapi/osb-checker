@@ -203,7 +203,7 @@ func pollLastOperationStatus(instanceID, bindingID string) error {
 		if lastOperationStatus != "in progress" {
 			break
 		}
-		fmt.Printf("%dth polling last operation...\n", i+1)
+		fmt.Printf("\n%dth polling last operation...\n", i+1)
 
 		var code int
 		var body *v2.LastOperationResource

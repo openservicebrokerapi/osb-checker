@@ -17,10 +17,10 @@ func TestUpdateInstance(
 ) {
 	Convey("UPDATE - request syntax", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "PATCH"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateInstanceURL(instanceID), "PATCH"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "PATCH"), ShouldBeNil)
+		So(testAuthentication(config.GenerateInstanceURL(instanceID), "PATCH"), ShouldBeNil)
 		if async {
-			So(testAsyncParameters(config.GenerateInstanceURL(instanceID), "PATCH"), ShouldEqual, nil)
+			So(testAsyncParameters(config.GenerateInstanceURL(instanceID), "PATCH"), ShouldBeNil)
 		}
 
 		var emptyValue, fakeValue = "", "xxxx-xxxx"
@@ -30,7 +30,7 @@ func TestUpdateInstance(
 			tempBody.ServiceID = &emptyValue
 			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -40,7 +40,7 @@ func TestUpdateInstance(
 			tempBody.ServiceID = &fakeValue
 			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
@@ -61,7 +61,7 @@ func TestUpdateInstance(
 			}
 			code, _, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 	})
@@ -72,10 +72,10 @@ func TestUpdateInstance(
 			deepCopy(req, tempBody)
 			code, asyncBody, err := apiclient.Default.UpdateInstance(instanceID, tempBody, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			if async {
 				So(code, ShouldEqual, 202)
-				So(testJSONSchema(asyncBody), ShouldEqual, nil)
+				So(testJSONSchema(asyncBody), ShouldBeNil)
 			} else {
 				So(code, ShouldEqual, 200)
 			}
@@ -83,8 +83,10 @@ func TestUpdateInstance(
 	})
 
 	if async {
-		TestPollInstanceLastOperation(t, instanceID)
+		Convey("UPDATE - poll", t, func(c C) {
+			testPollInstanceLastOperation(instanceID)
 
-		So(pollInstanceLastOperationStatus(instanceID), ShouldEqual, nil)
+			So(pollInstanceLastOperationStatus(instanceID), ShouldBeNil)
+		})
 	}
 }

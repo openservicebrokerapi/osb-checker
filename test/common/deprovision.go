@@ -16,23 +16,23 @@ func TestDeprovision(
 ) {
 	Convey("DEPROVISIONING - delete syntax", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "DELETE"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateInstanceURL(instanceID), "DELETE"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "DELETE"), ShouldBeNil)
+		So(testAuthentication(config.GenerateInstanceURL(instanceID), "DELETE"), ShouldBeNil)
 		if async {
-			So(testAsyncParameters(config.GenerateInstanceURL(instanceID), "DELETE"), ShouldEqual, nil)
+			So(testAsyncParameters(config.GenerateInstanceURL(instanceID), "DELETE"), ShouldBeNil)
 		}
 
 		Convey("should reject if missing service_id", func() {
 			code, _, err := apiclient.Default.Deprovision(instanceID, "", planID, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
 		Convey("should reject if missing plan_id", func() {
 			code, _, err := apiclient.Default.Deprovision(instanceID, serviceID, "", async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 	})
@@ -41,10 +41,10 @@ func TestDeprovision(
 		Convey("should accept a valid service instance deletion request", func() {
 			code, asyncBody, err := apiclient.Default.Deprovision(instanceID, serviceID, planID, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			if async {
 				So(code, ShouldEqual, 202)
-				So(testJSONSchema(asyncBody), ShouldEqual, nil)
+				So(testJSONSchema(asyncBody), ShouldBeNil)
 			} else {
 				So(code, ShouldEqual, 200)
 			}
@@ -52,8 +52,10 @@ func TestDeprovision(
 	})
 
 	if async {
-		TestPollInstanceLastOperation(t, instanceID)
+		Convey("DEPROVISIONING - poll", t, func(c C) {
+			testPollInstanceLastOperation(instanceID)
 
-		So(pollInstanceLastOperationStatus(instanceID), ShouldEqual, nil)
+			So(pollInstanceLastOperationStatus(instanceID), ShouldBeNil)
+		})
 	}
 }

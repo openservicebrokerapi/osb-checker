@@ -16,23 +16,23 @@ func TestUnbind(
 ) {
 	Convey("UNBINDING - delete syntax", t, func() {
 
-		So(testAPIVersionHeader(config.GenerateBindingURL(instanceID, bindingID), "DELETE"), ShouldEqual, nil)
-		So(testAuthentication(config.GenerateBindingURL(instanceID, bindingID), "DELETE"), ShouldEqual, nil)
+		So(testAPIVersionHeader(config.GenerateBindingURL(instanceID, bindingID), "DELETE"), ShouldBeNil)
+		So(testAuthentication(config.GenerateBindingURL(instanceID, bindingID), "DELETE"), ShouldBeNil)
 		if async {
-			So(testAsyncParameters(config.GenerateBindingURL(instanceID, bindingID), "DELETE"), ShouldEqual, nil)
+			So(testAsyncParameters(config.GenerateBindingURL(instanceID, bindingID), "DELETE"), ShouldBeNil)
 		}
 
 		Convey("should reject if missing service_id", func() {
 			code, _, err := apiclient.Default.Unbind(instanceID, bindingID, "", planID, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
 		Convey("should reject if missing plan_id", func() {
 			code, _, err := apiclient.Default.Unbind(instanceID, bindingID, serviceID, "", async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 	})
@@ -41,10 +41,10 @@ func TestUnbind(
 		Convey("should accept a valid service binding deletion request", func() {
 			code, asyncBody, err := apiclient.Default.Unbind(instanceID, bindingID, serviceID, planID, async)
 
-			So(err, ShouldEqual, nil)
+			So(err, ShouldBeNil)
 			if async {
 				So(code, ShouldEqual, 202)
-				So(testJSONSchema(asyncBody), ShouldEqual, nil)
+				So(testJSONSchema(asyncBody), ShouldBeNil)
 			} else {
 				So(code, ShouldEqual, 200)
 			}
@@ -52,8 +52,10 @@ func TestUnbind(
 	})
 
 	if async {
-		TestPollBindingLastOperation(t, instanceID, bindingID)
+		Convey("UNBINDING - poll", t, func(c C) {
+			testPollBindingLastOperation(instanceID, bindingID)
 
-		So(pollBindingLastOperationStatus(instanceID, bindingID), ShouldEqual, nil)
+			So(pollBindingLastOperationStatus(instanceID, bindingID), ShouldBeNil)
+		})
 	}
 }
