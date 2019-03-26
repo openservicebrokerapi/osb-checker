@@ -35,7 +35,9 @@ func TestUnbind(
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
 		})
+	})
 
+	Convey("UNBINDING - delete", t, func() {
 		Convey("should accept a valid service binding deletion request", func() {
 			code, asyncBody, err := apiclient.Default.Unbind(instanceID, bindingID, serviceID, planID, async)
 
@@ -48,4 +50,10 @@ func TestUnbind(
 			}
 		})
 	})
+
+	if async {
+		TestPollBindingLastOperation(t, instanceID, bindingID)
+
+		So(pollBindingLastOperationStatus(instanceID, bindingID), ShouldEqual, nil)
+	}
 }

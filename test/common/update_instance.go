@@ -64,7 +64,9 @@ func TestUpdateInstance(
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
 		})
+	})
 
+	Convey("UPDATE - new", t, func() {
 		Convey("should accept a valid update request", func() {
 			tempBody := new(v2.ServiceInstanceUpdateRequest)
 			deepCopy(req, tempBody)
@@ -79,4 +81,10 @@ func TestUpdateInstance(
 			}
 		})
 	})
+
+	if async {
+		TestPollInstanceLastOperation(t, instanceID)
+
+		So(pollInstanceLastOperationStatus(instanceID), ShouldEqual, nil)
+	}
 }

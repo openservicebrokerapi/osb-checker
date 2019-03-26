@@ -15,7 +15,7 @@ func TestProvision(
 	req *v2.ServiceInstanceProvisionRequest,
 	async bool,
 ) {
-	Convey("PROVISION - request syntax", t, func() {
+	Convey("PROVISIONING - request syntax", t, func() {
 
 		So(testAPIVersionHeader(config.GenerateInstanceURL(instanceID), "PUT"), ShouldEqual, nil)
 		So(testAuthentication(config.GenerateInstanceURL(instanceID), "PUT"), ShouldEqual, nil)
@@ -104,7 +104,9 @@ func TestProvision(
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
 		})
+	})
 
+	Convey("PROVISIONING - new", t, func() {
 		Convey("should accept a valid provision request", func() {
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)
@@ -118,9 +120,16 @@ func TestProvision(
 				So(code, ShouldEqual, 201)
 				So(testJSONSchema(syncBody), ShouldEqual, nil)
 			}
-
 		})
+	})
 
+	if async {
+		TestPollInstanceLastOperation(t, instanceID)
+
+		So(pollInstanceLastOperationStatus(instanceID), ShouldEqual, nil)
+	}
+
+	Convey("PROVISIONING - existed", t, func() {
 		Convey("should return 200 OK when instance Id exists with identical properties", func() {
 			tempBody := new(v2.ServiceInstanceProvisionRequest)
 			deepCopy(req, tempBody)

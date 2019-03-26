@@ -84,7 +84,9 @@ func TestBind(
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
 		})
+	})
 
+	Convey("BINDING - new", t, func() {
 		Convey("should accept a valid binding request", func() {
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
@@ -98,9 +100,16 @@ func TestBind(
 				So(code, ShouldEqual, 201)
 				So(testJSONSchema(syncBody), ShouldEqual, nil)
 			}
-
 		})
+	})
 
+	if async {
+		TestPollBindingLastOperation(t, instanceID, bindingID)
+
+		So(pollBindingLastOperationStatus(instanceID, bindingID), ShouldEqual, nil)
+	}
+
+	Convey("BINDING - existed", t, func() {
 		Convey("should return 200 OK when binding Id with same instance Id exists with identical properties", func() {
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)

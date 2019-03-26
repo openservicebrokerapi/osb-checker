@@ -1,10 +1,12 @@
 package config
 
 type Config struct {
-	URL            string      `yaml:"url"`
-	APIVersion     string      `yaml:"apiVersion"`
-	Authentication *AuthOption `yaml:"authentication"`
-	Services       []*Service  `yaml:"services"`
+	URL             string      `yaml:"url"`
+	APIVersion      string      `yaml:"apiVersion"`
+	Authentication  *AuthOption `yaml:"authentication"`
+	PollingInterval int         `yaml:"pollingInterval"`
+	MaxPollingNum   int         `yaml:"maxPollingNum"`
+	Services        []*Service  `yaml:"services"`
 }
 
 type AuthOption struct {

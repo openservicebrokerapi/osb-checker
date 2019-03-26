@@ -35,7 +35,9 @@ func TestDeprovision(
 			So(err, ShouldEqual, nil)
 			So(code, ShouldEqual, 400)
 		})
+	})
 
+	Convey("DEPROVISIONING - delete", t, func() {
 		Convey("should accept a valid service instance deletion request", func() {
 			code, asyncBody, err := apiclient.Default.Deprovision(instanceID, serviceID, planID, async)
 
@@ -48,4 +50,10 @@ func TestDeprovision(
 			}
 		})
 	})
+
+	if async {
+		TestPollInstanceLastOperation(t, instanceID)
+
+		So(pollInstanceLastOperationStatus(instanceID), ShouldEqual, nil)
+	}
 }
