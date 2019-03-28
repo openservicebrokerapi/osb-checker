@@ -31,35 +31,23 @@
 
 [[constraint]]
   name = "github.com/go-openapi/errors"
-  version = "0.18.0"
-
-[[constraint]]
-  name = "github.com/go-openapi/loads"
-  version = "0.18.0"
-
-[[constraint]]
-  name = "github.com/go-openapi/runtime"
-  version = "0.18.0"
+  version = "0.19.0"
 
 [[constraint]]
   name = "github.com/go-openapi/spec"
-  version = "0.18.0"
+  version = "0.19.0"
 
 [[constraint]]
   name = "github.com/go-openapi/strfmt"
-  version = "0.18.0"
+  version = "0.19.0"
 
 [[constraint]]
   name = "github.com/go-openapi/swag"
-  version = "0.18.0"
+  version = "0.19.0"
 
 [[constraint]]
   name = "github.com/go-openapi/validate"
-  version = "0.18.0"
-
-[[constraint]]
-  name = "github.com/jessevdk/go-flags"
-  version = "1.4.0"
+  version = "0.19.0"
 
 [[constraint]]
   name = "github.com/satori/go.uuid"
@@ -68,10 +56,6 @@
 [[constraint]]
   name = "github.com/smartystreets/goconvey"
   version = "1.6.3"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/net"
 
 [[constraint]]
   name = "gopkg.in/yaml.v2"
