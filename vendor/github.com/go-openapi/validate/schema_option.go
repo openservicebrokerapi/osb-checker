@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package security
+package validate
 
-import (
-	"net/http"
+type SchemaValidatorOptions struct {
+	DisableObjectArrayTypeCheck bool
+}
 
-	"github.com/go-openapi/runtime"
-)
+type Option func(*SchemaValidatorOptions)
 
-// Authorized provides a default implementation of the Authorizer interface where all
-// requests are authorized (successful)
-func Authorized() runtime.Authorizer {
-	return runtime.AuthorizerFunc(func(_ *http.Request, _ interface{}) error { return nil })
+func DisableObjectArrayTypeCheck(disable bool) Option {
+	return func(svo *SchemaValidatorOptions) {
+		svo.DisableObjectArrayTypeCheck = disable
+	}
 }
