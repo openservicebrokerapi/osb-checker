@@ -3,7 +3,7 @@ package common
 import (
 	"testing"
 
-	apiclient "github.com/openservicebrokerapi/osb-checker/client"
+	osbclient "github.com/openservicebrokerapi/osb-checker/client"
 	"github.com/openservicebrokerapi/osb-checker/config"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -23,14 +23,14 @@ func TestDeprovision(
 		}
 
 		Convey("should reject if missing service_id", func() {
-			code, _, err := apiclient.Default.Deprovision(instanceID, "", planID, async)
+			code, _, err := osbclient.Default.Deprovision(instanceID, "", planID, async)
 
 			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
 		})
 
 		Convey("should reject if missing plan_id", func() {
-			code, _, err := apiclient.Default.Deprovision(instanceID, serviceID, "", async)
+			code, _, err := osbclient.Default.Deprovision(instanceID, serviceID, "", async)
 
 			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 400)
@@ -39,7 +39,7 @@ func TestDeprovision(
 
 	Convey("DEPROVISIONING - delete", t, func() {
 		Convey("should accept a valid service instance deletion request", func() {
-			code, asyncBody, err := apiclient.Default.Deprovision(instanceID, serviceID, planID, async)
+			code, asyncBody, err := osbclient.Default.Deprovision(instanceID, serviceID, planID, async)
 
 			So(err, ShouldBeNil)
 			if async {

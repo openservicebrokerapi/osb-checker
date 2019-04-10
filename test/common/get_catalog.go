@@ -3,7 +3,7 @@ package common
 import (
 	"testing"
 
-	apiclient "github.com/openservicebrokerapi/osb-checker/client"
+	osbclient "github.com/openservicebrokerapi/osb-checker/client"
 	"github.com/openservicebrokerapi/osb-checker/config"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -15,7 +15,7 @@ func TestGetCatalog(t *testing.T) {
 		So(testAuthentication(config.GenerateCatalogURL(), "GET"), ShouldBeNil)
 
 		Convey("should return list of registered service classes as JSON payload", func() {
-			code, body, err := apiclient.Default.GetCatalog()
+			code, body, err := osbclient.Default.GetCatalog()
 
 			So(err, ShouldBeNil)
 			So(code, ShouldEqual, 200)
