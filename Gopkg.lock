@@ -34,6 +34,14 @@
   version = "v1.11.1"
 
 [[projects]]
+  digest = "1:4340101f42556a9cb2f7a360a0e95a019bfef6247d92e6c4c46f2433cf86a482"
+  name = "github.com/docker/go-units"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "47565b4f722fb6ceae66b95f853feed578a4a51c"
+  version = "v0.3.3"
+
+[[projects]]
   branch = "master"
   digest = "1:ce0cdcf4a121add67d3c6f7cc08e6233275d0f417852f025b790d35da88fab10"
   name = "github.com/globalsign/mgo"
@@ -88,9 +96,18 @@
   version = "v0.19.0"
 
 [[projects]]
-  digest = "1:aa6226179ea3595e1c433f65afb42c71c98a4504b42e8e8d077adda93cccee27"
+  digest = "1:1f86809d9851dc428299012ca876994d559aefbff29054271d606afaadef4bbd"
   name = "github.com/go-openapi/runtime"
-  packages = ["."]
+  packages = [
+    ".",
+    "flagext",
+    "logger",
+    "middleware",
+    "middleware/denco",
+    "middleware/header",
+    "middleware/untyped",
+    "security",
+  ]
   pruneopts = "NUT"
   revision = "109737172424d8a656fd1199e28c9f5cc89b0cca"
   version = "v0.19.0"
@@ -134,6 +151,14 @@
   packages = ["js"]
   pruneopts = "NUT"
   revision = "847fc94819f9d5a4e7154e2203b36f6dbace6f48"
+
+[[projects]]
+  digest = "1:d0fbb40af7faf9cc62d1728be5fdd140ae17ce6e2aac6371971a0a6a2cc139d3"
+  name = "github.com/jessevdk/go-flags"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "c6ca198ec95c841fdb89fc0de7496fed11ab854e"
+  version = "v1.4.0"
 
 [[projects]]
   digest = "1:395b1480ae42c3fec6fff19823e66e173819f85826811387f9045c88515a7f0f"
@@ -197,9 +222,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:82491a0790e0945762096c875e2e14932a5d7b37a7ce3e83ef3b50437a71e09a"
+  digest = "1:bbd232f46e33dfb01068e0f4193a3da2d662a350873804bc964f697de5f39ac7"
   name = "golang.org/x/net"
-  packages = ["idna"]
+  packages = [
+    "idna",
+    "netutil",
+  ]
   pruneopts = "NUT"
   revision = "63eda1eb0650888965ead1296efd04d0b2b61128"
 
@@ -241,12 +269,19 @@
   input-imports = [
     "github.com/astaxie/beego/httplib",
     "github.com/go-openapi/errors",
+    "github.com/go-openapi/loads",
+    "github.com/go-openapi/runtime",
+    "github.com/go-openapi/runtime/flagext",
+    "github.com/go-openapi/runtime/middleware",
+    "github.com/go-openapi/runtime/security",
     "github.com/go-openapi/spec",
     "github.com/go-openapi/strfmt",
     "github.com/go-openapi/swag",
     "github.com/go-openapi/validate",
+    "github.com/jessevdk/go-flags",
     "github.com/satori/go.uuid",
     "github.com/smartystreets/goconvey/convey",
+    "golang.org/x/net/netutil",
     "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
