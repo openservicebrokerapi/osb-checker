@@ -57,6 +57,50 @@ func (o *ServiceInstanceGetOK) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// ServiceInstanceGetUnauthorizedCode is the HTTP code returned for type ServiceInstanceGetUnauthorized
+const ServiceInstanceGetUnauthorizedCode int = 401
+
+/*ServiceInstanceGetUnauthorized Unauthorized
+
+swagger:response serviceInstanceGetUnauthorized
+*/
+type ServiceInstanceGetUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceInstanceGetUnauthorized creates ServiceInstanceGetUnauthorized with default headers values
+func NewServiceInstanceGetUnauthorized() *ServiceInstanceGetUnauthorized {
+
+	return &ServiceInstanceGetUnauthorized{}
+}
+
+// WithPayload adds the payload to the service instance get unauthorized response
+func (o *ServiceInstanceGetUnauthorized) WithPayload(payload *models.Error) *ServiceInstanceGetUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service instance get unauthorized response
+func (o *ServiceInstanceGetUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceInstanceGetUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ServiceInstanceGetNotFoundCode is the HTTP code returned for type ServiceInstanceGetNotFound
 const ServiceInstanceGetNotFoundCode int = 404
 
@@ -93,6 +137,50 @@ func (o *ServiceInstanceGetNotFound) SetPayload(payload *models.Error) {
 func (o *ServiceInstanceGetNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ServiceInstanceGetPreconditionFailedCode is the HTTP code returned for type ServiceInstanceGetPreconditionFailed
+const ServiceInstanceGetPreconditionFailedCode int = 412
+
+/*ServiceInstanceGetPreconditionFailed Precondition Failed
+
+swagger:response serviceInstanceGetPreconditionFailed
+*/
+type ServiceInstanceGetPreconditionFailed struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceInstanceGetPreconditionFailed creates ServiceInstanceGetPreconditionFailed with default headers values
+func NewServiceInstanceGetPreconditionFailed() *ServiceInstanceGetPreconditionFailed {
+
+	return &ServiceInstanceGetPreconditionFailed{}
+}
+
+// WithPayload adds the payload to the service instance get precondition failed response
+func (o *ServiceInstanceGetPreconditionFailed) WithPayload(payload *models.Error) *ServiceInstanceGetPreconditionFailed {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service instance get precondition failed response
+func (o *ServiceInstanceGetPreconditionFailed) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceInstanceGetPreconditionFailed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(412)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

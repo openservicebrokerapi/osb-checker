@@ -36,9 +36,10 @@ type ServiceBindingGetParams struct {
 	*/
 	XBrokerAPIOriginatingIdentity *string
 	/*idenity of the request from the Platform
+	  Required: true
 	  In: header
 	*/
-	XBrokerAPIRequestIdentity *string
+	XBrokerAPIRequestIdentity string
 	/*version number of the Service Broker API that the Platform will use
 	  Required: true
 	  In: header
@@ -113,18 +114,21 @@ func (o *ServiceBindingGetParams) bindXBrokerAPIOriginatingIdentity(rawData []st
 
 // bindXBrokerAPIRequestIdentity binds and validates parameter XBrokerAPIRequestIdentity from header.
 func (o *ServiceBindingGetParams) bindXBrokerAPIRequestIdentity(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("X-Broker-API-Request-Identity", "header")
+	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: false
+	// Required: true
 
-	if raw == "" { // empty values pass all other validations
-		return nil
+	if err := validate.RequiredString("X-Broker-API-Request-Identity", "header", raw); err != nil {
+		return err
 	}
 
-	o.XBrokerAPIRequestIdentity = &raw
+	o.XBrokerAPIRequestIdentity = raw
 
 	return nil
 }

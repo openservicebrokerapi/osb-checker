@@ -189,6 +189,50 @@ func (o *ServiceInstanceProvisionBadRequest) WriteResponse(rw http.ResponseWrite
 	}
 }
 
+// ServiceInstanceProvisionUnauthorizedCode is the HTTP code returned for type ServiceInstanceProvisionUnauthorized
+const ServiceInstanceProvisionUnauthorizedCode int = 401
+
+/*ServiceInstanceProvisionUnauthorized Unauthorized
+
+swagger:response serviceInstanceProvisionUnauthorized
+*/
+type ServiceInstanceProvisionUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceInstanceProvisionUnauthorized creates ServiceInstanceProvisionUnauthorized with default headers values
+func NewServiceInstanceProvisionUnauthorized() *ServiceInstanceProvisionUnauthorized {
+
+	return &ServiceInstanceProvisionUnauthorized{}
+}
+
+// WithPayload adds the payload to the service instance provision unauthorized response
+func (o *ServiceInstanceProvisionUnauthorized) WithPayload(payload *models.Error) *ServiceInstanceProvisionUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service instance provision unauthorized response
+func (o *ServiceInstanceProvisionUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceInstanceProvisionUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ServiceInstanceProvisionConflictCode is the HTTP code returned for type ServiceInstanceProvisionConflict
 const ServiceInstanceProvisionConflictCode int = 409
 
@@ -225,6 +269,50 @@ func (o *ServiceInstanceProvisionConflict) SetPayload(payload *models.Error) {
 func (o *ServiceInstanceProvisionConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(409)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ServiceInstanceProvisionPreconditionFailedCode is the HTTP code returned for type ServiceInstanceProvisionPreconditionFailed
+const ServiceInstanceProvisionPreconditionFailedCode int = 412
+
+/*ServiceInstanceProvisionPreconditionFailed Precondition Failed
+
+swagger:response serviceInstanceProvisionPreconditionFailed
+*/
+type ServiceInstanceProvisionPreconditionFailed struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceInstanceProvisionPreconditionFailed creates ServiceInstanceProvisionPreconditionFailed with default headers values
+func NewServiceInstanceProvisionPreconditionFailed() *ServiceInstanceProvisionPreconditionFailed {
+
+	return &ServiceInstanceProvisionPreconditionFailed{}
+}
+
+// WithPayload adds the payload to the service instance provision precondition failed response
+func (o *ServiceInstanceProvisionPreconditionFailed) WithPayload(payload *models.Error) *ServiceInstanceProvisionPreconditionFailed {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service instance provision precondition failed response
+func (o *ServiceInstanceProvisionPreconditionFailed) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceInstanceProvisionPreconditionFailed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(412)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

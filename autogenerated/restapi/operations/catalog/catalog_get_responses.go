@@ -56,3 +56,91 @@ func (o *CatalogGetOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 		}
 	}
 }
+
+// CatalogGetUnauthorizedCode is the HTTP code returned for type CatalogGetUnauthorized
+const CatalogGetUnauthorizedCode int = 401
+
+/*CatalogGetUnauthorized Unauthorized
+
+swagger:response catalogGetUnauthorized
+*/
+type CatalogGetUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewCatalogGetUnauthorized creates CatalogGetUnauthorized with default headers values
+func NewCatalogGetUnauthorized() *CatalogGetUnauthorized {
+
+	return &CatalogGetUnauthorized{}
+}
+
+// WithPayload adds the payload to the catalog get unauthorized response
+func (o *CatalogGetUnauthorized) WithPayload(payload *models.Error) *CatalogGetUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the catalog get unauthorized response
+func (o *CatalogGetUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *CatalogGetUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// CatalogGetPreconditionFailedCode is the HTTP code returned for type CatalogGetPreconditionFailed
+const CatalogGetPreconditionFailedCode int = 412
+
+/*CatalogGetPreconditionFailed Precondition Failed
+
+swagger:response catalogGetPreconditionFailed
+*/
+type CatalogGetPreconditionFailed struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewCatalogGetPreconditionFailed creates CatalogGetPreconditionFailed with default headers values
+func NewCatalogGetPreconditionFailed() *CatalogGetPreconditionFailed {
+
+	return &CatalogGetPreconditionFailed{}
+}
+
+// WithPayload adds the payload to the catalog get precondition failed response
+func (o *CatalogGetPreconditionFailed) WithPayload(payload *models.Error) *CatalogGetPreconditionFailed {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the catalog get precondition failed response
+func (o *CatalogGetPreconditionFailed) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *CatalogGetPreconditionFailed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(412)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

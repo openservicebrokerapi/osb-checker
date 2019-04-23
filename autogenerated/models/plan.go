@@ -31,12 +31,21 @@ type Plan struct {
 	// Required: true
 	ID *string `json:"id"`
 
+	// maintenance info
+	MaintenanceInfo *MaintenanceInfo `json:"maintenance_info,omitempty"`
+
+	// maximum polling duration
+	MaximumPollingDuration int64 `json:"maximum_polling_duration,omitempty"`
+
 	// metadata
 	Metadata Metadata `json:"metadata,omitempty"`
 
 	// name
 	// Required: true
 	Name *string `json:"name"`
+
+	// plan updateable
+	PlanUpdateable bool `json:"plan_updateable,omitempty"`
 
 	// schemas
 	Schemas *SchemasObject `json:"schemas,omitempty"`
@@ -51,6 +60,10 @@ func (m *Plan) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMaintenanceInfo(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -81,6 +94,24 @@ func (m *Plan) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Plan) validateMaintenanceInfo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MaintenanceInfo) { // not required
+		return nil
+	}
+
+	if m.MaintenanceInfo != nil {
+		if err := m.MaintenanceInfo.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("maintenance_info")
+			}
+			return err
+		}
 	}
 
 	return nil

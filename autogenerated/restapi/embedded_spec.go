@@ -18,6 +18,10 @@ var (
 
 func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
+  "schemes": [
+    "http",
+    "https"
+  ],
   "swagger": "2.0",
   "info": {
     "description": "The Open Service Broker API defines an HTTP(S) interface between Platforms and Service Brokers.",
@@ -31,8 +35,9 @@ func init() {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "v2.13"
+    "version": "master - might contain changes that are not yet released"
   },
+  "host": "localhost:3000",
   "paths": {
     "/v2/catalog": {
       "get": {
@@ -44,20 +49,38 @@ func init() {
         ],
         "summary": "get the catalog of services that the service broker offers",
         "operationId": "catalog.get",
-        "parameters": [
-          {
-            "$ref": "#/parameters/APIVersion"
-          }
-        ],
         "responses": {
           "200": {
             "description": "catalog response",
             "schema": {
               "$ref": "#/definitions/Catalog"
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/APIVersion"
+        },
+        {
+          "$ref": "#/parameters/OriginatingIdentity"
+        },
+        {
+          "$ref": "#/parameters/RequestIdentity"
+        }
+      ]
     },
     "/v2/service_instances/{instance_id}": {
       "get": {
@@ -66,20 +89,6 @@ func init() {
         ],
         "summary": "gets a service instance",
         "operationId": "serviceInstance.get",
-        "parameters": [
-          {
-            "$ref": "#/parameters/APIVersion"
-          },
-          {
-            "$ref": "#/parameters/OriginatingIdentity"
-          },
-          {
-            "$ref": "#/parameters/RequestIdentity"
-          },
-          {
-            "$ref": "#/parameters/instance_id"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -87,8 +96,20 @@ func init() {
               "$ref": "#/definitions/ServiceInstanceResource"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -146,8 +167,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "409": {
             "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -199,8 +232,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -258,8 +303,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "422": {
-            "description": "Unprocessable entity",
+            "description": "Unprocessable Entity",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -330,8 +387,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -341,6 +410,12 @@ func init() {
       "parameters": [
         {
           "$ref": "#/parameters/APIVersion"
+        },
+        {
+          "$ref": "#/parameters/OriginatingIdentity"
+        },
+        {
+          "$ref": "#/parameters/RequestIdentity"
         },
         {
           "$ref": "#/parameters/instance_id"
@@ -354,23 +429,6 @@ func init() {
         ],
         "summary": "gets a service binding",
         "operationId": "serviceBinding.get",
-        "parameters": [
-          {
-            "$ref": "#/parameters/APIVersion"
-          },
-          {
-            "$ref": "#/parameters/OriginatingIdentity"
-          },
-          {
-            "$ref": "#/parameters/RequestIdentity"
-          },
-          {
-            "$ref": "#/parameters/instance_id"
-          },
-          {
-            "$ref": "#/parameters/binding_id"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -378,8 +436,20 @@ func init() {
               "$ref": "#/definitions/ServiceBindingResource"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -434,8 +504,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "409": {
             "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -484,8 +566,26 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -559,8 +659,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -570,6 +682,12 @@ func init() {
       "parameters": [
         {
           "$ref": "#/parameters/APIVersion"
+        },
+        {
+          "$ref": "#/parameters/OriginatingIdentity"
+        },
+        {
+          "$ref": "#/parameters/RequestIdentity"
         },
         {
           "$ref": "#/parameters/instance_id"
@@ -606,6 +724,10 @@ func init() {
     },
     "DashboardClient": {
       "type": "object",
+      "required": [
+        "id",
+        "secret"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -651,6 +773,14 @@ func init() {
         }
       }
     },
+    "MaintenanceInfo": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      }
+    },
     "Metadata": {
       "description": "See [Service Metadata Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#service-metadata) for more details.",
       "type": "object"
@@ -679,11 +809,20 @@ func init() {
         "id": {
           "type": "string"
         },
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
+        },
+        "maximum_polling_duration": {
+          "type": "integer"
+        },
         "metadata": {
           "$ref": "#/definitions/Metadata"
         },
         "name": {
           "type": "string"
+        },
+        "plan_updateable": {
+          "type": "boolean"
         },
         "schemas": {
           "$ref": "#/definitions/SchemasObject"
@@ -719,7 +858,13 @@ func init() {
         "plans"
       ],
       "properties": {
+        "allow_context_updates": {
+          "type": "boolean"
+        },
         "bindable": {
+          "type": "boolean"
+        },
+        "bindings_retrievable": {
           "type": "boolean"
         },
         "dashboard_client": {
@@ -730,6 +875,9 @@ func init() {
         },
         "id": {
           "type": "string"
+        },
+        "instances_retrievable": {
+          "type": "boolean"
         },
         "metadata": {
           "$ref": "#/definitions/Metadata"
@@ -917,6 +1065,9 @@ func init() {
     "ServiceInstancePreviousValues": {
       "type": "object",
       "properties": {
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
+        },
         "organization_id": {
           "type": "string",
           "x-deprecated": true
@@ -953,6 +1104,9 @@ func init() {
       "properties": {
         "context": {
           "$ref": "#/definitions/Context"
+        },
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
         },
         "organization_guid": {
           "type": "string",
@@ -1010,6 +1164,9 @@ func init() {
         "context": {
           "$ref": "#/definitions/Context"
         },
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
+        },
         "parameters": {
           "$ref": "#/definitions/Object"
         },
@@ -1043,7 +1200,8 @@ func init() {
       "type": "string",
       "description": "idenity of the request from the Platform",
       "name": "X-Broker-API-Request-Identity",
-      "in": "header"
+      "in": "header",
+      "required": true
     },
     "accepts_incomplete": {
       "type": "boolean",
@@ -1096,6 +1254,10 @@ func init() {
   }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
+  "schemes": [
+    "http",
+    "https"
+  ],
   "swagger": "2.0",
   "info": {
     "description": "The Open Service Broker API defines an HTTP(S) interface between Platforms and Service Brokers.",
@@ -1109,8 +1271,9 @@ func init() {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "v2.13"
+    "version": "master - might contain changes that are not yet released"
   },
+  "host": "localhost:3000",
   "paths": {
     "/v2/catalog": {
       "get": {
@@ -1122,24 +1285,49 @@ func init() {
         ],
         "summary": "get the catalog of services that the service broker offers",
         "operationId": "catalog.get",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "version number of the Service Broker API that the Platform will use",
-            "name": "X-Broker-API-Version",
-            "in": "header",
-            "required": true
-          }
-        ],
         "responses": {
           "200": {
             "description": "catalog response",
             "schema": {
               "$ref": "#/definitions/Catalog"
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "version number of the Service Broker API that the Platform will use",
+          "name": "X-Broker-API-Version",
+          "in": "header",
+          "required": true
+        },
+        {
+          "type": "string",
+          "description": "identity of the user that initiated the request from the Platform",
+          "name": "X-Broker-API-Originating-Identity",
+          "in": "header"
+        },
+        {
+          "type": "string",
+          "description": "idenity of the request from the Platform",
+          "name": "X-Broker-API-Request-Identity",
+          "in": "header",
+          "required": true
+        }
+      ]
     },
     "/v2/service_instances/{instance_id}": {
       "get": {
@@ -1148,34 +1336,6 @@ func init() {
         ],
         "summary": "gets a service instance",
         "operationId": "serviceInstance.get",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "version number of the Service Broker API that the Platform will use",
-            "name": "X-Broker-API-Version",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "identity of the user that initiated the request from the Platform",
-            "name": "X-Broker-API-Originating-Identity",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "idenity of the request from the Platform",
-            "name": "X-Broker-API-Request-Identity",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "instance id of instance to provision",
-            "name": "instance_id",
-            "in": "path",
-            "required": true
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1183,8 +1343,20 @@ func init() {
               "$ref": "#/definitions/ServiceInstanceResource"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1245,8 +1417,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "409": {
             "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1309,8 +1493,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1371,8 +1567,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "422": {
-            "description": "Unprocessable entity",
+            "description": "Unprocessable Entity",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1397,7 +1605,8 @@ func init() {
           "type": "string",
           "description": "idenity of the request from the Platform",
           "name": "X-Broker-API-Request-Identity",
-          "in": "header"
+          "in": "header",
+          "required": true
         },
         {
           "type": "string",
@@ -1457,8 +1666,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1470,6 +1691,19 @@ func init() {
           "type": "string",
           "description": "version number of the Service Broker API that the Platform will use",
           "name": "X-Broker-API-Version",
+          "in": "header",
+          "required": true
+        },
+        {
+          "type": "string",
+          "description": "identity of the user that initiated the request from the Platform",
+          "name": "X-Broker-API-Originating-Identity",
+          "in": "header"
+        },
+        {
+          "type": "string",
+          "description": "idenity of the request from the Platform",
+          "name": "X-Broker-API-Request-Identity",
           "in": "header",
           "required": true
         },
@@ -1489,41 +1723,6 @@ func init() {
         ],
         "summary": "gets a service binding",
         "operationId": "serviceBinding.get",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "version number of the Service Broker API that the Platform will use",
-            "name": "X-Broker-API-Version",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "identity of the user that initiated the request from the Platform",
-            "name": "X-Broker-API-Originating-Identity",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "idenity of the request from the Platform",
-            "name": "X-Broker-API-Request-Identity",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "instance id of instance to provision",
-            "name": "instance_id",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "binding id of binding to create",
-            "name": "binding_id",
-            "in": "path",
-            "required": true
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1531,8 +1730,20 @@ func init() {
               "$ref": "#/definitions/ServiceBindingResource"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1590,8 +1801,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "409": {
             "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1651,8 +1874,26 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1677,7 +1918,8 @@ func init() {
           "type": "string",
           "description": "idenity of the request from the Platform",
           "name": "X-Broker-API-Request-Identity",
-          "in": "header"
+          "in": "header",
+          "required": true
         },
         {
           "type": "string",
@@ -1744,8 +1986,20 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "410": {
             "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1757,6 +2011,19 @@ func init() {
           "type": "string",
           "description": "version number of the Service Broker API that the Platform will use",
           "name": "X-Broker-API-Version",
+          "in": "header",
+          "required": true
+        },
+        {
+          "type": "string",
+          "description": "identity of the user that initiated the request from the Platform",
+          "name": "X-Broker-API-Originating-Identity",
+          "in": "header"
+        },
+        {
+          "type": "string",
+          "description": "idenity of the request from the Platform",
+          "name": "X-Broker-API-Request-Identity",
           "in": "header",
           "required": true
         },
@@ -1803,6 +2070,10 @@ func init() {
     },
     "DashboardClient": {
       "type": "object",
+      "required": [
+        "id",
+        "secret"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -1848,6 +2119,14 @@ func init() {
         }
       }
     },
+    "MaintenanceInfo": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      }
+    },
     "Metadata": {
       "description": "See [Service Metadata Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#service-metadata) for more details.",
       "type": "object"
@@ -1876,11 +2155,20 @@ func init() {
         "id": {
           "type": "string"
         },
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
+        },
+        "maximum_polling_duration": {
+          "type": "integer"
+        },
         "metadata": {
           "$ref": "#/definitions/Metadata"
         },
         "name": {
           "type": "string"
+        },
+        "plan_updateable": {
+          "type": "boolean"
         },
         "schemas": {
           "$ref": "#/definitions/SchemasObject"
@@ -1916,7 +2204,13 @@ func init() {
         "plans"
       ],
       "properties": {
+        "allow_context_updates": {
+          "type": "boolean"
+        },
         "bindable": {
+          "type": "boolean"
+        },
+        "bindings_retrievable": {
           "type": "boolean"
         },
         "dashboard_client": {
@@ -1927,6 +2221,9 @@ func init() {
         },
         "id": {
           "type": "string"
+        },
+        "instances_retrievable": {
+          "type": "boolean"
         },
         "metadata": {
           "$ref": "#/definitions/Metadata"
@@ -2114,6 +2411,9 @@ func init() {
     "ServiceInstancePreviousValues": {
       "type": "object",
       "properties": {
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
+        },
         "organization_id": {
           "type": "string",
           "x-deprecated": true
@@ -2150,6 +2450,9 @@ func init() {
       "properties": {
         "context": {
           "$ref": "#/definitions/Context"
+        },
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
         },
         "organization_guid": {
           "type": "string",
@@ -2207,6 +2510,9 @@ func init() {
         "context": {
           "$ref": "#/definitions/Context"
         },
+        "maintenance_info": {
+          "$ref": "#/definitions/MaintenanceInfo"
+        },
         "parameters": {
           "$ref": "#/definitions/Object"
         },
@@ -2240,7 +2546,8 @@ func init() {
       "type": "string",
       "description": "idenity of the request from the Platform",
       "name": "X-Broker-API-Request-Identity",
-      "in": "header"
+      "in": "header",
+      "required": true
     },
     "accepts_incomplete": {
       "type": "boolean",

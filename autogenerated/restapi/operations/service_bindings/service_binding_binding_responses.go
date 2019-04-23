@@ -189,6 +189,50 @@ func (o *ServiceBindingBindingBadRequest) WriteResponse(rw http.ResponseWriter, 
 	}
 }
 
+// ServiceBindingBindingUnauthorizedCode is the HTTP code returned for type ServiceBindingBindingUnauthorized
+const ServiceBindingBindingUnauthorizedCode int = 401
+
+/*ServiceBindingBindingUnauthorized Unauthorized
+
+swagger:response serviceBindingBindingUnauthorized
+*/
+type ServiceBindingBindingUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingBindingUnauthorized creates ServiceBindingBindingUnauthorized with default headers values
+func NewServiceBindingBindingUnauthorized() *ServiceBindingBindingUnauthorized {
+
+	return &ServiceBindingBindingUnauthorized{}
+}
+
+// WithPayload adds the payload to the service binding binding unauthorized response
+func (o *ServiceBindingBindingUnauthorized) WithPayload(payload *models.Error) *ServiceBindingBindingUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding binding unauthorized response
+func (o *ServiceBindingBindingUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingBindingUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ServiceBindingBindingConflictCode is the HTTP code returned for type ServiceBindingBindingConflict
 const ServiceBindingBindingConflictCode int = 409
 
@@ -225,6 +269,50 @@ func (o *ServiceBindingBindingConflict) SetPayload(payload *models.Error) {
 func (o *ServiceBindingBindingConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(409)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ServiceBindingBindingPreconditionFailedCode is the HTTP code returned for type ServiceBindingBindingPreconditionFailed
+const ServiceBindingBindingPreconditionFailedCode int = 412
+
+/*ServiceBindingBindingPreconditionFailed Precondition Failed
+
+swagger:response serviceBindingBindingPreconditionFailed
+*/
+type ServiceBindingBindingPreconditionFailed struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingBindingPreconditionFailed creates ServiceBindingBindingPreconditionFailed with default headers values
+func NewServiceBindingBindingPreconditionFailed() *ServiceBindingBindingPreconditionFailed {
+
+	return &ServiceBindingBindingPreconditionFailed{}
+}
+
+// WithPayload adds the payload to the service binding binding precondition failed response
+func (o *ServiceBindingBindingPreconditionFailed) WithPayload(payload *models.Error) *ServiceBindingBindingPreconditionFailed {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding binding precondition failed response
+func (o *ServiceBindingBindingPreconditionFailed) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingBindingPreconditionFailed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(412)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

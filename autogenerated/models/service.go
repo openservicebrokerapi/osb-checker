@@ -20,9 +20,15 @@ import (
 // swagger:model Service
 type Service struct {
 
+	// allow context updates
+	AllowContextUpdates bool `json:"allow_context_updates,omitempty"`
+
 	// bindable
 	// Required: true
 	Bindable *bool `json:"bindable"`
+
+	// bindings retrievable
+	BindingsRetrievable bool `json:"bindings_retrievable,omitempty"`
 
 	// dashboard client
 	DashboardClient *DashboardClient `json:"dashboard_client,omitempty"`
@@ -34,6 +40,9 @@ type Service struct {
 	// id
 	// Required: true
 	ID *string `json:"id"`
+
+	// instances retrievable
+	InstancesRetrievable bool `json:"instances_retrievable,omitempty"`
 
 	// metadata
 	Metadata Metadata `json:"metadata,omitempty"`

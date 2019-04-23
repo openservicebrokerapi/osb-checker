@@ -32,6 +32,15 @@ type ServiceBindingLastOperationGetParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*identity of the user that initiated the request from the Platform
+	  In: header
+	*/
+	XBrokerAPIOriginatingIdentity *string
+	/*idenity of the request from the Platform
+	  Required: true
+	  In: header
+	*/
+	XBrokerAPIRequestIdentity string
 	/*version number of the Service Broker API that the Platform will use
 	  Required: true
 	  In: header
@@ -72,6 +81,14 @@ func (o *ServiceBindingLastOperationGetParams) BindRequest(r *http.Request, rout
 
 	qs := runtime.Values(r.URL.Query())
 
+	if err := o.bindXBrokerAPIOriginatingIdentity(r.Header[http.CanonicalHeaderKey("X-Broker-API-Originating-Identity")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.bindXBrokerAPIRequestIdentity(r.Header[http.CanonicalHeaderKey("X-Broker-API-Request-Identity")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.bindXBrokerAPIVersion(r.Header[http.CanonicalHeaderKey("X-Broker-API-Version")], true, route.Formats); err != nil {
 		res = append(res, err)
 	}
@@ -104,6 +121,45 @@ func (o *ServiceBindingLastOperationGetParams) BindRequest(r *http.Request, rout
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindXBrokerAPIOriginatingIdentity binds and validates parameter XBrokerAPIOriginatingIdentity from header.
+func (o *ServiceBindingLastOperationGetParams) bindXBrokerAPIOriginatingIdentity(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.XBrokerAPIOriginatingIdentity = &raw
+
+	return nil
+}
+
+// bindXBrokerAPIRequestIdentity binds and validates parameter XBrokerAPIRequestIdentity from header.
+func (o *ServiceBindingLastOperationGetParams) bindXBrokerAPIRequestIdentity(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("X-Broker-API-Request-Identity", "header")
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+
+	if err := validate.RequiredString("X-Broker-API-Request-Identity", "header", raw); err != nil {
+		return err
+	}
+
+	o.XBrokerAPIRequestIdentity = raw
+
 	return nil
 }
 

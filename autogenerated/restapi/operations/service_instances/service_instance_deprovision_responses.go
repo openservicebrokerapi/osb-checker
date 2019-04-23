@@ -143,6 +143,50 @@ func (o *ServiceInstanceDeprovisionBadRequest) WriteResponse(rw http.ResponseWri
 	}
 }
 
+// ServiceInstanceDeprovisionUnauthorizedCode is the HTTP code returned for type ServiceInstanceDeprovisionUnauthorized
+const ServiceInstanceDeprovisionUnauthorizedCode int = 401
+
+/*ServiceInstanceDeprovisionUnauthorized Unauthorized
+
+swagger:response serviceInstanceDeprovisionUnauthorized
+*/
+type ServiceInstanceDeprovisionUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceInstanceDeprovisionUnauthorized creates ServiceInstanceDeprovisionUnauthorized with default headers values
+func NewServiceInstanceDeprovisionUnauthorized() *ServiceInstanceDeprovisionUnauthorized {
+
+	return &ServiceInstanceDeprovisionUnauthorized{}
+}
+
+// WithPayload adds the payload to the service instance deprovision unauthorized response
+func (o *ServiceInstanceDeprovisionUnauthorized) WithPayload(payload *models.Error) *ServiceInstanceDeprovisionUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service instance deprovision unauthorized response
+func (o *ServiceInstanceDeprovisionUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceInstanceDeprovisionUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ServiceInstanceDeprovisionGoneCode is the HTTP code returned for type ServiceInstanceDeprovisionGone
 const ServiceInstanceDeprovisionGoneCode int = 410
 
@@ -179,6 +223,50 @@ func (o *ServiceInstanceDeprovisionGone) SetPayload(payload *models.Error) {
 func (o *ServiceInstanceDeprovisionGone) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(410)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ServiceInstanceDeprovisionPreconditionFailedCode is the HTTP code returned for type ServiceInstanceDeprovisionPreconditionFailed
+const ServiceInstanceDeprovisionPreconditionFailedCode int = 412
+
+/*ServiceInstanceDeprovisionPreconditionFailed Precondition Failed
+
+swagger:response serviceInstanceDeprovisionPreconditionFailed
+*/
+type ServiceInstanceDeprovisionPreconditionFailed struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceInstanceDeprovisionPreconditionFailed creates ServiceInstanceDeprovisionPreconditionFailed with default headers values
+func NewServiceInstanceDeprovisionPreconditionFailed() *ServiceInstanceDeprovisionPreconditionFailed {
+
+	return &ServiceInstanceDeprovisionPreconditionFailed{}
+}
+
+// WithPayload adds the payload to the service instance deprovision precondition failed response
+func (o *ServiceInstanceDeprovisionPreconditionFailed) WithPayload(payload *models.Error) *ServiceInstanceDeprovisionPreconditionFailed {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service instance deprovision precondition failed response
+func (o *ServiceInstanceDeprovisionPreconditionFailed) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceInstanceDeprovisionPreconditionFailed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(412)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

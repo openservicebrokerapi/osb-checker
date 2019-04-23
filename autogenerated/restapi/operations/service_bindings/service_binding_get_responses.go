@@ -57,6 +57,50 @@ func (o *ServiceBindingGetOK) WriteResponse(rw http.ResponseWriter, producer run
 	}
 }
 
+// ServiceBindingGetUnauthorizedCode is the HTTP code returned for type ServiceBindingGetUnauthorized
+const ServiceBindingGetUnauthorizedCode int = 401
+
+/*ServiceBindingGetUnauthorized Unauthorized
+
+swagger:response serviceBindingGetUnauthorized
+*/
+type ServiceBindingGetUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingGetUnauthorized creates ServiceBindingGetUnauthorized with default headers values
+func NewServiceBindingGetUnauthorized() *ServiceBindingGetUnauthorized {
+
+	return &ServiceBindingGetUnauthorized{}
+}
+
+// WithPayload adds the payload to the service binding get unauthorized response
+func (o *ServiceBindingGetUnauthorized) WithPayload(payload *models.Error) *ServiceBindingGetUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding get unauthorized response
+func (o *ServiceBindingGetUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingGetUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ServiceBindingGetNotFoundCode is the HTTP code returned for type ServiceBindingGetNotFound
 const ServiceBindingGetNotFoundCode int = 404
 
@@ -93,6 +137,50 @@ func (o *ServiceBindingGetNotFound) SetPayload(payload *models.Error) {
 func (o *ServiceBindingGetNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ServiceBindingGetPreconditionFailedCode is the HTTP code returned for type ServiceBindingGetPreconditionFailed
+const ServiceBindingGetPreconditionFailedCode int = 412
+
+/*ServiceBindingGetPreconditionFailed Precondition Failed
+
+swagger:response serviceBindingGetPreconditionFailed
+*/
+type ServiceBindingGetPreconditionFailed struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingGetPreconditionFailed creates ServiceBindingGetPreconditionFailed with default headers values
+func NewServiceBindingGetPreconditionFailed() *ServiceBindingGetPreconditionFailed {
+
+	return &ServiceBindingGetPreconditionFailed{}
+}
+
+// WithPayload adds the payload to the service binding get precondition failed response
+func (o *ServiceBindingGetPreconditionFailed) WithPayload(payload *models.Error) *ServiceBindingGetPreconditionFailed {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding get precondition failed response
+func (o *ServiceBindingGetPreconditionFailed) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingGetPreconditionFailed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(412)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

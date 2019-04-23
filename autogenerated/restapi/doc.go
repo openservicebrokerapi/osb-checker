@@ -7,9 +7,10 @@ The Open Service Broker API defines an HTTP(S) interface between Platforms and S
 
     Schemes:
       http
-    Host: localhost
+      https
+    Host: localhost:3000
     BasePath: /
-    Version: v2.13
+    Version: master - might contain changes that are not yet released
     License: Apache 2.0 http://www.apache.org/licenses/LICENSE-2.0.html
     Contact: Open Service Broker API<open-service-broker-api@googlegroups.com> https://www.openservicebrokerapi.org/
 

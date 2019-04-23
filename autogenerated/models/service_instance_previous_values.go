@@ -8,12 +8,16 @@ package models
 import (
 	strfmt "github.com/go-openapi/strfmt"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
 )
 
 // ServiceInstancePreviousValues service instance previous values
 // swagger:model ServiceInstancePreviousValues
 type ServiceInstancePreviousValues struct {
+
+	// maintenance info
+	MaintenanceInfo *MaintenanceInfo `json:"maintenance_info,omitempty"`
 
 	// organization id
 	OrganizationID string `json:"organization_id,omitempty"`
@@ -30,6 +34,33 @@ type ServiceInstancePreviousValues struct {
 
 // Validate validates this service instance previous values
 func (m *ServiceInstancePreviousValues) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateMaintenanceInfo(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ServiceInstancePreviousValues) validateMaintenanceInfo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MaintenanceInfo) { // not required
+		return nil
+	}
+
+	if m.MaintenanceInfo != nil {
+		if err := m.MaintenanceInfo.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("maintenance_info")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

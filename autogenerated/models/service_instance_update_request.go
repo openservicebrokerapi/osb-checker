@@ -20,6 +20,9 @@ type ServiceInstanceUpdateRequest struct {
 	// context
 	Context Context `json:"context,omitempty"`
 
+	// maintenance info
+	MaintenanceInfo *MaintenanceInfo `json:"maintenance_info,omitempty"`
+
 	// parameters
 	Parameters Object `json:"parameters,omitempty"`
 
@@ -38,6 +41,10 @@ type ServiceInstanceUpdateRequest struct {
 func (m *ServiceInstanceUpdateRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateMaintenanceInfo(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePreviousValues(formats); err != nil {
 		res = append(res, err)
 	}
@@ -49,6 +56,24 @@ func (m *ServiceInstanceUpdateRequest) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ServiceInstanceUpdateRequest) validateMaintenanceInfo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MaintenanceInfo) { // not required
+		return nil
+	}
+
+	if m.MaintenanceInfo != nil {
+		if err := m.MaintenanceInfo.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("maintenance_info")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

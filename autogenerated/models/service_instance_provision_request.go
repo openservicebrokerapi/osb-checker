@@ -20,6 +20,9 @@ type ServiceInstanceProvisionRequest struct {
 	// context
 	Context Context `json:"context,omitempty"`
 
+	// maintenance info
+	MaintenanceInfo *MaintenanceInfo `json:"maintenance_info,omitempty"`
+
 	// organization guid
 	// Required: true
 	OrganizationGUID *string `json:"organization_guid"`
@@ -44,6 +47,10 @@ type ServiceInstanceProvisionRequest struct {
 func (m *ServiceInstanceProvisionRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateMaintenanceInfo(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateOrganizationGUID(formats); err != nil {
 		res = append(res, err)
 	}
@@ -63,6 +70,24 @@ func (m *ServiceInstanceProvisionRequest) Validate(formats strfmt.Registry) erro
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ServiceInstanceProvisionRequest) validateMaintenanceInfo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MaintenanceInfo) { // not required
+		return nil
+	}
+
+	if m.MaintenanceInfo != nil {
+		if err := m.MaintenanceInfo.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("maintenance_info")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

@@ -123,6 +123,50 @@ func (o *ServiceBindingLastOperationGetBadRequest) WriteResponse(rw http.Respons
 	}
 }
 
+// ServiceBindingLastOperationGetUnauthorizedCode is the HTTP code returned for type ServiceBindingLastOperationGetUnauthorized
+const ServiceBindingLastOperationGetUnauthorizedCode int = 401
+
+/*ServiceBindingLastOperationGetUnauthorized Unauthorized
+
+swagger:response serviceBindingLastOperationGetUnauthorized
+*/
+type ServiceBindingLastOperationGetUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingLastOperationGetUnauthorized creates ServiceBindingLastOperationGetUnauthorized with default headers values
+func NewServiceBindingLastOperationGetUnauthorized() *ServiceBindingLastOperationGetUnauthorized {
+
+	return &ServiceBindingLastOperationGetUnauthorized{}
+}
+
+// WithPayload adds the payload to the service binding last operation get unauthorized response
+func (o *ServiceBindingLastOperationGetUnauthorized) WithPayload(payload *models.Error) *ServiceBindingLastOperationGetUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding last operation get unauthorized response
+func (o *ServiceBindingLastOperationGetUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingLastOperationGetUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ServiceBindingLastOperationGetGoneCode is the HTTP code returned for type ServiceBindingLastOperationGetGone
 const ServiceBindingLastOperationGetGoneCode int = 410
 
@@ -159,6 +203,50 @@ func (o *ServiceBindingLastOperationGetGone) SetPayload(payload *models.Error) {
 func (o *ServiceBindingLastOperationGetGone) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(410)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ServiceBindingLastOperationGetPreconditionFailedCode is the HTTP code returned for type ServiceBindingLastOperationGetPreconditionFailed
+const ServiceBindingLastOperationGetPreconditionFailedCode int = 412
+
+/*ServiceBindingLastOperationGetPreconditionFailed Precondition Failed
+
+swagger:response serviceBindingLastOperationGetPreconditionFailed
+*/
+type ServiceBindingLastOperationGetPreconditionFailed struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingLastOperationGetPreconditionFailed creates ServiceBindingLastOperationGetPreconditionFailed with default headers values
+func NewServiceBindingLastOperationGetPreconditionFailed() *ServiceBindingLastOperationGetPreconditionFailed {
+
+	return &ServiceBindingLastOperationGetPreconditionFailed{}
+}
+
+// WithPayload adds the payload to the service binding last operation get precondition failed response
+func (o *ServiceBindingLastOperationGetPreconditionFailed) WithPayload(payload *models.Error) *ServiceBindingLastOperationGetPreconditionFailed {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding last operation get precondition failed response
+func (o *ServiceBindingLastOperationGetPreconditionFailed) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingLastOperationGetPreconditionFailed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(412)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

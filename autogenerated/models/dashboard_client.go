@@ -8,7 +8,9 @@ package models
 import (
 	strfmt "github.com/go-openapi/strfmt"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // DashboardClient dashboard client
@@ -16,17 +18,50 @@ import (
 type DashboardClient struct {
 
 	// id
-	ID string `json:"id,omitempty"`
+	// Required: true
+	ID *string `json:"id"`
 
 	// redirect uri
 	RedirectURI string `json:"redirect_uri,omitempty"`
 
 	// secret
-	Secret string `json:"secret,omitempty"`
+	// Required: true
+	Secret *string `json:"secret"`
 }
 
 // Validate validates this dashboard client
 func (m *DashboardClient) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSecret(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *DashboardClient) validateID(formats strfmt.Registry) error {
+
+	if err := validate.Required("id", "body", m.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DashboardClient) validateSecret(formats strfmt.Registry) error {
+
+	if err := validate.Required("secret", "body", m.Secret); err != nil {
+		return err
+	}
+
 	return nil
 }
 
