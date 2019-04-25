@@ -1200,8 +1200,7 @@ func init() {
       "type": "string",
       "description": "idenity of the request from the Platform",
       "name": "X-Broker-API-Request-Identity",
-      "in": "header",
-      "required": true
+      "in": "header"
     },
     "accepts_incomplete": {
       "type": "boolean",
@@ -1324,8 +1323,7 @@ func init() {
           "type": "string",
           "description": "idenity of the request from the Platform",
           "name": "X-Broker-API-Request-Identity",
-          "in": "header",
-          "required": true
+          "in": "header"
         }
       ]
     },
@@ -1605,8 +1603,7 @@ func init() {
           "type": "string",
           "description": "idenity of the request from the Platform",
           "name": "X-Broker-API-Request-Identity",
-          "in": "header",
-          "required": true
+          "in": "header"
         },
         {
           "type": "string",
@@ -1704,8 +1701,7 @@ func init() {
           "type": "string",
           "description": "idenity of the request from the Platform",
           "name": "X-Broker-API-Request-Identity",
-          "in": "header",
-          "required": true
+          "in": "header"
         },
         {
           "type": "string",
@@ -1918,8 +1914,7 @@ func init() {
           "type": "string",
           "description": "idenity of the request from the Platform",
           "name": "X-Broker-API-Request-Identity",
-          "in": "header",
-          "required": true
+          "in": "header"
         },
         {
           "type": "string",
@@ -2024,8 +2019,7 @@ func init() {
           "type": "string",
           "description": "idenity of the request from the Platform",
           "name": "X-Broker-API-Request-Identity",
-          "in": "header",
-          "required": true
+          "in": "header"
         },
         {
           "type": "string",
@@ -2546,8 +2540,7 @@ func init() {
       "type": "string",
       "description": "idenity of the request from the Platform",
       "name": "X-Broker-API-Request-Identity",
-      "in": "header",
-      "required": true
+      "in": "header"
     },
     "accepts_incomplete": {
       "type": "boolean",
