@@ -18,6 +18,12 @@ var (
 
 func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "schemes": [
     "http",
     "https"
@@ -41,9 +47,6 @@ func init() {
   "paths": {
     "/v2/catalog": {
       "get": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "Catalog"
         ],
@@ -57,16 +60,13 @@ func init() {
             }
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
@@ -97,32 +97,20 @@ func init() {
             }
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorNotFound"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
       "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -162,41 +150,26 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorBadRequest"
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorConflict"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
           },
           "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnprocessableEntity"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
       "delete": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -227,44 +200,26 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorBadRequest"
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "410": {
-            "description": "Gone",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorGone"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
           },
           "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnprocessableEntity"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
       "patch": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -298,28 +253,19 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorBadRequest"
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
           },
           "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnprocessableEntity"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
@@ -340,9 +286,6 @@ func init() {
     },
     "/v2/service_instances/{instance_id}/last_operation": {
       "get": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -382,28 +325,19 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorBadRequest"
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "410": {
-            "description": "Gone",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorGone"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
@@ -437,29 +371,20 @@ func init() {
             }
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorNotFound"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
       "put": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceBindings"
         ],
@@ -499,34 +424,25 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorBadRequest"
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorConflict"
+          },
+          "410": {
+            "$ref": "#/responses/ErrorGone"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
           },
           "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnprocessableEntity"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
@@ -561,34 +477,22 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorBadRequest"
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "410": {
-            "description": "Gone",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorGone"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
           },
           "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnprocessableEntity"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
@@ -612,9 +516,6 @@ func init() {
     },
     "/v2/service_instances/{instance_id}/service_bindings/{binding_id}/last_operation": {
       "get": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceBindings"
         ],
@@ -654,28 +555,19 @@ func init() {
             }
           },
           "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorBadRequest"
           },
           "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorUnauthorized"
           },
           "410": {
-            "description": "Gone",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorGone"
           },
           "412": {
-            "description": "Precondition Failed",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "$ref": "#/responses/ErrorPreconditionFailed"
+          },
+          "default": {
+            "$ref": "#/responses/ErrorUnexpected"
           }
         }
       },
@@ -1235,6 +1127,56 @@ func init() {
       "name": "service_id",
       "in": "query",
       "required": true
+    }
+  },
+  "responses": {
+    "ErrorBadRequest": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorConflict": {
+      "description": "Conflict",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorGone": {
+      "description": "Gone",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorNotFound": {
+      "description": "Not Found",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorPreconditionFailed": {
+      "description": "Precondition Failed",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorUnauthorized": {
+      "description": "Unauthorized",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorUnexpected": {
+      "description": "Unexpected",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorUnprocessableEntity": {
+      "description": "Unprocessable Entity",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
     }
   },
   "securityDefinitions": {
@@ -1253,6 +1195,12 @@ func init() {
   }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "schemes": [
     "http",
     "https"
@@ -1276,9 +1224,6 @@ func init() {
   "paths": {
     "/v2/catalog": {
       "get": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "Catalog"
         ],
@@ -1299,6 +1244,12 @@ func init() {
           },
           "412": {
             "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "default": {
+            "description": "Unexpected",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1358,16 +1309,16 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "default": {
+            "description": "Unexpected",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
       "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -1438,13 +1389,16 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "default": {
+            "description": "Unexpected",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
       "delete": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -1514,16 +1468,16 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "default": {
+            "description": "Unexpected",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
       "patch": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -1582,6 +1536,12 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "default": {
+            "description": "Unexpected",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -1616,9 +1576,6 @@ func init() {
     },
     "/v2/service_instances/{instance_id}/last_operation": {
       "get": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceInstances"
         ],
@@ -1677,6 +1634,12 @@ func init() {
           },
           "412": {
             "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "default": {
+            "description": "Unexpected",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1743,13 +1706,16 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "default": {
+            "description": "Unexpected",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
       "put": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceBindings"
         ],
@@ -1809,6 +1775,12 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "410": {
+            "description": "Gone",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "412": {
             "description": "Precondition Failed",
             "schema": {
@@ -1817,6 +1789,12 @@ func init() {
           },
           "422": {
             "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "default": {
+            "description": "Unexpected",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1893,6 +1871,12 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "default": {
+            "description": "Unexpected",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -1934,9 +1918,6 @@ func init() {
     },
     "/v2/service_instances/{instance_id}/service_bindings/{binding_id}/last_operation": {
       "get": {
-        "produces": [
-          "application/json"
-        ],
         "tags": [
           "ServiceBindings"
         ],
@@ -1995,6 +1976,12 @@ func init() {
           },
           "412": {
             "description": "Precondition Failed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "default": {
+            "description": "Unexpected",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2575,6 +2562,56 @@ func init() {
       "name": "service_id",
       "in": "query",
       "required": true
+    }
+  },
+  "responses": {
+    "ErrorBadRequest": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorConflict": {
+      "description": "Conflict",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorGone": {
+      "description": "Gone",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorNotFound": {
+      "description": "Not Found",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorPreconditionFailed": {
+      "description": "Precondition Failed",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorUnauthorized": {
+      "description": "Unauthorized",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorUnexpected": {
+      "description": "Unexpected",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "ErrorUnprocessableEntity": {
+      "description": "Unprocessable Entity",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
     }
   },
   "securityDefinitions": {

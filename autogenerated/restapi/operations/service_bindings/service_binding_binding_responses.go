@@ -277,6 +277,50 @@ func (o *ServiceBindingBindingConflict) WriteResponse(rw http.ResponseWriter, pr
 	}
 }
 
+// ServiceBindingBindingGoneCode is the HTTP code returned for type ServiceBindingBindingGone
+const ServiceBindingBindingGoneCode int = 410
+
+/*ServiceBindingBindingGone Gone
+
+swagger:response serviceBindingBindingGone
+*/
+type ServiceBindingBindingGone struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingBindingGone creates ServiceBindingBindingGone with default headers values
+func NewServiceBindingBindingGone() *ServiceBindingBindingGone {
+
+	return &ServiceBindingBindingGone{}
+}
+
+// WithPayload adds the payload to the service binding binding gone response
+func (o *ServiceBindingBindingGone) WithPayload(payload *models.Error) *ServiceBindingBindingGone {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding binding gone response
+func (o *ServiceBindingBindingGone) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingBindingGone) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(410)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ServiceBindingBindingPreconditionFailedCode is the HTTP code returned for type ServiceBindingBindingPreconditionFailed
 const ServiceBindingBindingPreconditionFailedCode int = 412
 
@@ -357,6 +401,64 @@ func (o *ServiceBindingBindingUnprocessableEntity) SetPayload(payload *models.Er
 func (o *ServiceBindingBindingUnprocessableEntity) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(422)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+/*ServiceBindingBindingDefault Unexpected
+
+swagger:response serviceBindingBindingDefault
+*/
+type ServiceBindingBindingDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingBindingDefault creates ServiceBindingBindingDefault with default headers values
+func NewServiceBindingBindingDefault(code int) *ServiceBindingBindingDefault {
+	if code <= 0 {
+		code = 500
+	}
+
+	return &ServiceBindingBindingDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the service binding binding default response
+func (o *ServiceBindingBindingDefault) WithStatusCode(code int) *ServiceBindingBindingDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the service binding binding default response
+func (o *ServiceBindingBindingDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the service binding binding default response
+func (o *ServiceBindingBindingDefault) WithPayload(payload *models.Error) *ServiceBindingBindingDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding binding default response
+func (o *ServiceBindingBindingDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingBindingDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(o._statusCode)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

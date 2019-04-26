@@ -318,3 +318,61 @@ func (o *ServiceInstanceDeprovisionUnprocessableEntity) WriteResponse(rw http.Re
 		}
 	}
 }
+
+/*ServiceInstanceDeprovisionDefault Unexpected
+
+swagger:response serviceInstanceDeprovisionDefault
+*/
+type ServiceInstanceDeprovisionDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceInstanceDeprovisionDefault creates ServiceInstanceDeprovisionDefault with default headers values
+func NewServiceInstanceDeprovisionDefault(code int) *ServiceInstanceDeprovisionDefault {
+	if code <= 0 {
+		code = 500
+	}
+
+	return &ServiceInstanceDeprovisionDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the service instance deprovision default response
+func (o *ServiceInstanceDeprovisionDefault) WithStatusCode(code int) *ServiceInstanceDeprovisionDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the service instance deprovision default response
+func (o *ServiceInstanceDeprovisionDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the service instance deprovision default response
+func (o *ServiceInstanceDeprovisionDefault) WithPayload(payload *models.Error) *ServiceInstanceDeprovisionDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service instance deprovision default response
+func (o *ServiceInstanceDeprovisionDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceInstanceDeprovisionDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

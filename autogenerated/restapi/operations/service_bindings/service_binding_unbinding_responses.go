@@ -318,3 +318,61 @@ func (o *ServiceBindingUnbindingUnprocessableEntity) WriteResponse(rw http.Respo
 		}
 	}
 }
+
+/*ServiceBindingUnbindingDefault Unexpected
+
+swagger:response serviceBindingUnbindingDefault
+*/
+type ServiceBindingUnbindingDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingUnbindingDefault creates ServiceBindingUnbindingDefault with default headers values
+func NewServiceBindingUnbindingDefault(code int) *ServiceBindingUnbindingDefault {
+	if code <= 0 {
+		code = 500
+	}
+
+	return &ServiceBindingUnbindingDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the service binding unbinding default response
+func (o *ServiceBindingUnbindingDefault) WithStatusCode(code int) *ServiceBindingUnbindingDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the service binding unbinding default response
+func (o *ServiceBindingUnbindingDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the service binding unbinding default response
+func (o *ServiceBindingUnbindingDefault) WithPayload(payload *models.Error) *ServiceBindingUnbindingDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding unbinding default response
+func (o *ServiceBindingUnbindingDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingUnbindingDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

@@ -254,3 +254,61 @@ func (o *ServiceBindingLastOperationGetPreconditionFailed) WriteResponse(rw http
 		}
 	}
 }
+
+/*ServiceBindingLastOperationGetDefault Unexpected
+
+swagger:response serviceBindingLastOperationGetDefault
+*/
+type ServiceBindingLastOperationGetDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingLastOperationGetDefault creates ServiceBindingLastOperationGetDefault with default headers values
+func NewServiceBindingLastOperationGetDefault(code int) *ServiceBindingLastOperationGetDefault {
+	if code <= 0 {
+		code = 500
+	}
+
+	return &ServiceBindingLastOperationGetDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the service binding last operation get default response
+func (o *ServiceBindingLastOperationGetDefault) WithStatusCode(code int) *ServiceBindingLastOperationGetDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the service binding last operation get default response
+func (o *ServiceBindingLastOperationGetDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the service binding last operation get default response
+func (o *ServiceBindingLastOperationGetDefault) WithPayload(payload *models.Error) *ServiceBindingLastOperationGetDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding last operation get default response
+func (o *ServiceBindingLastOperationGetDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingLastOperationGetDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

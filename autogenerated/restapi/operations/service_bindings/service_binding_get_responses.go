@@ -188,3 +188,61 @@ func (o *ServiceBindingGetPreconditionFailed) WriteResponse(rw http.ResponseWrit
 		}
 	}
 }
+
+/*ServiceBindingGetDefault Unexpected
+
+swagger:response serviceBindingGetDefault
+*/
+type ServiceBindingGetDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewServiceBindingGetDefault creates ServiceBindingGetDefault with default headers values
+func NewServiceBindingGetDefault(code int) *ServiceBindingGetDefault {
+	if code <= 0 {
+		code = 500
+	}
+
+	return &ServiceBindingGetDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the service binding get default response
+func (o *ServiceBindingGetDefault) WithStatusCode(code int) *ServiceBindingGetDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the service binding get default response
+func (o *ServiceBindingGetDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the service binding get default response
+func (o *ServiceBindingGetDefault) WithPayload(payload *models.Error) *ServiceBindingGetDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the service binding get default response
+func (o *ServiceBindingGetDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ServiceBindingGetDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
