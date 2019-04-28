@@ -25,12 +25,12 @@ services:
           parameter1: 1
           parameter2: "foo"
       - type: "bind"
-        async: false
+        async: true
         parameters:
           parameter1-name-here: 1
           parameter2-name-here: "parameter2-value-here"
       - type: "get_binding"
       - type: "unbind"
-        async: false
+        async: true
       - type: "deprovision"
         async: true
