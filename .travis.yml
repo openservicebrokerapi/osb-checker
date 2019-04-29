@@ -1,0 +1,24 @@
+dist: xenial
+
+language: go
+go_import_path: github.com/openservicebrokerapi/osb-checker
+
+go:
+  - 1.12.x
+
+env:
+  matrix:
+  - TARGET=amd64
+  - TARGET=arm64
+  - TARGET=arm
+  - TARGET=386
+  - TARGET=ppc64le
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y make
+
+install:
+  - make
+  - nohup ./build/osbchecker.mockbroker --scheme=http --port=3000 &
+  - go test -v ./test/ -loose-check 
