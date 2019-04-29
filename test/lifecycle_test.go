@@ -12,11 +12,13 @@ import (
 
 var (
 	configFile string
+	looseCheck bool
 )
 
 func init() {
 	// Parse some configuration fields from command line.
-	flag.StringVar(&configFile, "config-file", "configs/config_mock.yaml", "Please specify the config file of service broker you want to test!")
+	flag.StringVar(&configFile, "config-file", "configs/config_mock.yaml", "Please specify the config file of service broker you want to test.")
+	flag.BoolVar(&looseCheck, "loose-check", false, "This flag will skip some schema check test cases, please use with caution.")
 	flag.Parse()
 
 	if err := Load(configFile); err != nil {
@@ -27,7 +29,7 @@ func init() {
 func TestLifeCycle(t *testing.T) {
 	t.Parallel()
 
-	common.TestGetCatalog(t)
+	common.TestGetCatalog(t, looseCheck)
 
 	for _, svc := range CONF.Services {
 		instanceID := uuid.NewV4().String()
@@ -48,10 +50,10 @@ func TestLifeCycle(t *testing.T) {
 					Parameters:       operation.Parameters,
 				}
 
-				common.TestProvision(t, instanceID, req, operation.Async)
+				common.TestProvision(t, instanceID, req, operation.Async, looseCheck)
 				break
 			case "get_instance":
-				common.TestGetInstance(t, instanceID)
+				common.TestGetInstance(t, instanceID, looseCheck)
 				break
 			case "update":
 				if operation.PlanID != "" {
@@ -63,10 +65,10 @@ func TestLifeCycle(t *testing.T) {
 					Parameters: operation.Parameters,
 				}
 
-				common.TestUpdateInstance(t, instanceID, req, operation.Async)
+				common.TestUpdateInstance(t, instanceID, req, operation.Async, looseCheck)
 				break
 			case "deprovision":
-				common.TestDeprovision(t, instanceID, serviceID, currentPlanID, operation.Async)
+				common.TestDeprovision(t, instanceID, serviceID, currentPlanID, operation.Async, looseCheck)
 				break
 			case "bind":
 				req := &v2.ServiceBindingRequest{
@@ -75,13 +77,13 @@ func TestLifeCycle(t *testing.T) {
 					Parameters: operation.Parameters,
 				}
 
-				common.TestBind(t, instanceID, bindingID, req, operation.Async)
+				common.TestBind(t, instanceID, bindingID, req, operation.Async, looseCheck)
 				break
 			case "get_binding":
-				common.TestGetBinding(t, instanceID, bindingID)
+				common.TestGetBinding(t, instanceID, bindingID, looseCheck)
 				break
 			case "unbind":
-				common.TestUnbind(t, instanceID, bindingID, serviceID, currentPlanID, operation.Async)
+				common.TestUnbind(t, instanceID, bindingID, serviceID, currentPlanID, operation.Async, looseCheck)
 				break
 			default:
 				break

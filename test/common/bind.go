@@ -13,7 +13,7 @@ func TestBind(
 	t *testing.T,
 	instanceID, bindingID string,
 	req *v2.ServiceBindingRequest,
-	async bool,
+	async, looseCheck bool,
 ) {
 	Convey("BINDING - request syntax", t, func() {
 
@@ -54,7 +54,7 @@ func TestBind(
 			So(code, ShouldEqual, 400)
 		})
 
-		Convey("should reject if paln_id is invalid", func() {
+		Convey("should reject if plan_id is invalid", func() {
 			tempBody := new(v2.ServiceBindingRequest)
 			deepCopy(req, tempBody)
 			tempBody.PlanID = &fakeValue

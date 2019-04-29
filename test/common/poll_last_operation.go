@@ -6,7 +6,9 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func testPollInstanceLastOperation(instanceID string) {
+func testPollInstanceLastOperation(
+	instanceID string,
+) {
 	So(testAPIVersionHeader(config.GeneratePollInstanceLastOperationURL(instanceID), "GET"), ShouldBeNil)
 	So(testAuthentication(config.GeneratePollInstanceLastOperationURL(instanceID), "GET"), ShouldBeNil)
 
@@ -19,7 +21,9 @@ func testPollInstanceLastOperation(instanceID string) {
 	})
 }
 
-func testPollBindingLastOperation(instanceID, bindingID string) {
+func testPollBindingLastOperation(
+	instanceID, bindingID string,
+) {
 	So(testAPIVersionHeader(config.GeneratePollBindingLastOperationURL(instanceID, bindingID), "GET"), ShouldBeNil)
 	So(testAuthentication(config.GeneratePollBindingLastOperationURL(instanceID, bindingID), "GET"), ShouldBeNil)
 

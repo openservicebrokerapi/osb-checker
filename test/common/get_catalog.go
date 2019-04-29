@@ -8,7 +8,10 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestGetCatalog(t *testing.T) {
+func TestGetCatalog(
+	t *testing.T,
+	looseCheck bool,
+) {
 	Convey("Query service catalog", t, func() {
 
 		So(testAPIVersionHeader(config.GenerateCatalogURL(), "GET"), ShouldBeNil)

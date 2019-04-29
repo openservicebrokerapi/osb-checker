@@ -1,7 +1,6 @@
 package client
 
 import (
-	"fmt"
 	"encoding/json"
 	"strconv"
 
@@ -76,7 +75,7 @@ func (c *Client) Provision(
 	default:
 		break
 	}
-	fmt.Printf("\nmsg is: %s\n", string(res.Message))
+
 	return res.Code, &provision, &asyncOperation, nil
 }
 
@@ -124,7 +123,7 @@ func (c *Client) GetInstance(
 		return -1, nil, err
 	}
 	json.Unmarshal(res.Message, &instance)
-	fmt.Printf("\nmsg is: %s\n", string(res.Message))
+
 	return res.Code, &instance, nil
 }
 
@@ -192,7 +191,7 @@ func (c *Client) Deprovision(
 	default:
 		break
 	}
-	fmt.Printf("\nmsg is: %s\n", string(res.Message))
+
 	return res.Code, &asyncOperation, nil
 }
 

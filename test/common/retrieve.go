@@ -11,6 +11,7 @@ import (
 func TestGetInstance(
 	t *testing.T,
 	instanceID string,
+	looseCheck bool,
 ) {
 	Convey("RETRIEVE INSTANCE", t, func() {
 
@@ -30,6 +31,7 @@ func TestGetInstance(
 func TestGetBinding(
 	t *testing.T,
 	instanceID, bindingID string,
+	looseCheck bool,
 ) {
 	Convey("RETRIEVE BINDING", t, func() {
 

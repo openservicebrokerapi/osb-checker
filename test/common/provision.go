@@ -13,7 +13,7 @@ func TestProvision(
 	t *testing.T,
 	instanceID string,
 	req *v2.ServiceInstanceProvisionRequest,
-	async bool,
+	async, looseCheck bool,
 ) {
 	Convey("PROVISIONING - request syntax", t, func() {
 
@@ -44,25 +44,27 @@ func TestProvision(
 			So(code, ShouldEqual, 400)
 		})
 
-		Convey("should reject if request payload is missing organization_guid", func() {
-			tempBody := new(v2.ServiceInstanceProvisionRequest)
-			deepCopy(req, tempBody)
-			tempBody.OrganizationGUID = &emptyValue
-			code, _, _, err := osbclient.Default.Provision(instanceID, tempBody, async)
+		if !looseCheck {
+			Convey("should reject if request payload is missing organization_guid", func() {
+				tempBody := new(v2.ServiceInstanceProvisionRequest)
+				deepCopy(req, tempBody)
+				tempBody.OrganizationGUID = &emptyValue
+				code, _, _, err := osbclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldBeNil)
-			So(code, ShouldEqual, 400)
-		})
+				So(err, ShouldBeNil)
+				So(code, ShouldEqual, 400)
+			})
 
-		Convey("should reject if request payload is missing space_guid", func() {
-			tempBody := new(v2.ServiceInstanceProvisionRequest)
-			deepCopy(req, tempBody)
-			tempBody.SpaceGUID = &emptyValue
-			code, _, _, err := osbclient.Default.Provision(instanceID, tempBody, async)
+			Convey("should reject if request payload is missing space_guid", func() {
+				tempBody := new(v2.ServiceInstanceProvisionRequest)
+				deepCopy(req, tempBody)
+				tempBody.SpaceGUID = &emptyValue
+				code, _, _, err := osbclient.Default.Provision(instanceID, tempBody, async)
 
-			So(err, ShouldBeNil)
-			So(code, ShouldEqual, 400)
-		})
+				So(err, ShouldBeNil)
+				So(code, ShouldEqual, 400)
+			})
+		}
 
 		Convey("should reject if service_id is invalid", func() {
 			tempBody := new(v2.ServiceInstanceProvisionRequest)

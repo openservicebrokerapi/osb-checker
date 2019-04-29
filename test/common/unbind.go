@@ -12,7 +12,7 @@ func TestUnbind(
 	t *testing.T,
 	instanceID, bindingID string,
 	serviceID, planID string,
-	async bool,
+	async, looseCheck bool,
 ) {
 	Convey("UNBINDING - delete syntax", t, func() {
 
@@ -22,19 +22,21 @@ func TestUnbind(
 			So(testAsyncParameters(config.GenerateBindingURL(instanceID, bindingID), "DELETE"), ShouldBeNil)
 		}
 
-		Convey("should reject if missing service_id", func() {
-			code, _, err := osbclient.Default.Unbind(instanceID, bindingID, "", planID, async)
+		if !looseCheck {
+			Convey("should reject if missing service_id", func() {
+				code, _, err := osbclient.Default.Unbind(instanceID, bindingID, "", planID, async)
 
-			So(err, ShouldBeNil)
-			So(code, ShouldEqual, 400)
-		})
+				So(err, ShouldBeNil)
+				So(code, ShouldEqual, 400)
+			})
 
-		Convey("should reject if missing plan_id", func() {
-			code, _, err := osbclient.Default.Unbind(instanceID, bindingID, serviceID, "", async)
+			Convey("should reject if missing plan_id", func() {
+				code, _, err := osbclient.Default.Unbind(instanceID, bindingID, serviceID, "", async)
 
-			So(err, ShouldBeNil)
-			So(code, ShouldEqual, 400)
-		})
+				So(err, ShouldBeNil)
+				So(code, ShouldEqual, 400)
+			})
+		}
 	})
 
 	Convey("UNBINDING - delete", t, func() {

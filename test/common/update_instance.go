@@ -13,7 +13,7 @@ func TestUpdateInstance(
 	t *testing.T,
 	instanceID string,
 	req *v2.ServiceInstanceUpdateRequest,
-	async bool,
+	async, looseCheck bool,
 ) {
 	Convey("UPDATE - request syntax", t, func() {
 

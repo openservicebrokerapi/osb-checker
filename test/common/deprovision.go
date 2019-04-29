@@ -12,7 +12,7 @@ func TestDeprovision(
 	t *testing.T,
 	instanceID string,
 	serviceID, planID string,
-	async bool,
+	async, looseCheck bool,
 ) {
 	Convey("DEPROVISIONING - delete syntax", t, func() {
 
@@ -22,19 +22,22 @@ func TestDeprovision(
 			So(testAsyncParameters(config.GenerateInstanceURL(instanceID), "DELETE"), ShouldBeNil)
 		}
 
-		Convey("should reject if missing service_id", func() {
-			code, _, err := osbclient.Default.Deprovision(instanceID, "", planID, async)
+		if !looseCheck {
+			Convey("should reject if missing service_id", func() {
+				code, _, err := osbclient.Default.Deprovision(instanceID, "", planID, async)
 
-			So(err, ShouldBeNil)
-			So(code, ShouldEqual, 400)
-		})
+				So(err, ShouldBeNil)
+				So(code, ShouldEqual, 400)
+			})
 
-		Convey("should reject if missing plan_id", func() {
-			code, _, err := osbclient.Default.Deprovision(instanceID, serviceID, "", async)
+			Convey("should reject if missing plan_id", func() {
+				code, _, err := osbclient.Default.Deprovision(instanceID, serviceID, "", async)
 
-			So(err, ShouldBeNil)
-			So(code, ShouldEqual, 400)
-		})
+				So(err, ShouldBeNil)
+				So(code, ShouldEqual, 400)
+			})
+		}
+
 	})
 
 	Convey("DEPROVISIONING - delete", t, func() {
