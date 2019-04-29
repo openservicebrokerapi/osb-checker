@@ -1,0 +1,36 @@
+url: "http://localhost:3000"
+apiVersion: "2.14"
+authentication:
+  authType: "basic"
+  username: "username"
+  password: "password"
+pollingInterval: 3
+maxPollingNum: 100
+services:
+  - name: "Mock Service Test"
+    service_id: "acb56d7c-XXXX-XXXX-XXXX-feb140a59a66"
+    organization_guid: "org-guid-here"
+    space_guid: "space-guid-here"
+    operations:
+      - type: "provision"
+        plan_id: "d3031751-XXXX-XXXX-XXXX-a42377d3320e"
+        async: true
+        parameters:
+          billing-account: "fake-account"
+      - type: "get_instance"
+      - type: "update"
+        plan_id: "0f4008b5-XXXX-XXXX-XXXX-dace631cd648"
+        async: true
+        parameters:
+          parameter1: 1
+          parameter2: "foo"
+      - type: "bind"
+        async: true
+        parameters:
+          parameter1-name-here: 1
+          parameter2-name-here: "parameter2-value-here"
+      - type: "get_binding"
+      - type: "unbind"
+        async: true
+      - type: "deprovision"
+        async: true
