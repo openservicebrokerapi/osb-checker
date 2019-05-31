@@ -1,3 +1,7 @@
 .vscode
 .idea/
-swagger.yaml
+*/swagger.yaml
+
+build/
+
+**/*.swp
