@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"gopkg.in/yaml.v2"
+	"github.com/ghodss/yaml"
 )
 
 var CONF = &Config{}

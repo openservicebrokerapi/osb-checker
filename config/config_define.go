@@ -1,31 +1,31 @@
 package config
 
 type Config struct {
-	URL             string      `yaml:"url"`
-	APIVersion      string      `yaml:"apiVersion"`
-	Authentication  *AuthOption `yaml:"authentication"`
-	PollingInterval int         `yaml:"pollingInterval"`
-	MaxPollingNum   int         `yaml:"maxPollingNum"`
-	Services        []*Service  `yaml:"services"`
+	URL             string      `json:"url"`
+	APIVersion      string      `json:"apiVersion"`
+	Authentication  *AuthOption `json:"authentication"`
+	PollingInterval int         `json:"pollingInterval"`
+	MaxPollingNum   int         `json:"maxPollingNum"`
+	Services        []*Service  `json:"services"`
 }
 
 type AuthOption struct {
-	AuthType string `yaml:"authType"`
-	Username string `yaml:"username,omitempty"`
-	Password string `yaml:"password,omitempty"`
+	AuthType string `json:"authType"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
 }
 
 type Service struct {
-	Name             string       `yaml:"name"`
-	ServiceID        string       `yaml:"service_id"`
-	OrganizationGUID string       `yaml:"organization_guid"`
-	SpaceGUID        string       `yaml:"space_guid"`
-	Operations       []*Operation `yaml:"operations"`
+	Name             string       `json:"name"`
+	ServiceID        string       `json:"service_id"`
+	OrganizationGUID string       `json:"organization_guid"`
+	SpaceGUID        string       `json:"space_guid"`
+	Operations       []*Operation `json:"operations"`
 }
 
 type Operation struct {
-	Type       string                 `yaml:"type"`
-	PlanID     string                 `yaml:"plan_id,omitempty"`
-	Async      bool                   `yaml:"async,omitempty"`
-	Parameters map[string]interface{} `yaml:"parameters,omitempty"`
+	Type       string                 `json:"type"`
+	PlanID     string                 `json:"plan_id,omitempty"`
+	Async      bool                   `json:"async,omitempty"`
+	Parameters map[string]interface{} `json:"parameters,omitempty"`
 }

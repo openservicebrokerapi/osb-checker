@@ -1,0 +1,1635 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: open-service-broker-api@googlegroups.com
+    name: Open Service Broker API
+    url: https://www.openservicebrokerapi.org/
+  description: The Open Service Broker API defines an HTTP(S) interface between Platforms
+    and Service Brokers.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Open Service Broker API
+  version: master - might contain changes that are not yet released
+externalDocs:
+  description: The offical Open Service Broker API specification
+  url: https://github.com/openservicebrokerapi/servicebroker/
+servers:
+- url: http://localhost:3000/
+- url: https://localhost:3000/
+security:
+- basicAuth: []
+paths:
+  /v2/catalog:
+    get:
+      operationId: catalog.get
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Catalog'
+          description: catalog response
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: get the catalog of services that the service broker offers
+      tags:
+      - Catalog
+  /v2/service_instances/{instance_id}:
+    delete:
+      operationId: serviceInstance.deprovision
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: asynchronous operations supported
+        in: query
+        name: accepts_incomplete
+        schema:
+          type: boolean
+      - description: id of the service associated with the instance being deleted
+        in: query
+        name: service_id
+        required: true
+        schema:
+          type: string
+      - description: id of the plan associated with the instance being deleted
+        in: query
+        name: plan_id
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+          description: OK
+        202:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncOperation'
+          description: Accepted
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        410:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Gone
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unprocessable Entity
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: deprovision a service instance
+      tags:
+      - ServiceInstances
+    get:
+      operationId: serviceInstance.get
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInstanceResource'
+          description: OK
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not Found
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: gets a service instance
+      tags:
+      - ServiceInstances
+    patch:
+      operationId: serviceInstance.update
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: asynchronous operations supported
+        in: query
+        name: accepts_incomplete
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInstanceUpdateRequest'
+        description: parameters for the requested service instance update
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+          description: OK
+        202:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInstanceAsyncOperation'
+          description: Accepted
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unprocessable Entity
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: update a service instance
+      tags:
+      - ServiceInstances
+      x-codegen-request-body-name: body
+    put:
+      operationId: serviceInstance.provision
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: asynchronous operations supported
+        in: query
+        name: accepts_incomplete
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInstanceProvisionRequest'
+        description: parameters for the requested service instance provision
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInstance'
+          description: OK
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInstance'
+          description: Created
+        202:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInstanceAsyncOperation'
+          description: Accepted
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Conflict
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unprocessable Entity
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: provision a service instance
+      tags:
+      - ServiceInstances
+      x-codegen-request-body-name: body
+  /v2/service_instances/{instance_id}/last_operation:
+    get:
+      operationId: serviceInstance.lastOperation.get
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: id of the service associated with the instance
+        in: query
+        name: service_id
+        schema:
+          type: string
+      - description: id of the plan associated with the instance
+        in: query
+        name: plan_id
+        schema:
+          type: string
+      - description: a provided identifier for the operation
+        in: query
+        name: operation
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LastOperationResource'
+          description: OK
+          headers:
+            RetryAfter:
+              description: Indicates when to retry the request
+              schema:
+                type: string
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        410:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Gone
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: last requested operation state for service instance
+      tags:
+      - ServiceInstances
+  /v2/service_instances/{instance_id}/service_bindings/{binding_id}/last_operation:
+    get:
+      operationId: serviceBinding.lastOperation.get
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: binding id of binding to create
+        in: path
+        name: binding_id
+        required: true
+        schema:
+          type: string
+      - description: id of the service associated with the instance
+        in: query
+        name: service_id
+        schema:
+          type: string
+      - description: id of the plan associated with the instance
+        in: query
+        name: plan_id
+        schema:
+          type: string
+      - description: a provided identifier for the operation
+        in: query
+        name: operation
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LastOperationResource'
+          description: OK
+          headers:
+            RetryAfter:
+              description: Indicates when to retry the request
+              schema:
+                type: string
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        410:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Gone
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: last requested operation state for service binding
+      tags:
+      - ServiceBindings
+  /v2/service_instances/{instance_id}/service_bindings/{binding_id}:
+    delete:
+      operationId: serviceBinding.unbinding
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: binding id of binding to create
+        in: path
+        name: binding_id
+        required: true
+        schema:
+          type: string
+      - description: id of the service associated with the instance being deleted
+        in: query
+        name: service_id
+        required: true
+        schema:
+          type: string
+      - description: id of the plan associated with the instance being deleted
+        in: query
+        name: plan_id
+        required: true
+        schema:
+          type: string
+      - description: asynchronous operations supported
+        in: query
+        name: accepts_incomplete
+        schema:
+          type: boolean
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+          description: OK
+        202:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncOperation'
+          description: Accepted
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        410:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Gone
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unprocessable Entity
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: deprovision of a service binding
+      tags:
+      - ServiceBindings
+    get:
+      operationId: serviceBinding.get
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: binding id of binding to create
+        in: path
+        name: binding_id
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceBindingResource'
+          description: OK
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not Found
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: gets a service binding
+      tags:
+      - ServiceBindings
+    put:
+      operationId: serviceBinding.binding
+      parameters:
+      - description: version number of the Service Broker API that the Platform will
+          use
+        in: header
+        name: X-Broker-API-Version
+        required: true
+        schema:
+          type: string
+      - description: identity of the user that initiated the request from the Platform
+        in: header
+        name: X-Broker-API-Originating-Identity
+        schema:
+          type: string
+      - description: idenity of the request from the Platform
+        in: header
+        name: X-Broker-API-Request-Identity
+        schema:
+          type: string
+      - description: instance id of instance to provision
+        in: path
+        name: instance_id
+        required: true
+        schema:
+          type: string
+      - description: binding id of binding to create
+        in: path
+        name: binding_id
+        required: true
+        schema:
+          type: string
+      - description: asynchronous operations supported
+        in: query
+        name: accepts_incomplete
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceBindingRequest'
+        description: parameters for the requested service binding
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceBinding'
+          description: OK
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceBinding'
+          description: Created
+        202:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncOperation'
+          description: Accepted
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        409:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Conflict
+        410:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Gone
+        412:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Precondition Failed
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unprocessable Entity
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected
+      summary: generation of a service binding
+      tags:
+      - ServiceBindings
+      x-codegen-request-body-name: body
+components:
+  parameters:
+    APIVersion:
+      description: version number of the Service Broker API that the Platform will
+        use
+      in: header
+      name: X-Broker-API-Version
+      required: true
+      schema:
+        type: string
+    OriginatingIdentity:
+      description: identity of the user that initiated the request from the Platform
+      in: header
+      name: X-Broker-API-Originating-Identity
+      schema:
+        type: string
+    RequestIdentity:
+      description: idenity of the request from the Platform
+      in: header
+      name: X-Broker-API-Request-Identity
+      schema:
+        type: string
+    accepts_incomplete:
+      description: asynchronous operations supported
+      in: query
+      name: accepts_incomplete
+      schema:
+        type: boolean
+    service_id:
+      description: id of the service associated with the instance being deleted
+      in: query
+      name: service_id
+      required: true
+      schema:
+        type: string
+    plan_id:
+      description: id of the plan associated with the instance being deleted
+      in: query
+      name: plan_id
+      required: true
+      schema:
+        type: string
+  responses:
+    ErrorBadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Bad Request
+    ErrorConflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Conflict
+    ErrorGone:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Gone
+    ErrorNotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Not Found
+    ErrorPreconditionFailed:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Precondition Failed
+    ErrorUnauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Unauthorized
+    ErrorUnexpected:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Unexpected
+    ErrorUnprocessableEntity:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Unprocessable Entity
+  schemas:
+    Catalog:
+      example:
+        services:
+        - allow_context_updates: true
+          metadata: '{}'
+          instances_retrievable: true
+          description: description
+          tags:
+          - tags
+          - tags
+          bindable: true
+          plan_updateable: true
+          plans:
+          - metadata: '{}'
+            bindable: true
+            plan_updateable: true
+            maintenance_info:
+              description: description
+              version: version
+            schemas:
+              service_binding:
+                create:
+                  parameters: '{}'
+              service_instance:
+                create:
+                  parameters: '{}'
+                update:
+                  parameters: '{}'
+            name: name
+            description: description
+            id: id
+            free: true
+            maximum_polling_duration: 0
+          - metadata: '{}'
+            bindable: true
+            plan_updateable: true
+            maintenance_info:
+              description: description
+              version: version
+            schemas:
+              service_binding:
+                create:
+                  parameters: '{}'
+              service_instance:
+                create:
+                  parameters: '{}'
+                update:
+                  parameters: '{}'
+            name: name
+            description: description
+            id: id
+            free: true
+            maximum_polling_duration: 0
+          name: name
+          id: id
+          dashboard_client:
+            id: id
+            secret: secret
+            redirect_uri: redirect_uri
+          requires:
+          - syslog_drain
+          - syslog_drain
+          bindings_retrievable: true
+        - allow_context_updates: true
+          metadata: '{}'
+          instances_retrievable: true
+          description: description
+          tags:
+          - tags
+          - tags
+          bindable: true
+          plan_updateable: true
+          plans:
+          - metadata: '{}'
+            bindable: true
+            plan_updateable: true
+            maintenance_info:
+              description: description
+              version: version
+            schemas:
+              service_binding:
+                create:
+                  parameters: '{}'
+              service_instance:
+                create:
+                  parameters: '{}'
+                update:
+                  parameters: '{}'
+            name: name
+            description: description
+            id: id
+            free: true
+            maximum_polling_duration: 0
+          - metadata: '{}'
+            bindable: true
+            plan_updateable: true
+            maintenance_info:
+              description: description
+              version: version
+            schemas:
+              service_binding:
+                create:
+                  parameters: '{}'
+              service_instance:
+                create:
+                  parameters: '{}'
+                update:
+                  parameters: '{}'
+            name: name
+            description: description
+            id: id
+            free: true
+            maximum_polling_duration: 0
+          name: name
+          id: id
+          dashboard_client:
+            id: id
+            secret: secret
+            redirect_uri: redirect_uri
+          requires:
+          - syslog_drain
+          - syslog_drain
+          bindings_retrievable: true
+      properties:
+        services:
+          items:
+            $ref: '#/components/schemas/Service'
+          type: array
+      type: object
+    Service:
+      example:
+        allow_context_updates: true
+        metadata: '{}'
+        instances_retrievable: true
+        description: description
+        tags:
+        - tags
+        - tags
+        bindable: true
+        plan_updateable: true
+        plans:
+        - metadata: '{}'
+          bindable: true
+          plan_updateable: true
+          maintenance_info:
+            description: description
+            version: version
+          schemas:
+            service_binding:
+              create:
+                parameters: '{}'
+            service_instance:
+              create:
+                parameters: '{}'
+              update:
+                parameters: '{}'
+          name: name
+          description: description
+          id: id
+          free: true
+          maximum_polling_duration: 0
+        - metadata: '{}'
+          bindable: true
+          plan_updateable: true
+          maintenance_info:
+            description: description
+            version: version
+          schemas:
+            service_binding:
+              create:
+                parameters: '{}'
+            service_instance:
+              create:
+                parameters: '{}'
+              update:
+                parameters: '{}'
+          name: name
+          description: description
+          id: id
+          free: true
+          maximum_polling_duration: 0
+        name: name
+        id: id
+        dashboard_client:
+          id: id
+          secret: secret
+          redirect_uri: redirect_uri
+        requires:
+        - syslog_drain
+        - syslog_drain
+        bindings_retrievable: true
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        description:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+        requires:
+          items:
+            enum:
+            - syslog_drain
+            - route_forwarding
+            - volume_mount
+            type: string
+          type: array
+        bindable:
+          type: boolean
+        instances_retrievable:
+          type: boolean
+        bindings_retrievable:
+          type: boolean
+        allow_context_updates:
+          type: boolean
+        metadata:
+          description: See [Service Metadata Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#service-metadata)
+            for more details.
+          type: object
+        dashboard_client:
+          $ref: '#/components/schemas/DashboardClient'
+        plan_updateable:
+          type: boolean
+        plans:
+          items:
+            $ref: '#/components/schemas/Plan'
+          type: array
+      required:
+      - bindable
+      - description
+      - id
+      - name
+      - plans
+      type: object
+    DashboardClient:
+      example:
+        id: id
+        secret: secret
+        redirect_uri: redirect_uri
+      properties:
+        id:
+          type: string
+        secret:
+          type: string
+        redirect_uri:
+          type: string
+      required:
+      - id
+      - secret
+      type: object
+    Plan:
+      example:
+        metadata: '{}'
+        bindable: true
+        plan_updateable: true
+        maintenance_info:
+          description: description
+          version: version
+        schemas:
+          service_binding:
+            create:
+              parameters: '{}'
+          service_instance:
+            create:
+              parameters: '{}'
+            update:
+              parameters: '{}'
+        name: name
+        description: description
+        id: id
+        free: true
+        maximum_polling_duration: 0
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        metadata:
+          description: See [Service Metadata Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#service-metadata)
+            for more details.
+          type: object
+        free:
+          default: true
+          type: boolean
+        bindable:
+          type: boolean
+        plan_updateable:
+          type: boolean
+        schemas:
+          $ref: '#/components/schemas/SchemasObject'
+        maximum_polling_duration:
+          type: integer
+        maintenance_info:
+          $ref: '#/components/schemas/MaintenanceInfo'
+      required:
+      - description
+      - id
+      - name
+      type: object
+    SchemasObject:
+      example:
+        service_binding:
+          create:
+            parameters: '{}'
+        service_instance:
+          create:
+            parameters: '{}'
+          update:
+            parameters: '{}'
+      properties:
+        service_instance:
+          $ref: '#/components/schemas/ServiceInstanceSchemaObject'
+        service_binding:
+          $ref: '#/components/schemas/ServiceBindingSchemaObject'
+      type: object
+    ServiceInstanceSchemaObject:
+      example:
+        create:
+          parameters: '{}'
+        update:
+          parameters: '{}'
+      properties:
+        create:
+          $ref: '#/components/schemas/SchemaParameters'
+        update:
+          $ref: '#/components/schemas/SchemaParameters'
+      type: object
+    ServiceBindingSchemaObject:
+      example:
+        create:
+          parameters: '{}'
+      properties:
+        create:
+          $ref: '#/components/schemas/SchemaParameters'
+      type: object
+    SchemaParameters:
+      example:
+        parameters: '{}'
+      properties:
+        parameters:
+          type: object
+      type: object
+    JSONSchemaObject:
+      type: object
+    ServiceInstanceResource:
+      example:
+        service_id: service_id
+        dashboard_url: dashboard_url
+        parameters: '{}'
+        plan_id: plan_id
+      properties:
+        service_id:
+          type: string
+        plan_id:
+          type: string
+        dashboard_url:
+          type: string
+        parameters:
+          type: object
+      type: object
+    ServiceInstanceProvisionRequest:
+      example:
+        maintenance_info:
+          description: description
+          version: version
+        service_id: service_id
+        context: '{}'
+        organization_guid: organization_guid
+        space_guid: space_guid
+        parameters: '{}'
+        plan_id: plan_id
+      properties:
+        service_id:
+          type: string
+        plan_id:
+          type: string
+        context:
+          description: See [Context Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object)
+            for more details.
+          type: object
+        organization_guid:
+          type: string
+          x-deprecated: true
+        space_guid:
+          type: string
+          x-deprecated: true
+        parameters:
+          type: object
+        maintenance_info:
+          $ref: '#/components/schemas/MaintenanceInfo'
+      required:
+      - organization_guid
+      - plan_id
+      - service_id
+      - space_guid
+      type: object
+    ServiceInstance:
+      example:
+        dashboard_url: dashboard_url
+      properties:
+        dashboard_url:
+          type: string
+      type: object
+    ServiceInstanceAsyncOperation:
+      properties:
+        dashboard_url:
+          type: string
+        operation:
+          type: string
+      type: object
+    ServiceInstanceUpdateRequest:
+      example:
+        maintenance_info:
+          description: description
+          version: version
+        previous_values:
+          maintenance_info:
+            description: description
+            version: version
+          service_id: service_id
+          organization_id: organization_id
+          space_id: space_id
+          plan_id: plan_id
+        service_id: service_id
+        context: '{}'
+        parameters: '{}'
+        plan_id: plan_id
+      properties:
+        context:
+          description: See [Context Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object)
+            for more details.
+          type: object
+        service_id:
+          type: string
+        plan_id:
+          type: string
+        parameters:
+          type: object
+        previous_values:
+          $ref: '#/components/schemas/ServiceInstancePreviousValues'
+        maintenance_info:
+          $ref: '#/components/schemas/MaintenanceInfo'
+      required:
+      - service_id
+      type: object
+    ServiceInstancePreviousValues:
+      example:
+        maintenance_info:
+          description: description
+          version: version
+        service_id: service_id
+        organization_id: organization_id
+        space_id: space_id
+        plan_id: plan_id
+      properties:
+        service_id:
+          type: string
+          x-deprecated: true
+        plan_id:
+          type: string
+        organization_id:
+          type: string
+          x-deprecated: true
+        space_id:
+          type: string
+          x-deprecated: true
+        maintenance_info:
+          $ref: '#/components/schemas/MaintenanceInfo'
+      type: object
+    AsyncOperation:
+      properties:
+        operation:
+          type: string
+      type: object
+    LastOperationResource:
+      example:
+        description: description
+        state: in progress
+      properties:
+        state:
+          enum:
+          - in progress
+          - succeeded
+          - failed
+          type: string
+        description:
+          type: string
+      required:
+      - state
+      type: object
+    ServiceBindingResource:
+      example:
+        route_service_url: route_service_url
+        credentials: '{}'
+        syslog_drain_url: syslog_drain_url
+        volume_mounts:
+        - mode: r
+          driver: driver
+          device_type: shared
+          device:
+            volume_id: volume_id
+            mount_config: '{}'
+          container_dir: container_dir
+        - mode: r
+          driver: driver
+          device_type: shared
+          device:
+            volume_id: volume_id
+            mount_config: '{}'
+          container_dir: container_dir
+        parameters: '{}'
+      properties:
+        credentials:
+          type: object
+        syslog_drain_url:
+          type: string
+        route_service_url:
+          type: string
+        volume_mounts:
+          items:
+            $ref: '#/components/schemas/ServiceBindingVolumeMount'
+          type: array
+        parameters:
+          type: object
+      type: object
+    ServiceBindingRequest:
+      example:
+        app_guid: app_guid
+        service_id: service_id
+        context: '{}'
+        bind_resource:
+          app_guid: app_guid
+          route: route
+        parameters: '{}'
+        plan_id: plan_id
+      properties:
+        context:
+          description: See [Context Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object)
+            for more details.
+          type: object
+        service_id:
+          type: string
+        plan_id:
+          type: string
+        app_guid:
+          type: string
+          x-deprecated: true
+        bind_resource:
+          $ref: '#/components/schemas/ServiceBindingResourceObject'
+        parameters:
+          type: object
+      required:
+      - plan_id
+      - service_id
+      type: object
+    ServiceBindingResourceObject:
+      example:
+        app_guid: app_guid
+        route: route
+      properties:
+        app_guid:
+          type: string
+        route:
+          type: string
+      type: object
+    ServiceBinding:
+      example:
+        route_service_url: route_service_url
+        credentials: '{}'
+        syslog_drain_url: syslog_drain_url
+        volume_mounts:
+        - mode: r
+          driver: driver
+          device_type: shared
+          device:
+            volume_id: volume_id
+            mount_config: '{}'
+          container_dir: container_dir
+        - mode: r
+          driver: driver
+          device_type: shared
+          device:
+            volume_id: volume_id
+            mount_config: '{}'
+          container_dir: container_dir
+      properties:
+        credentials:
+          type: object
+        syslog_drain_url:
+          type: string
+        route_service_url:
+          type: string
+        volume_mounts:
+          items:
+            $ref: '#/components/schemas/ServiceBindingVolumeMount'
+          type: array
+      type: object
+    ServiceBindingVolumeMount:
+      example:
+        mode: r
+        driver: driver
+        device_type: shared
+        device:
+          volume_id: volume_id
+          mount_config: '{}'
+        container_dir: container_dir
+      properties:
+        driver:
+          type: string
+        container_dir:
+          type: string
+        mode:
+          enum:
+          - r
+          - rw
+          type: string
+        device_type:
+          enum:
+          - shared
+          type: string
+        device:
+          $ref: '#/components/schemas/ServiceBindingVolumeMountDevice'
+      required:
+      - container_dir
+      - device
+      - device_type
+      - driver
+      - mode
+      type: object
+    ServiceBindingVolumeMountDevice:
+      example:
+        volume_id: volume_id
+        mount_config: '{}'
+      properties:
+        volume_id:
+          type: string
+        mount_config:
+          type: object
+      required:
+      - volume_id
+      type: object
+    MaintenanceInfo:
+      example:
+        description: description
+        version: version
+      properties:
+        version:
+          type: string
+        description:
+          type: string
+      type: object
+    Context:
+      description: See [Context Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object)
+        for more details.
+      type: object
+    Metadata:
+      description: See [Service Metadata Conventions](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#service-metadata)
+        for more details.
+      type: object
+    Object:
+      type: object
+    Error:
+      properties:
+        error:
+          type: string
+        description:
+          type: string
+      type: object
+  securitySchemes:
+    basicAuth:
+      scheme: basic
+      type: http

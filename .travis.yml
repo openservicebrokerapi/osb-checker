@@ -20,5 +20,5 @@ before_install:
 
 install:
   - make
-  - nohup ./build/osbchecker.mockbroker --scheme=http --port=3000 &
-  - go test -v ./test/ -loose-check 
+  - nohup ./build/bin/osbchecker.mockbroker &
+  - go test -v ./test/
