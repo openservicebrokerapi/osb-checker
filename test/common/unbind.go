@@ -27,14 +27,16 @@ func TestUnbind(
 			So(resp.StatusCode, ShouldEqual, 412)
 		})
 
-		Convey("should return 401 Unauthorized if missing Authorization header", func() {
-			_, resp, err := cli.ServiceBindingsApi.ServiceBindingUnbinding(
-				context.Background(), CONF.APIVersion, instanceID, bindingID, serviceID, planID,
-				&openapi.ServiceBindingUnbindingOpts{AcceptsIncomplete: optional.NewBool(async)})
+		if CONF.Authentication.AuthType != TypeNoauth {
+			Convey("should return 401 Unauthorized if missing Authorization header", func() {
+				_, resp, err := cli.ServiceBindingsApi.ServiceBindingUnbinding(
+					context.Background(), CONF.APIVersion, instanceID, bindingID, serviceID, planID,
+					&openapi.ServiceBindingUnbindingOpts{AcceptsIncomplete: optional.NewBool(async)})
 
-			So(err, ShouldNotBeNil)
-			So(resp.StatusCode, ShouldEqual, 401)
-		})
+				So(err, ShouldNotBeNil)
+				So(resp.StatusCode, ShouldEqual, 401)
+			})
+		}
 
 		if async {
 			Convey("should return 422 UnprocessableEntity if missing accepts_incomplete", func() {

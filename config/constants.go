@@ -5,15 +5,18 @@ import (
 )
 
 const (
-	Version214 = "v2.14"
+	Version214 = "2.14"
 )
 
 const (
-	HTTPRequestTimeout = 30 * time.Second
+	TypeNoauth    = "noauth"
+	TypeBasicAuth = "basic"
 )
 
 const (
-	MockBrokerEndpoint = "http://localhost:3000"
+	MockBrokerEndpoint = "localhost:3000"
+	HTTPRWTimeout      = 30 * time.Second
+	HTTPIdleTimeout    = 60 * time.Second
 )
 
 const (

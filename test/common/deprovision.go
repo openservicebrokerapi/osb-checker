@@ -27,14 +27,16 @@ func TestDeprovision(
 			So(resp.StatusCode, ShouldEqual, 412)
 		})
 
-		Convey("should return 401 Unauthorized if missing Authorization header", func() {
-			_, resp, err := cli.ServiceInstancesApi.ServiceInstanceDeprovision(
-				context.Background(), CONF.APIVersion, instanceID, serviceID, planID,
-				&openapi.ServiceInstanceDeprovisionOpts{AcceptsIncomplete: optional.NewBool(async)})
+		if CONF.Authentication.AuthType != TypeNoauth {
+			Convey("should return 401 Unauthorized if missing Authorization header", func() {
+				_, resp, err := cli.ServiceInstancesApi.ServiceInstanceDeprovision(
+					context.Background(), CONF.APIVersion, instanceID, serviceID, planID,
+					&openapi.ServiceInstanceDeprovisionOpts{AcceptsIncomplete: optional.NewBool(async)})
 
-			So(err, ShouldNotBeNil)
-			So(resp.StatusCode, ShouldEqual, 401)
-		})
+				So(err, ShouldNotBeNil)
+				So(resp.StatusCode, ShouldEqual, 401)
+			})
+		}
 
 		if async {
 			Convey("should return 422 UnprocessableEntity if missing accepts_incomplete", func() {

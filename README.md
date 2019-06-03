@@ -13,7 +13,7 @@ This project should be considered **experimental**. You should validate the resu
 ## Test
 * Firstly, u need to deploy your own service broker to be tested.
 * Modify the `config_mock.yaml` under test/configs folder.
-* Just run `go test -v ./test/ --config-file=configs/config_mock.yaml` to start the test job.
+* Just run `go test -v ./test/ -f configs/config_mock.yaml` to start the test job.
 
 ## Mock broker
 This project provides a mock broker as reference implementation for enforcing conformance test, and validated results of this mock broker should be considered more reliable compared with other 3rd party brokers.
