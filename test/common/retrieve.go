@@ -23,14 +23,16 @@ func TestGetInstance(
 			So(resp.StatusCode, ShouldEqual, 412)
 		})
 
-		Convey("should return 401 Unauthorized if missing Authorization header", func() {
-			_, resp, err := cli.ServiceInstancesApi.ServiceInstanceGet(
-				context.Background(), CONF.APIVersion, instanceID,
-				&openapi.ServiceInstanceGetOpts{})
+		if CONF.Authentication.AuthType != TypeNoauth {
+			Convey("should return 401 Unauthorized if missing Authorization header", func() {
+				_, resp, err := cli.ServiceInstancesApi.ServiceInstanceGet(
+					context.Background(), CONF.APIVersion, instanceID,
+					&openapi.ServiceInstanceGetOpts{})
 
-			So(err, ShouldNotBeNil)
-			So(resp.StatusCode, ShouldEqual, 401)
-		})
+				So(err, ShouldNotBeNil)
+				So(resp.StatusCode, ShouldEqual, 401)
+			})
+		}
 
 		Convey("should accept a valid get instance request", func() {
 			_, resp, err := cli.ServiceInstancesApi.ServiceInstanceGet(
@@ -58,14 +60,16 @@ func TestGetBinding(
 			So(resp.StatusCode, ShouldEqual, 412)
 		})
 
-		Convey("should return 401 Unauthorized if missing Authorization header", func() {
-			_, resp, err := cli.ServiceBindingsApi.ServiceBindingGet(
-				context.Background(), CONF.APIVersion, instanceID, bindingID,
-				&openapi.ServiceBindingGetOpts{})
+		if CONF.Authentication.AuthType != TypeNoauth {
+			Convey("should return 401 Unauthorized if missing Authorization header", func() {
+				_, resp, err := cli.ServiceBindingsApi.ServiceBindingGet(
+					context.Background(), CONF.APIVersion, instanceID, bindingID,
+					&openapi.ServiceBindingGetOpts{})
 
-			So(err, ShouldNotBeNil)
-			So(resp.StatusCode, ShouldEqual, 401)
-		})
+				So(err, ShouldNotBeNil)
+				So(resp.StatusCode, ShouldEqual, 401)
+			})
+		}
 
 		Convey("should accept a valid get binding request", func() {
 			_, resp, err := cli.ServiceBindingsApi.ServiceBindingGet(

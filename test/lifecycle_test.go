@@ -16,10 +16,14 @@ var (
 
 func init() {
 	// Parse some configuration fields from command line.
-	flag.StringVar(&configFile, "config-file", "configs/config_mock.yaml", "Please specify the config file of service broker you want to test.")
+	flag.StringVar(&configFile, "f", "configs/config_mock.yaml", "Please specify the config file of service broker you want to test.")
 	flag.Parse()
-
+	// Load configuration info into global CONF variable.
 	if err := Load(configFile); err != nil {
+		panic(err)
+	}
+	// Initialize work
+	if err := common.InitClientWithAuthCtx(); err != nil {
 		panic(err)
 	}
 }

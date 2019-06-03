@@ -18,18 +18,18 @@ func Load(path string) error {
 		return errors.New("config path can not be empty")
 	}
 	// Try to parse config file type
-	fType := getFileType(path)
-	if fType == "" {
-		return errors.New("cannot load " + path + " file")
-	}
+	s := strings.Split(path, ".")
+	fType := s[len(s)-1]
 
-	switch fType {
+	switch strings.ToUpper(fType) {
 	case "JSON":
-		return loadFromJSON(path)
-	case "YAML":
-		return loadFromYAML(path)
+		 loadFromJSON(path)
+		 break
+	case "YAML", "YML":
+		 loadFromYAML(path)
+		 break
 	default:
-		break
+		return errors.New("cannot load " + path + " file")
 	}
 
 	return validate(CONF)
@@ -51,17 +51,6 @@ func loadFromYAML(path string) error {
 	}
 
 	return yaml.Unmarshal(f, CONF)
-}
-
-func getFileType(path string) string {
-	s := strings.Split(path, ".")
-	ext := s[len(s)-1]
-	switch ext {
-	case "yaml", "yml":
-		return "YAML"
-	}
-
-	return ""
 }
 
 func validate(cfg *Config) error {

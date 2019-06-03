@@ -9,19 +9,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-var (
-	cli     *openapi.APIClient
-	authCtx context.Context
-)
-
-func init() {
-	authCtx = context.WithValue(context.Background(), openapi.ContextBasicAuth, openapi.BasicAuth{
-		UserName: "username",
-		Password: "password",
-	})
-	cli = openapi.NewAPIClient(openapi.NewConfiguration())
-}
-
 func TestGetCatalog(
 	t *testing.T,
 ) {
@@ -35,13 +22,15 @@ func TestGetCatalog(
 			So(resp.StatusCode, ShouldEqual, 412)
 		})
 
-		Convey("should return 401 Unauthorized if missing Authorization header", func() {
-			_, resp, err := cli.CatalogApi.CatalogGet(
-				context.Background(), CONF.APIVersion, &openapi.CatalogGetOpts{})
+		if CONF.Authentication.AuthType != TypeNoauth {
+			Convey("should return 401 Unauthorized if missing Authorization header", func() {
+				_, resp, err := cli.CatalogApi.CatalogGet(
+					context.Background(), CONF.APIVersion, &openapi.CatalogGetOpts{})
 
-			So(err, ShouldNotBeNil)
-			So(resp.StatusCode, ShouldEqual, 401)
-		})
+				So(err, ShouldNotBeNil)
+				So(resp.StatusCode, ShouldEqual, 401)
+			})
+		}
 
 		Convey("should return list of registered service classes as JSON payload", func() {
 			_, resp, err := cli.CatalogApi.CatalogGet(
