@@ -187,7 +187,7 @@ func ServiceInstanceProvision(w http.ResponseWriter, r *http.Request) {
 	if store.CheckIfServiceInstanceExists(svcID, planID, insID) {
 		log.Printf("service instance (%s) already exists\n", insID)
 		payload, _ := store.FindServiceInstancePayload(insID)
-		handleResult(w, 200, &openapi.ServiceInstance{
+		handleResult(w, 200, &openapi.ServiceInstanceProvisionResponse{
 			DashboardUrl: payload.Payload.DashboardUrl,
 		})
 		return

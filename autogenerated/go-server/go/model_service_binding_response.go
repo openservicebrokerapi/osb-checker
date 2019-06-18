@@ -10,6 +10,12 @@
 
 package openapi
 
-type ServiceInstance struct {
-	DashboardUrl string `json:"dashboard_url,omitempty"`
+type ServiceBindingResponse struct {
+	Credentials map[string]interface{} `json:"credentials,omitempty"`
+
+	SyslogDrainUrl string `json:"syslog_drain_url,omitempty"`
+
+	RouteServiceUrl string `json:"route_service_url,omitempty"`
+
+	VolumeMounts []ServiceBindingVolumeMount `json:"volume_mounts,omitempty"`
 }

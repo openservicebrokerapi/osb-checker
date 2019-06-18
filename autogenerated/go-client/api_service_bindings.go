@@ -39,7 +39,7 @@ ServiceBindingsApiService generation of a service binding
  * @param "XBrokerAPIOriginatingIdentity" (optional.String) -  identity of the user that initiated the request from the Platform
  * @param "XBrokerAPIRequestIdentity" (optional.String) -  idenity of the request from the Platform
  * @param "AcceptsIncomplete" (optional.Bool) -  asynchronous operations supported
-@return ServiceBinding
+@return ServiceBindingResponse
 */
 
 type ServiceBindingBindingOpts struct {
@@ -48,14 +48,14 @@ type ServiceBindingBindingOpts struct {
 	AcceptsIncomplete             optional.Bool
 }
 
-func (a *ServiceBindingsApiService) ServiceBindingBinding(ctx context.Context, xBrokerAPIVersion string, instanceId string, bindingId string, body ServiceBindingRequest, localVarOptionals *ServiceBindingBindingOpts) (ServiceBinding, *http.Response, error) {
+func (a *ServiceBindingsApiService) ServiceBindingBinding(ctx context.Context, xBrokerAPIVersion string, instanceId string, bindingId string, body ServiceBindingRequest, localVarOptionals *ServiceBindingBindingOpts) (ServiceBindingResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod   = strings.ToUpper("Put")
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  ServiceBinding
+		localVarReturnValue  ServiceBindingResponse
 	)
 
 	// create path and map variables
@@ -118,7 +118,7 @@ func (a *ServiceBindingsApiService) ServiceBindingBinding(ctx context.Context, x
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v ServiceBinding
+			var v ServiceBindingResponse
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -128,7 +128,7 @@ func (a *ServiceBindingsApiService) ServiceBindingBinding(ctx context.Context, x
 			return localVarReturnValue, localVarHttpResponse, newErr
 		}
 		if localVarHttpResponse.StatusCode == 201 {
-			var v ServiceBinding
+			var v ServiceBindingResponse
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

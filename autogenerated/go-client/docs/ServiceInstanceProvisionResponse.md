@@ -1,4 +1,4 @@
-# ServiceInstance
+# ServiceInstanceProvisionResponse
 
 ## Properties
 

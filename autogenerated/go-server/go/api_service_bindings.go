@@ -88,7 +88,7 @@ func ServiceBindingBinding(w http.ResponseWriter, r *http.Request) {
 	if store.CheckIfServiceBindingExists(svcID, planID, insID, bidID) {
 		log.Printf("service binding (%s) already exists\n", bidID)
 		payload, _ := store.FindServiceBindingPayload(insID, bidID)
-		handleResult(w, 200, &openapi.ServiceBinding{
+		handleResult(w, 200, &openapi.ServiceBindingResponse{
 			Credentials: payload.Payload.Credentials,
 		})
 		return

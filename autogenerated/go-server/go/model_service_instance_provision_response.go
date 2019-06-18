@@ -10,6 +10,6 @@
 
 package openapi
 
-type ServiceInstance struct {
+type ServiceInstanceProvisionResponse struct {
 	DashboardUrl string `json:"dashboard_url,omitempty"`
 }
