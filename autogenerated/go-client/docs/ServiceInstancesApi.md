@@ -157,7 +157,7 @@ Name | Type | Description  | Notes
 
 ## ServiceInstanceProvision
 
-> ServiceInstance ServiceInstanceProvision(ctx, xBrokerAPIVersion, instanceId, body, optional)
+> ServiceInstanceProvisionResponse ServiceInstanceProvision(ctx, xBrokerAPIVersion, instanceId, body, optional)
 provision a service instance
 
 ### Required Parameters
@@ -187,7 +187,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ServiceInstance**](ServiceInstance.md)
+[**ServiceInstanceProvisionResponse**](ServiceInstanceProvisionResponse.md)
 
 ### Authorization
 

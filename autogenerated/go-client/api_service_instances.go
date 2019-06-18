@@ -534,7 +534,7 @@ ServiceInstancesApiService provision a service instance
  * @param "XBrokerAPIOriginatingIdentity" (optional.String) -  identity of the user that initiated the request from the Platform
  * @param "XBrokerAPIRequestIdentity" (optional.String) -  idenity of the request from the Platform
  * @param "AcceptsIncomplete" (optional.Bool) -  asynchronous operations supported
-@return ServiceInstance
+@return ServiceInstanceProvisionResponse
 */
 
 type ServiceInstanceProvisionOpts struct {
@@ -543,14 +543,14 @@ type ServiceInstanceProvisionOpts struct {
 	AcceptsIncomplete             optional.Bool
 }
 
-func (a *ServiceInstancesApiService) ServiceInstanceProvision(ctx context.Context, xBrokerAPIVersion string, instanceId string, body ServiceInstanceProvisionRequest, localVarOptionals *ServiceInstanceProvisionOpts) (ServiceInstance, *http.Response, error) {
+func (a *ServiceInstancesApiService) ServiceInstanceProvision(ctx context.Context, xBrokerAPIVersion string, instanceId string, body ServiceInstanceProvisionRequest, localVarOptionals *ServiceInstanceProvisionOpts) (ServiceInstanceProvisionResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod   = strings.ToUpper("Put")
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  ServiceInstance
+		localVarReturnValue  ServiceInstanceProvisionResponse
 	)
 
 	// create path and map variables
@@ -612,7 +612,7 @@ func (a *ServiceInstancesApiService) ServiceInstanceProvision(ctx context.Contex
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v ServiceInstance
+			var v ServiceInstanceProvisionResponse
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -622,7 +622,7 @@ func (a *ServiceInstancesApiService) ServiceInstanceProvision(ctx context.Contex
 			return localVarReturnValue, localVarHttpResponse, newErr
 		}
 		if localVarHttpResponse.StatusCode == 201 {
-			var v ServiceInstance
+			var v ServiceInstanceProvisionResponse
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

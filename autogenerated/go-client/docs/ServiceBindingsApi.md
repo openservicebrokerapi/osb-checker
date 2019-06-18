@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 ## ServiceBindingBinding
 
-> ServiceBinding ServiceBindingBinding(ctx, xBrokerAPIVersion, instanceId, bindingId, body, optional)
+> ServiceBindingResponse ServiceBindingBinding(ctx, xBrokerAPIVersion, instanceId, bindingId, body, optional)
 generation of a service binding
 
 ### Required Parameters
@@ -45,7 +45,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ServiceBinding**](ServiceBinding.md)
+[**ServiceBindingResponse**](ServiceBindingResponse.md)
 
 ### Authorization
 

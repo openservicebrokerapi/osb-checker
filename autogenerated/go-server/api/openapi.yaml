@@ -353,13 +353,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceInstance'
+                $ref: '#/components/schemas/ServiceInstanceProvisionResponse'
           description: OK
         201:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceInstance'
+                $ref: '#/components/schemas/ServiceInstanceProvisionResponse'
           description: Created
         202:
           content:
@@ -804,13 +804,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceBinding'
+                $ref: '#/components/schemas/ServiceBindingResponse'
           description: OK
         201:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceBinding'
+                $ref: '#/components/schemas/ServiceBindingResponse'
           description: Created
         202:
           content:
@@ -1357,7 +1357,7 @@ components:
       - service_id
       - space_guid
       type: object
-    ServiceInstance:
+    ServiceInstanceProvisionResponse:
       example:
         dashboard_url: dashboard_url
       properties:
@@ -1526,7 +1526,7 @@ components:
         route:
           type: string
       type: object
-    ServiceBinding:
+    ServiceBindingResponse:
       example:
         route_service_url: route_service_url
         credentials: '{}'
