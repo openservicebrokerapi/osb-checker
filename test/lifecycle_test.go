@@ -73,6 +73,8 @@ func TestLifeCycle(t *testing.T) {
 				common.TestDeprovision(t, instanceID, serviceID, currentPlanID, operation.Async)
 				break
 			case "bind":
+				currentPlanID = operation.PlanID
+
 				req := &openapi.ServiceBindingRequest{
 					ServiceId:  serviceID,
 					PlanId:     currentPlanID,
