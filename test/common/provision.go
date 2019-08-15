@@ -41,9 +41,11 @@ func TestProvision(
 
 		if async {
 			Convey("should return 422 UnprocessableEntity if missing accepts_incomplete", func() {
+				tempBody := openapi.ServiceInstanceProvisionRequest{}
+				deepCopy(req, &tempBody)
 				_, resp, err := cli.ServiceInstancesApi.ServiceInstanceProvision(
-					authCtx, CONF.APIVersion, instanceID, openapi.ServiceInstanceProvisionRequest{},
-					&openapi.ServiceInstanceProvisionOpts{AcceptsIncomplete: optional.NewBool(false)})
+					authCtx, CONF.APIVersion, instanceID, tempBody,
+					&openapi.ServiceInstanceProvisionOpts{})
 
 				So(err, ShouldNotBeNil)
 				So(resp.StatusCode, ShouldEqual, 422)
