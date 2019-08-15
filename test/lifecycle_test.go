@@ -70,6 +70,7 @@ func TestLifeCycle(t *testing.T) {
 				common.TestUpdateInstance(t, instanceID, req, operation.Async)
 				break
 			case "deprovision":
+				currentPlanID = operation.PlanID
 				common.TestDeprovision(t, instanceID, serviceID, currentPlanID, operation.Async)
 				break
 			case "bind":
