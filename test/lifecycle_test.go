@@ -85,6 +85,7 @@ func TestLifeCycle(t *testing.T) {
 				common.TestGetBinding(t, instanceID, bindingID)
 				break
 			case "unbind":
+				currentPlanID = operation.PlanID
 				common.TestUnbind(t, instanceID, bindingID, serviceID, currentPlanID, operation.Async)
 				break
 			default:
