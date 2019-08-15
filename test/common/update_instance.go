@@ -120,7 +120,7 @@ func TestUpdateInstance(
 		Convey("UPDATE - poll", t, func(c C) {
 			testPollInstanceLastOperation(instanceID)
 
-			So(pollInstanceLastOperationStatus(instanceID), ShouldBeNil)
+			So(pollInstanceLastOperationStatus(instanceID, "update"), ShouldBeNil)
 		})
 	}
 }

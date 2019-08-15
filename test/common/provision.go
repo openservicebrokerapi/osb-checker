@@ -169,7 +169,7 @@ func TestProvision(
 		Convey("PROVISIONING - poll", t, func(c C) {
 			testPollInstanceLastOperation(instanceID)
 
-			So(pollInstanceLastOperationStatus(instanceID), ShouldBeNil)
+			So(pollInstanceLastOperationStatus(instanceID, "provision"), ShouldBeNil)
 		})
 	}
 

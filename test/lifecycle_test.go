@@ -70,15 +70,12 @@ func TestLifeCycle(t *testing.T) {
 				common.TestUpdateInstance(t, instanceID, req, operation.Async)
 				break
 			case "deprovision":
-				currentPlanID = operation.PlanID
-				common.TestDeprovision(t, instanceID, serviceID, currentPlanID, operation.Async)
+				common.TestDeprovision(t, instanceID, serviceID, operation.PlanID, operation.Async)
 				break
 			case "bind":
-				currentPlanID = operation.PlanID
-
 				req := &openapi.ServiceBindingRequest{
 					ServiceId:  serviceID,
-					PlanId:     currentPlanID,
+					PlanId:     operation.PlanID,
 					Parameters: operation.Parameters,
 				}
 
@@ -88,8 +85,7 @@ func TestLifeCycle(t *testing.T) {
 				common.TestGetBinding(t, instanceID, bindingID)
 				break
 			case "unbind":
-				currentPlanID = operation.PlanID
-				common.TestUnbind(t, instanceID, bindingID, serviceID, currentPlanID, operation.Async)
+				common.TestUnbind(t, instanceID, bindingID, serviceID, operation.PlanID, operation.Async)
 				break
 			default:
 				break

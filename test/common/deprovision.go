@@ -88,7 +88,7 @@ func TestDeprovision(
 		Convey("DEPROVISIONING - poll", t, func(c C) {
 			testPollInstanceLastOperation(instanceID)
 
-			So(pollInstanceLastOperationStatus(instanceID), ShouldBeNil)
+			So(pollInstanceLastOperationStatus(instanceID, "deprovision"), ShouldBeNil)
 		})
 	}
 }
