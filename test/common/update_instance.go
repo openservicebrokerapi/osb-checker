@@ -40,8 +40,10 @@ func TestUpdateInstance(
 
 		if async {
 			Convey("should return 422 UnprocessableEntity if missing accepts_incomplete", func() {
+				tempBody := openapi.ServiceInstanceUpdateRequest{}
+				deepCopy(req, &tempBody)
 				_, resp, err := cli.ServiceInstancesApi.ServiceInstanceUpdate(
-					authCtx, CONF.APIVersion, instanceID, openapi.ServiceInstanceUpdateRequest{},
+					authCtx, CONF.APIVersion, instanceID, tempBody,
 					&openapi.ServiceInstanceUpdateOpts{AcceptsIncomplete: optional.NewBool(false)})
 
 				So(err, ShouldNotBeNil)
