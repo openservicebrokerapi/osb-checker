@@ -38,15 +38,13 @@ func TestLifeCycle(t *testing.T) {
 		bindingID := uuid.NewV4().String()
 		serviceID, organizationGUID, spaceGUID :=
 			svc.ServiceID, svc.OrganizationGUID, svc.SpaceGUID
-		var currentPlanID string
 
 		for _, operation := range svc.Operations {
 			switch operation.Type {
 			case "provision":
-				currentPlanID = operation.PlanID
 				req := &openapi.ServiceInstanceProvisionRequest{
 					ServiceId:        serviceID,
-					PlanId:           currentPlanID,
+					PlanId:           operation.PlanID,
 					OrganizationGuid: organizationGUID,
 					SpaceGuid:        spaceGUID,
 					Parameters:       operation.Parameters,
@@ -58,6 +56,7 @@ func TestLifeCycle(t *testing.T) {
 				common.TestGetInstance(t, instanceID)
 				break
 			case "update":
+				var currentPlanID string
 				if operation.PlanID != "" {
 					currentPlanID = operation.PlanID
 				}
