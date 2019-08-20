@@ -45,7 +45,7 @@ func TestProvision(
 				deepCopy(req, &tempBody)
 				_, resp, err := cli.ServiceInstancesApi.ServiceInstanceProvision(
 					authCtx, CONF.APIVersion, instanceID, tempBody,
-					&openapi.ServiceInstanceProvisionOpts{})
+					&openapi.ServiceInstanceProvisionOpts{AcceptsIncomplete: optional.NewBool(false)})
 
 				So(err, ShouldNotBeNil)
 				So(resp.StatusCode, ShouldEqual, 422)
