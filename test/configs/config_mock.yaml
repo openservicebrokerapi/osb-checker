@@ -35,5 +35,5 @@ services:
         plan_id: "0f4008b5-XXXX-XXXX-XXXX-dace631cd648"
         async: true
       - type: "deprovision"
-        plan_id: "d3031751-XXXX-XXXX-XXXX-a42377d3320e"
+        plan_id: "0f4008b5-XXXX-XXXX-XXXX-dace631cd648"
         async: true
