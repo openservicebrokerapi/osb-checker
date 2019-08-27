@@ -89,6 +89,8 @@ Name | Type | Description  | Notes
 
  **xBrokerAPIOriginatingIdentity** | **optional.String**| identity of the user that initiated the request from the Platform | 
  **xBrokerAPIRequestIdentity** | **optional.String**| idenity of the request from the Platform | 
+ **serviceId** | **optional.String**| id of the service associated with the instance | 
+ **planId** | **optional.String**| id of the plan associated with the instance | 
 
 ### Return type
 

@@ -191,6 +191,16 @@ paths:
         required: true
         schema:
           type: string
+      - description: id of the service associated with the instance
+        in: query
+        name: service_id
+        schema:
+          type: string
+      - description: id of the plan associated with the instance
+        in: query
+        name: plan_id
+        schema:
+          type: string
       responses:
         200:
           content:
@@ -719,6 +729,16 @@ paths:
         in: path
         name: binding_id
         required: true
+        schema:
+          type: string
+      - description: id of the service associated with the instance
+        in: query
+        name: service_id
+        schema:
+          type: string
+      - description: id of the plan associated with the instance
+        in: query
+        name: plan_id
         schema:
           type: string
       responses:
@@ -1437,6 +1457,8 @@ components:
       type: object
     LastOperationResource:
       example:
+        instance_usable: true
+        update_repeatable: true
         description: description
         state: in progress
       properties:
@@ -1448,6 +1470,10 @@ components:
           type: string
         description:
           type: string
+        instance_usable:
+          type: boolean
+        update_repeatable:
+          type: boolean
       required:
       - state
       type: object
@@ -1628,6 +1654,10 @@ components:
           type: string
         description:
           type: string
+        instance_usable:
+          type: boolean
+        update_repeatable:
+          type: boolean
       type: object
   securitySchemes:
     basicAuth:

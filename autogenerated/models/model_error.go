@@ -14,4 +14,8 @@ type Error struct {
 	Error string `json:"error,omitempty"`
 
 	Description string `json:"description,omitempty"`
+
+	InstanceUsable bool `json:"instance_usable,omitempty"`
+
+	UpdateRepeatable bool `json:"update_repeatable,omitempty"`
 }
