@@ -15,7 +15,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/antihax/optional"
 )
@@ -44,7 +43,7 @@ type CatalogGetOpts struct {
 
 func (a *CatalogApiService) CatalogGet(ctx context.Context, xBrokerAPIVersion string, localVarOptionals *CatalogGetOpts) (Catalog, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string

@@ -50,7 +50,7 @@ type ServiceInstanceDeprovisionOpts struct {
 
 func (a *ServiceInstancesApiService) ServiceInstanceDeprovision(ctx context.Context, xBrokerAPIVersion string, instanceId string, serviceId string, planId string, localVarOptionals *ServiceInstanceDeprovisionOpts) (map[string]interface{}, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Delete")
+		localVarHttpMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -219,17 +219,21 @@ ServiceInstancesApiService gets a service instance
  * @param optional nil or *ServiceInstanceGetOpts - Optional Parameters:
  * @param "XBrokerAPIOriginatingIdentity" (optional.String) -  identity of the user that initiated the request from the Platform
  * @param "XBrokerAPIRequestIdentity" (optional.String) -  idenity of the request from the Platform
+ * @param "ServiceId" (optional.String) -  id of the service associated with the instance
+ * @param "PlanId" (optional.String) -  id of the plan associated with the instance
 @return ServiceInstanceResource
 */
 
 type ServiceInstanceGetOpts struct {
 	XBrokerAPIOriginatingIdentity optional.String
 	XBrokerAPIRequestIdentity     optional.String
+	ServiceId                     optional.String
+	PlanId                        optional.String
 }
 
 func (a *ServiceInstancesApiService) ServiceInstanceGet(ctx context.Context, xBrokerAPIVersion string, instanceId string, localVarOptionals *ServiceInstanceGetOpts) (ServiceInstanceResource, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -245,6 +249,12 @@ func (a *ServiceInstancesApiService) ServiceInstanceGet(ctx context.Context, xBr
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if localVarOptionals != nil && localVarOptionals.ServiceId.IsSet() {
+		localVarQueryParams.Add("service_id", parameterToString(localVarOptionals.ServiceId.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.PlanId.IsSet() {
+		localVarQueryParams.Add("plan_id", parameterToString(localVarOptionals.PlanId.Value(), ""))
+	}
 	// to determine the Content-Type header
 	localVarHttpContentTypes := []string{}
 
@@ -379,7 +389,7 @@ type ServiceInstanceLastOperationGetOpts struct {
 
 func (a *ServiceInstancesApiService) ServiceInstanceLastOperationGet(ctx context.Context, xBrokerAPIVersion string, instanceId string, localVarOptionals *ServiceInstanceLastOperationGetOpts) (LastOperationResource, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -545,7 +555,7 @@ type ServiceInstanceProvisionOpts struct {
 
 func (a *ServiceInstancesApiService) ServiceInstanceProvision(ctx context.Context, xBrokerAPIVersion string, instanceId string, body ServiceInstanceProvisionRequest, localVarOptionals *ServiceInstanceProvisionOpts) (ServiceInstanceProvisionResponse, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Put")
+		localVarHttpMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -737,7 +747,7 @@ type ServiceInstanceUpdateOpts struct {
 
 func (a *ServiceInstancesApiService) ServiceInstanceUpdate(ctx context.Context, xBrokerAPIVersion string, instanceId string, body ServiceInstanceUpdateRequest, localVarOptionals *ServiceInstanceUpdateOpts) (map[string]interface{}, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Patch")
+		localVarHttpMethod   = http.MethodPatch
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
