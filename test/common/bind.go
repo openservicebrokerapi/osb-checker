@@ -41,8 +41,10 @@ func TestBind(
 
 		if async {
 			Convey("should return 422 UnprocessableEntity if missing accepts_incomplete", func() {
+				tempBody := openapi.ServiceBindingRequest{}
+				deepCopy(req, &tempBody)
 				_, resp, err := cli.ServiceBindingsApi.ServiceBindingBinding(
-					authCtx, CONF.APIVersion, instanceID, bindingID, openapi.ServiceBindingRequest{},
+					authCtx, CONF.APIVersion, instanceID, bindingID, tempBody,
 					&openapi.ServiceBindingBindingOpts{AcceptsIncomplete: optional.NewBool(false)})
 
 				So(err, ShouldNotBeNil)

@@ -25,12 +25,15 @@ services:
           parameter1: 1
           parameter2: "foo"
       - type: "bind"
+        plan_id: "0f4008b5-XXXX-XXXX-XXXX-dace631cd648"
         async: true
         parameters:
           parameter1-name-here: 1
           parameter2-name-here: "parameter2-value-here"
       - type: "get_binding"
       - type: "unbind"
+        plan_id: "0f4008b5-XXXX-XXXX-XXXX-dace631cd648"
         async: true
       - type: "deprovision"
+        plan_id: "0f4008b5-XXXX-XXXX-XXXX-dace631cd648"
         async: true

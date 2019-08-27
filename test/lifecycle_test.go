@@ -38,15 +38,13 @@ func TestLifeCycle(t *testing.T) {
 		bindingID := uuid.NewV4().String()
 		serviceID, organizationGUID, spaceGUID :=
 			svc.ServiceID, svc.OrganizationGUID, svc.SpaceGUID
-		var currentPlanID string
 
 		for _, operation := range svc.Operations {
 			switch operation.Type {
 			case "provision":
-				currentPlanID = operation.PlanID
 				req := &openapi.ServiceInstanceProvisionRequest{
 					ServiceId:        serviceID,
-					PlanId:           currentPlanID,
+					PlanId:           operation.PlanID,
 					OrganizationGuid: organizationGUID,
 					SpaceGuid:        spaceGUID,
 					Parameters:       operation.Parameters,
@@ -58,6 +56,7 @@ func TestLifeCycle(t *testing.T) {
 				common.TestGetInstance(t, instanceID)
 				break
 			case "update":
+				var currentPlanID string
 				if operation.PlanID != "" {
 					currentPlanID = operation.PlanID
 				}
@@ -70,12 +69,12 @@ func TestLifeCycle(t *testing.T) {
 				common.TestUpdateInstance(t, instanceID, req, operation.Async)
 				break
 			case "deprovision":
-				common.TestDeprovision(t, instanceID, serviceID, currentPlanID, operation.Async)
+				common.TestDeprovision(t, instanceID, serviceID, operation.PlanID, operation.Async)
 				break
 			case "bind":
 				req := &openapi.ServiceBindingRequest{
 					ServiceId:  serviceID,
-					PlanId:     currentPlanID,
+					PlanId:     operation.PlanID,
 					Parameters: operation.Parameters,
 				}
 
@@ -85,7 +84,7 @@ func TestLifeCycle(t *testing.T) {
 				common.TestGetBinding(t, instanceID, bindingID)
 				break
 			case "unbind":
-				common.TestUnbind(t, instanceID, bindingID, serviceID, currentPlanID, operation.Async)
+				common.TestUnbind(t, instanceID, bindingID, serviceID, operation.PlanID, operation.Async)
 				break
 			default:
 				break
